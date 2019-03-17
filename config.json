@@ -1,0 +1,25 @@
+{
+    "Tile": {
+        "dx": 63,
+        "dy": 37,
+        "width": 128,
+        "height": 74,
+        "imgHeight": 94,
+        "probHouse": 0.9
+    },
+    "Tree": {
+        "numTrees": 6,
+        "maxHeight": 79,
+        "insideFactor": 0.8
+    },
+    "Street": {
+        "highways": ["r0081", "r0085"],
+        "straights": ["r0017", "r0021", "r0081", "r0085"],
+        "lanePark": 3
+    },
+    "Car": {
+        "imgSize": 32,
+        "numTypes": 12,
+        "headingOrder": [240, 255, 270, 285, 300, 315, 0, 45, 60, 75, 90, 105, 120, 135, 180, 225]
+    }
+}
