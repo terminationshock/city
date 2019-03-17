@@ -3,10 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <script src="phaser.min.js"></script>
+    <script src="error.js"></script>
     <script src="loader.js"></script>
     <script src="trees.js"></script>
     <script src="tile.js"></script>
     <script src="map.js"></script>
+    <script src="carai.js"></script>
     <script src="car.js"></script>
 </head>
 <body>
@@ -25,6 +27,10 @@
         }
     }
 
+    function step() {
+        map.update();
+    }
+
     function preload() {
         game.load.onFileComplete.add(loadConfig, this);
         game.load.text('world', 'world.dat');
@@ -38,8 +44,10 @@
         map.initTiles(loader.houses, loader.trees, loader.cars);
 
         game.world.resize(map.getWidth(), map.getHeight());
-
         map.draw(game);
+
+        var dt = 1. / config.World.stepsPerSecond;
+        game.time.events.loop(dt, step);
     }
 
     function update() {

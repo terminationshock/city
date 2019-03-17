@@ -49,12 +49,21 @@ class Map {
             tile.generateTrees(treeImages);
             tile.generateCars(carImages);
         });
+        this.tiles.forEach(function (tile, index, tiles) {
+            tile.computeStreetNeighbours(tiles);
+        });
     }
 
     draw(game) {
         for (var i = 0; i < this.tiles.length; i++) {
             this.tiles[i].draw(game, this.groups[this.tileRowId[i]]);
         }
+    }
+
+    update() {
+        this.tiles.forEach(function (tile) {
+            tile.update();
+        });
     }
 }
 
