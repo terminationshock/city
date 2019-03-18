@@ -1,5 +1,5 @@
 class Loader {
-    load(game) {
+    load() {
         this.streets = [
             'g0000',
             'r0001',

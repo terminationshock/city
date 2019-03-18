@@ -32,7 +32,7 @@ class Trees {
         return null;
     }
 
-    draw(game, group) {
+    draw(group) {
         this.trees.forEach(function (tree) {
             group.add(game.add.sprite(tree.imgX, tree.imgY, tree.tree));
         });

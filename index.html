@@ -23,7 +23,7 @@
     function loadConfig(progress, key, success, totalLoadedFile, totalFiles) {
         if (key === 'config') {
             config = game.cache.getJSON('config');
-            loader.load(game);
+            loader.load();
         }
     }
 
@@ -40,11 +40,11 @@
     function create() {
         cursors = game.input.keyboard.createCursorKeys();
 
-        map.loadMap(game, game.cache.getText('world'));
+        map.loadMap(game.cache.getText('world'));
         map.initTiles(loader.houses, loader.trees, loader.cars);
 
         game.world.resize(map.getWidth(), map.getHeight());
-        map.draw(game);
+        map.draw();
 
         var dt = 1. / config.World.stepsPerSecond;
         game.time.events.loop(dt, step);

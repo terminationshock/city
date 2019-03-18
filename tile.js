@@ -1,5 +1,5 @@
 class Tile {
-    constructor(game, fileId, x, y) {
+    constructor(fileId, x, y) {
         this.fileId = fileId;
         this.imgX = x;
         this.imgY = y;
@@ -11,6 +11,7 @@ class Tile {
         this.connections = [];
         this.trees = null;
         this.cars = [];
+        this.group = null;
     }
 
     updateImage(fileId) {
@@ -19,13 +20,14 @@ class Tile {
         this.imgY = this.imgY + config.Tile.imgHeight - image.height;
     }
 
-    draw(game, group) {
-        group.add(game.add.sprite(this.imgX, this.imgY, this.fileId));
+    draw(group) {
+        this.group = group;
+        this.group.add(game.add.sprite(this.imgX, this.imgY, this.fileId));
         if (this.trees !== null) {
-            this.trees.draw(game, group);
+            this.trees.draw(this.group);
         }
         this.cars.forEach(function (car) {
-            car.draw(game, group);
+            car.draw();
         });
     }
 
@@ -185,9 +187,9 @@ class Tile {
         var py = this.y;
 
         if (head == 60 || head == 120) {
-            py += config.Tile.height / lane;
+            py += lane;
         } else {
-            py -= config.Tile.height / lane;
+            py -= lane;
         }
         return {nx: nx, ny: ny, px: px, py: py};
     }

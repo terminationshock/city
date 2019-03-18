@@ -7,6 +7,7 @@ class Car {
         this.group = null;
         this.startInParkingLot(tile);
         this.queue = [this.callbackPark];
+        this.waiting = 0;
     }
 
     disable() {
@@ -38,16 +39,16 @@ class Car {
         return this.typeId * config.Car.headingOrder.length + col;
     }
 
-    draw(game, tileGroup) {
-        var x = Math.round(this.x - config.Car.imgSize/2);
-        var y = Math.round(this.y - config.Car.imgSize/2);
+    draw() {
+        var x = this.x - config.Car.imgSize/2;
+        var y = this.y - config.Car.imgSize/2;
         this.sprite = game.add.sprite(x, y, this.colorId);
         this.sprite.frame = this.getFrameIndex();
 
         this.group = game.add.group();
         this.group.add(this.sprite);
 
-        while (this.group.z > tileGroup.z + 1) {                
+        while (this.group.z > this.tile.group.z + 1) {                
             game.world.moveDown(this.group);
         }
     }
@@ -61,22 +62,36 @@ class Car {
             this.queue.shift();
         }
 
+        var dt = 1. / config.World.stepsPerSecond;
+        this.waiting += dt;
+
         if (this.v == 0) {
+            if (this.isParking()) {
+                this.waiting = 0;
+            }
         } else {
-            var dt = 1. / config.World.stepsPerSecond;
             var dx = Math.sin(this.head * Math.PI/180) * this.v * dt;
             var dy = -Math.cos(this.head * Math.PI/180) * this.v * dt;
 
-            this.x += dx;
-            this.y += dy;
+            if (false) {
+                //callqueueinsert       
+            } else {
+                this.waiting = 0;
+                this.x += dx;
+                this.y += dy;
 
-            this.enterNewTile();
-            if (!this.tile.inside(this.x, this.y)) {
-                error('Car has left its tile', this, this.disable);
+                this.enterNewTile();
+                if (!this.tile.inside(this.x, this.y)) {
+                    error('Car has left its tile', this, this.disable);
+                }
+
+                this.sprite.x = this.x - config.Car.imgSize/2;
+                this.sprite.y = this.y - config.Car.imgSize/2;
+
+                if (this.group.z > this.tile.group.z + 1) {
+                    game.world.moveDown(this.group);
+                }
             }
-
-            this.sprite.x = this.x - config.Car.imgSize/2;
-            this.sprite.y = this.y - config.Car.imgSize/2;
         }
         this.sprite.frame = this.getFrameIndex();
     }
@@ -98,9 +113,8 @@ class Car {
                 }
 
                 if (this.isInFront(tile, this.x, this.y, this.head)) {
-                    this.oldTile = this.tile;                       
-                    this.oldTile.removeCar(this);
-
+                    //this.oldTile = this.tile;                       
+                    this.tile.removeCar(this);
                     this.tile = tile;
                     this.tile.addCar(this);
 
@@ -212,6 +226,17 @@ class Car {
         } else {
             this.v = config.Car.velocityCity;
         }
+
+        if (!this.tile.isStraightOrCurve()) {
+            var index = this.tile.cars.indexOf(this);
+            for (var i = 0; i < index; i++) {
+                if (this.tile.cars[i].waiting <= config.Car.waitBlocked) {
+                    this.v = 0;
+                    return false;
+                }
+            }
+        }
+
         return false;
     }
 }

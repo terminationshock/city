@@ -7,7 +7,7 @@ class Map {
         this.nRows = 0;
     }
 
-    loadMap(game, fileContent) {
+    loadMap(fileContent) {
         var lines = fileContent.trim().split('\n');
 
         for (var y = 0; y < lines.length; y++) {
@@ -24,7 +24,7 @@ class Map {
                 for (var x = 0; x < fileIds.length; x++) {
                     var fileId = fileIds[x].trim();
                     if (fileId.length > 0) {
-                        var tile = new Tile(game, fileId, xoff + 2*x*config.Tile.dx, (y-1)*config.Tile.dy);
+                        var tile = new Tile(fileId, xoff + 2*x*config.Tile.dx, (y-1)*config.Tile.dy);
                         this.tiles.push(tile);
                         this.tileRowId.push(this.nRows-1);
                     }
@@ -54,9 +54,9 @@ class Map {
         });
     }
 
-    draw(game) {
+    draw() {
         for (var i = 0; i < this.tiles.length; i++) {
-            this.tiles[i].draw(game, this.groups[this.tileRowId[i]]);
+            this.tiles[i].draw(this.groups[this.tileRowId[i]]);
         }
     }
 

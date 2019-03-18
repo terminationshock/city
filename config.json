@@ -15,8 +15,8 @@
     "Street": {
         "highways": ["r0081", "r0085"],
         "straights": ["r0017", "r0021", "r0081", "r0085"],
-        "lanePark": 3,
-        "laneDrive": 8
+        "lanePark": 25,
+        "laneDrive": 9
     },
     "Car": {
         "imgSize": 32,
@@ -24,9 +24,10 @@
         "headingOrder": [240, 255, 270, 285, 300, 315, 0, 45, 60, 75, 90, 105, 120, 135, 180, 225],
         "velocityTurn": 30,
         "velocityCity": 50,
-        "velocityHighway": 80
+        "velocityHighway": 80,
+        "waitBlocked": 10
     },
     "World": {
-        "stepsPerSecond": 20
+        "stepsPerSecond": 30
     }
 }
