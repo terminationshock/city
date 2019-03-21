@@ -16,7 +16,7 @@
         "highways": ["r0081", "r0085"],
         "straights": ["r0017", "r0021", "r0081", "r0085"],
         "lanePark": 25,
-        "laneDrive": 9
+        "laneDrive": 10
     },
     "Car": {
         "imgSize": 32,

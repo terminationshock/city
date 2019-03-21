@@ -11,7 +11,7 @@ class Map {
         var lines = fileContent.trim().split('\n');
 
         for (var y = 0; y < lines.length; y++) {
-            if (lines[y].indexOf(',') >= 0) {
+            if (lines[y].includes(',')) {
                 var fileIds = lines[y].split(',');
                 this.nRows++;
                 this.nCols = Math.max(this.nCols, fileIds.length);

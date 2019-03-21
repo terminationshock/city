@@ -1,5 +1,6 @@
 class Tile {
     constructor(fileId, x, y) {
+        this.hash = generateRandomId();
         this.fileId = fileId;
         this.imgX = x;
         this.imgY = y;
@@ -11,6 +12,7 @@ class Tile {
         this.connections = [];
         this.trees = null;
         this.cars = [];
+        this.carHashes = [];
         this.group = null;
     }
 
@@ -31,6 +33,10 @@ class Tile {
         });
     }
 
+    equals(other) {
+        return this.hash === other.hash;
+    }
+
     update() {
         this.cars.forEach(function (car) {
             car.update();
@@ -46,15 +52,15 @@ class Tile {
     }
 
     isStraight() {
-        return config.Street.straights.indexOf(this.fileId) >= 0;
+        return config.Street.straights.includes(this.fileId);
     }
 
     isHighway() {
-        return config.Street.highways.indexOf(this.fileId) >= 0;
+        return config.Street.highways.includes(this.fileId);
     }
 
     isStraightOrCurve() {
-        return this.connections.length == 2;
+        return this.connections.length === 2;
     }
 
     generateHouse(houseImages) {
@@ -85,14 +91,15 @@ class Tile {
 
     generateCars(carImages) {
         if (this.isStreet() && this.isStraight() && !this.isHighway()) {
-            this.cars.push(new Car(this, carImages));
+            var car = new Car(this, carImages);
+            this.addCar(car);
         }
     }
 
     computeAllNeighbours(tiles) {
         var buf = 10;
         for (var i = 0; i < tiles.length; i++) {
-            if (this.x !== tiles[i].x && this.y !== tiles[i].y) {
+            if (!this.equals(tiles[i])) {
                 if (this.x + buf < tiles[i].x && tiles[i].x < this.x + config.Tile.width - buf
                     && this.y - config.Tile.height + buf < tiles[i].y && tiles[i].y < this.y - buf) {
                     this.neighbours.push(tiles[i]);
@@ -111,7 +118,7 @@ class Tile {
     }
 
     computeStreetNeighbours(tiles) {
-        if (this.connections.length == 0) {
+        if (this.connections.length === 0) {
             return;
         }
 
@@ -121,19 +128,19 @@ class Tile {
                 var direction = null;
 
                 if (tile.x > this.x && tile.y < this.y) {
-                    if (this.connections.indexOf(60) >= 0) {
+                    if (this.connections.includes(convertInt(60))) {
                         direction = 60;
                     }
                 } else if (tile.x > this.x && tile.y > this.y) {
-                    if (this.connections.indexOf(120) >= 0) {
+                    if (this.connections.includes(convertInt(120))) {
                         direction = 120;
                     }
                 } else if (tile.x < this.x && tile.y > this.y) {
-                    if (this.connections.indexOf(240) >= 0) {
+                    if (this.connections.includes(convertInt(240))) {
                         direction = 240;
                     }
                 } else if (tile.x < this.x && tile.y < this.y) {
-                    if (this.connections.indexOf(300) >= 0) {
+                    if (this.connections.includes(convertInt(300))) {
                         direction = 300;
                     }
                 }
@@ -143,26 +150,31 @@ class Tile {
                         error('Cannot handle neighbouring junctions, crossings, or dead ends.', this, null);
                     }
                     this.streetNeighbours.push(tile);
-                    this.neighbourConnections[tile] = direction;
+                    this.neighbourConnections[tile.hash] = convertInt(direction);
                 }
             }
         }
     }
 
+    getNeighbourConnection(tile) {
+        return this.neighbourConnections[tile.hash];
+    }
+
     computeStreetConnections() {
         var id = parseInt(this.fileId.substring(1,5));
-        if ([1, 5, 9, 21, 45, 49, 53, 77, 85].indexOf(id) >= 0) {
+        if ([1, 5, 9, 21, 45, 49, 53, 77, 85].includes(id)) {
             this.connections.push(300);
         }
-        if ([5, 9, 13, 17, 45, 53, 57, 65, 81].indexOf(id) >= 0) {
+        if ([5, 9, 13, 17, 45, 53, 57, 65, 81].includes(id)) {
             this.connections.push(60);
         }
-        if ([1, 9, 13, 21, 45, 57, 61, 69, 85].indexOf(id) >= 0) {
+        if ([1, 9, 13, 21, 45, 57, 61, 69, 85].includes(id)) {
             this.connections.push(120);
         }
-        if ([1, 5, 13, 17, 45, 49, 61, 73, 81].indexOf(id) >= 0) {
+        if ([1, 5, 13, 17, 45, 49, 61, 73, 81].includes(id)) {
             this.connections.push(240);
         }
+        this.connections.forEach(convertInt);
     }
 
     inside(x, y, factor) {
@@ -186,7 +198,7 @@ class Tile {
         var px = this.x;
         var py = this.y;
 
-        if (head == 60 || head == 120) {
+        if (convertInt(head) === 60 || convertInt(head) === 120) {
             py += lane;
         } else {
             py -= lane;
@@ -194,21 +206,33 @@ class Tile {
         return {nx: nx, ny: ny, px: px, py: py};
     }
 
-    distanceToLane(x, y, head, lane) {
+    getClosestPointInLane(x, y, head, lane) {
         var laneVectors = this.getLane(head, lane);
-        var fx = laneVectors.nx**2 * laneVectors.px + laneVectors.ny**2 * x + laneVectors.nx * laneVectors.ny * (laneVectors.py - y);
-        var fy = laneVectors.ny**2 * laneVectors.py + laneVectors.nx**2 * y + laneVectors.nx * laneVectors.ny * (laneVectors.px - x);
-        return Math.sqrt((x-fx)**2 + (y-fy)**2);
+        var k = laneVectors.nx * (x - laneVectors.px) - laneVectors.ny * (y - laneVectors.py);
+        var fx = laneVectors.px + k * laneVectors.nx;
+        var fy = laneVectors.py - k * laneVectors.ny;
+        return {x: fx, y: fy};
+    }
+
+    distanceToLane(x, y, head, lane) {
+        var point = this.getClosestPointInLane(x, y, head, lane);
+        return Math.sqrt((x - point.x)**2 + (y - point.y)**2);
     }
 
     addCar(car) {
         this.cars.push(car);
+        this.carHashes.push(car.hash);
     }
 
     removeCar(car) {
-        var index = this.cars.indexOf(car);
+        var index = this.carHashes.indexOf(car.hash);
         if (index >= 0) {
             this.cars.splice(index, 1);
+            this.carHashes.splice(index, 1);
         }
+    }
+
+    getCarIndex(car) {
+        return this.carHashes.indexOf(car.hash);
     }
 }

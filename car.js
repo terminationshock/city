@@ -1,5 +1,6 @@
 class Car {
     constructor(tile, carImages) {
+        this.hash = generateRandomId();
         this.driver = new CarAI();
         this.colorId = carImages[Math.floor(Math.random() * carImages.length)];
         this.typeId = Math.floor(Math.random() * config.Car.numTypes);
@@ -14,6 +15,10 @@ class Car {
         this.group.destroy();
     }
 
+    equals(other) {
+        return this.hash === other.hash;
+    }
+
     startInParkingLot(tile) {
         this.v = 0;
         this.tile = tile;
@@ -21,9 +26,9 @@ class Car {
         this.head = this.tile.getRandomConnection();
         this.fhead = this.head;
 
-        var lane = this.tile.getLane(this.head, config.Street.lanePark);
+        var lane = this.tile.getLane(this.getHead(), config.Street.lanePark);
         this.x = this.tile.x;
-        if (this.head == 60 || this.head == 300) {
+        if (this.getHead() === 60 || this.getHead() === 300) {
             this.x += config.Tile.width / 4;
         } else {
             this.x -= config.Tile.width / 4;
@@ -32,8 +37,8 @@ class Car {
     }
 
     getFrameIndex() {
-        var col = config.Car.headingOrder.indexOf(this.head);
-        if (col == -1) {
+        var col = config.Car.headingOrder.indexOf(this.getHead());
+        if (col === -1) {
             error('Heading not in car sprite', this, this.disable);
         }
         return this.typeId * config.Car.headingOrder.length + col;
@@ -48,7 +53,7 @@ class Car {
         this.group = game.add.group();
         this.group.add(this.sprite);
 
-        while (this.group.z > this.tile.group.z + 1) {                
+        while (this.group.z > this.tile.group.z + 1) {
             game.world.moveDown(this.group);
         }
     }
@@ -65,13 +70,13 @@ class Car {
         var dt = 1. / config.World.stepsPerSecond;
         this.waiting += dt;
 
-        if (this.v == 0) {
+        if (convertInt(this.v) === 0) {
             if (this.isParking()) {
                 this.waiting = 0;
             }
         } else {
-            var dx = Math.sin(this.head * Math.PI/180) * this.v * dt;
-            var dy = -Math.cos(this.head * Math.PI/180) * this.v * dt;
+            var dx = Math.sin(this.getHead() * Math.PI/180) * this.v * dt;
+            var dy = -Math.cos(this.getHead() * Math.PI/180) * this.v * dt;
 
             if (false) {
                 //callqueueinsert       
@@ -90,6 +95,12 @@ class Car {
 
                 if (this.group.z > this.tile.group.z + 1) {
                     game.world.moveDown(this.group);
+                } else if (this.group.z < this.tile.group.z + 1) {
+                    game.world.moveUp(this.group);
+                }
+
+                if (this.group.z > this.tile.group.z + 1) {
+                    game.world.moveDown(this.group);
                 }
             }
         }
@@ -104,21 +115,21 @@ class Car {
         for (var i = 0; i < this.tile.streetNeighbours.length; i++) {
             var tile = this.tile.streetNeighbours[i];
             if (tile.inside(this.x, this.y)) {
-                var head = this.tile.neighbourConnections[tile];
-                if (this.head == head) {
+                var head = this.tile.getNeighbourConnection(tile);
+                if (this.getHead() === convertInt(head)) {
                     this.laneAssist();
                     if (this.tile.inside(this.x, this.y)) {
                         return;
                     }
                 }
 
-                if (this.isInFront(tile, this.x, this.y, this.head)) {
-                    //this.oldTile = this.tile;                       
+                if (this.isInFront(tile, this.x, this.y, this.getHead())) {
+                    //this.oldTile = this.tile;                 
                     this.tile.removeCar(this);
                     this.tile = tile;
                     this.tile.addCar(this);
 
-                    //parkNow
+                    //parkNow                       
                     return;
                 }
             }
@@ -126,15 +137,15 @@ class Car {
     }
 
     isParking() {
-        return this.v == 0 && [this.callbackPark, this.callbackLeaveParkingLot].indexOf(this.queue[0]) >= 0;
+        return convertInt(this.v) === 0 && [this.callbackPark, this.callbackLeaveParkingLot].includes(this.queue[0]);
     }
 
     getHead() {
-        return this.head;
+        return convertInt(this.head);
     }
 
     getNextHead(turn) {
-        var index = config.Car.headingOrder.indexOf(this.head) + turn;
+        var index = config.Car.headingOrder.indexOf(this.getHead()) + turn;
         if (index < 0) {
             index += config.Car.headingOrder.length;
         } else if (index >= config.Car.headingOrder.length) {
@@ -144,22 +155,17 @@ class Car {
     }
 
     laneAssist() {
-        var lane = this.tile.getLane(this.head, config.Street.laneDrive);
-
-        var fx = lane.nx**2 * lane.px + lane.ny**2 * this.x + lane.nx * lane.ny * (lane.py - this.y);
-        var fy = lane.ny**2 * lane.py + lane.nx**2 * this.y + lane.nx * lane.ny * (lane.px - this.x);
-        this.x = fx;
-        this.y = fy;
+        var point = this.tile.getClosestPointInLane(this.x, this.y, this.getHead(), config.Street.laneDrive);
+        this.x = point.x;
+        this.y = point.y;
     }
 
     isInFront(other, x, y, head) {
         var dx = other.x - x;
         var dy = other.y - y;
         var direction = this.getHeadFromDxDy(dx, dy);
-        if ([direction, direction+360].indexOf(head) >= 0) {
-            if (head + 60 < angle && angle < head + 300) {
-                return false;
-            }
+        if ((head + 60 < direction && direction < head + 300) || (head + 60 < direction+360 && direction+360 < head + 300)) {
+            return false;
         }
         return true;
     }
@@ -184,7 +190,7 @@ class Car {
 
     callbackLeaveParkingLot() {
         for (var i = 0; i < this.tile.cars.length; i++) {
-            if (this.tile.cars[i] !== this && !this.tile.cars[i].isParking() && this.tile.cars[i].getHead() == this.head) {
+            if (!this.equals(this.tile.cars[i]) && !this.tile.cars[i].isParking() && this.tile.cars[i].getHead() === this.getHead()) {
                 return false;
             }
         }
@@ -228,7 +234,7 @@ class Car {
         }
 
         if (!this.tile.isStraightOrCurve()) {
-            var index = this.tile.cars.indexOf(this);
+            var index = this.tile.getCarIndex(this);
             for (var i = 0; i < index; i++) {
                 if (this.tile.cars[i].waiting <= config.Car.waitBlocked) {
                     this.v = 0;

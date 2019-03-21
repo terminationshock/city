@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <script src="phaser.min.js"></script>
+    <script src="error.js"></script>
+    <script src="utils.js"></script>
+    <script src="tile.js"></script>
+    <script src="tile_test.js"></script>
+    <script src="carai.js"></script>
+    <script src="carai_test.js"></script>
+    <script src="car.js"></script>
+    <script src="car_test.js"></script>
+</head>
+<body>
+    <script>
+        var game = new Phaser.Game(1, 1, Phaser.CANVAS, '', { preload: preload, create: create });
+        var config;
+
+        function preload() {
+            game.load.json('config', 'config.json');
+        }
+
+        function create() {
+            config = game.cache.getJSON('config');
+            new TileTest();
+            new CarAITest();
+            new CarTest();
+            console.log('Tests finished')
+        }
+    </script>
+</body>
+</html>
