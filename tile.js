@@ -208,9 +208,8 @@ class Tile {
 
     getClosestPointInLane(x, y, head, lane) {
         var laneVectors = this.getLane(head, lane);
-        var k = laneVectors.nx * (x - laneVectors.px) - laneVectors.ny * (y - laneVectors.py);
-        var fx = laneVectors.px + k * laneVectors.nx;
-        var fy = laneVectors.py - k * laneVectors.ny;
+        var fx = laneVectors.nx**2 * laneVectors.px + laneVectors.ny**2 * x + laneVectors.nx * laneVectors.ny * (laneVectors.py - y)
+        var fy = laneVectors.ny**2 * laneVectors.py + laneVectors.nx**2 * y + laneVectors.nx * laneVectors.ny * (laneVectors.px - x)
         return {x: fx, y: fy};
     }
 
