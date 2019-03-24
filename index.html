@@ -42,6 +42,7 @@
         function create() {
             cursors = game.input.keyboard.createCursorKeys();
 
+            game.stage.backgroundColor = '#585b58';
             map.loadMap(game.cache.getText('world'));
             map.initTiles(loader.houses, loader.trees, loader.cars);
 
