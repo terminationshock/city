@@ -5,7 +5,8 @@
         "width": 128,
         "height": 74,
         "imgHeight": 94,
-        "probHouse": 0.9
+        "probHouse": 0.9,
+        "probCar": 0.5
     },
     "Tree": {
         "numTrees": 6,
@@ -16,7 +17,8 @@
         "highways": ["r0081", "r0085"],
         "straights": ["r0017", "r0021", "r0081", "r0085"],
         "lanePark": 25,
-        "laneDrive": 9
+        "laneDrive": 9,
+        "centerSizeFactor": 0.7
     },
     "Car": {
         "imgSize": 32,
@@ -25,9 +27,14 @@
         "velocityTurn": 30,
         "velocityCity": 50,
         "velocityHighway": 80,
-        "waitBlocked": 10
+        "waitBlocked": 10,
+        "collisionSpacing": 3,
+        "bezierFactor": 0.09
     },
     "World": {
         "stepsPerSecond": 30
+    },
+    "AI": {
+        "probStepDrive": 0.001
     }
 }

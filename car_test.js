@@ -11,14 +11,26 @@ class CarTest {
         this.car = new Car(this.tile, ['colorId']);
         this.car.typeId = 1;
         this.car.driver = new DriverMock();
+        this.otherCar = new Car(this.tile, ['colorId']);
 
         this.testInit();
         this.testGetFrameIndex();
         this.testGetNextHead();
+        this.testGetClosestHead();
+        this.testGetTurnDirection();
+        this.testGetTurnPath();
         this.testIsInFront();
         this.testGetHeadFromDxDy();
+        this.testGetMaxDistancePerStep();
+        this.testCollision();
 
         this.testCallbackPark();
+        this.testCallbackLeaveParkingLot();
+        this.testCallbackChangeLane();
+        this.testCallbackProceedToTargetLane();
+        this.testCallbackDrive();
+        this.testCallbackWait();
+        this.testCallbackTurn();
     }
 
     testInit() {
@@ -35,6 +47,39 @@ class CarTest {
         console.assert(this.car.getNextHead(-1) === 45);
         console.assert(this.car.getNextHead(8) === 240);
         console.assert(this.car.getNextHead(-9) === 225);
+    }
+
+    testGetClosestHead() {
+        console.assert(this.car.getClosestHead(240, false) === 240);
+        console.assert(this.car.getClosestHead(245, false) === 240);
+        console.assert(this.car.getClosestHead(314, false) === 315);
+        console.assert(this.car.getClosestHead(359, false) === 0);
+        console.assert(this.car.getClosestHead(10, false) === 0);
+        console.assert(this.car.getClosestHead(225, false) === 225);
+        console.assert(this.car.getClosestHead(239, false) === 240);
+
+        console.assert(this.car.getClosestHead(240, true) === 240);
+        console.assert(this.car.getClosestHead(254, true) === 240);
+        console.assert(this.car.getClosestHead(359, true) === 315);
+        console.assert(this.car.getClosestHead(0, true) === 0);
+        console.assert(this.car.getClosestHead(44, true) === 0);
+        console.assert(this.car.getClosestHead(225, true) === 225);
+        console.assert(this.car.getClosestHead(239, true) === 225);
+    }
+
+    testGetTurnDirection() {
+        console.assert(this.car.getTurnDirection(0, 90) === 1);
+        console.assert(this.car.getTurnDirection(0, 270) === -1);
+        console.assert(this.car.getTurnDirection(90, 180) === 1);
+        console.assert(this.car.getTurnDirection(90, 0) === -1);
+        console.assert(this.car.getTurnDirection(180, 270) === 1);
+        console.assert(this.car.getTurnDirection(180, 90) === -1);
+        console.assert(this.car.getTurnDirection(270, 0) === 1);
+        console.assert(this.car.getTurnDirection(270, 180) === -1);
+    }
+
+    testGetTurnPath() {
+        
     }
 
     testIsInFront() {
@@ -55,11 +100,72 @@ class CarTest {
         console.assert(this.car.getHeadFromDxDy(-1, 0) === 270);
     }
 
+    testGetMaxDistancePerStep() {
+        this.car.v = 0;
+        console.assert(this.car.getMaxDistancePerStep() === 0);
+        this.car.v = config.World.stepsPerSecond * 1.5;
+        console.assert(this.car.getMaxDistancePerStep() === 2);
+    }
+
+    testCollision() {
+            
+    }
+
     testCallbackPark() {
+        this.car.queue = [];
         var res = this.car.callbackPark();
         console.assert(this.car.v === 0);
-        console.assert(this.car.queue.length === 2);
-        console.assert(this.car.queue[1] === this.car.callbackLeaveParkingLot);
+        console.assert(this.car.queue.length === 1);
+        console.assert(this.car.queue[0] === this.car.callbackLeaveParkingLot);
         console.assert(res);
+    }
+
+    testCallbackLeaveParkingLot() {
+        this.car.queue = [];
+        var res = this.car.callbackLeaveParkingLot();
+        console.assert(this.car.queue.length === 3);
+        console.assert(this.car.queue[2] === this.car.callbackDrive);
+        console.assert(res);
+
+        this.car.tile.addCar(this.otherCar);
+        this.otherCar.head = this.car.head;
+        this.otherCar.queue = [this.otherCar.callbackDrive];
+        var res = this.car.callbackLeaveParkingLot();
+        console.assert(!res);
+    }
+
+    testCallbackChangeLane() {
+        var head = this.car.head;
+        var res = this.car.callbackChangeLane(-2);
+        console.assert(this.car.getNextHead(4) === head);
+        console.assert(res);
+    }
+
+    testCallbackProceedToTargetLane() {
+        this.tile.getDistanceToLane = function(a,b,c,d) {
+            return 0;
+        };
+        var res = this.car.callbackProceedToTargetLane(300, 0);
+        console.assert(this.car.v === config.Car.velocityTurn);
+        console.assert(this.car.head === 300);
+        console.assert(res);
+        this.tile.getDistanceToLane = function(a,b,c,d) {
+            return 100;
+        };
+        var res = this.car.callbackProceedToTargetLane(300, 0);
+        console.assert(!res);
+    }
+
+    testCallbackDrive() {
+            
+    }
+
+    testCallbackWait() {
+        var res = this.car.callbackWait();
+        console.assert(res);
+    }
+
+    testCallbackTurn() {
+            
     }
 }

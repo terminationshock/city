@@ -63,6 +63,14 @@ class Tile {
         return this.connections.length === 2;
     }
 
+    isJunctionOrCrossing() {
+        return this.connections.length > 2;
+    }
+
+    isDeadEnd() {
+        return this.connections.length === 1;
+    }
+
     generateHouse(houseImages) {
         if (!this.isGrass()) {
             return;
@@ -91,8 +99,10 @@ class Tile {
 
     generateCars(carImages) {
         if (this.isStreet() && this.isStraight() && !this.isHighway()) {
-            var car = new Car(this, carImages);
-            this.addCar(car);
+            if (Math.random() < config.Tile.probCar) {
+                var car = new Car(this, carImages);
+                this.addCar(car);
+            }
         }
     }
 
@@ -185,6 +195,17 @@ class Tile {
         return Math.abs(xx + ratio*yy) < factor * config.Tile.width * 0.5 && Math.abs(xx - ratio*yy) < factor * config.Tile.width * 0.5;
     }
 
+    nearCenter(x, y) {
+        return this.inside(x, y, config.Street.centerSizeFactor);
+    }
+
+    centerAhead(x, head) {
+        if (0 < head && head < 180) {
+            return x < this.x;
+        }
+        return x > this.x;
+    }
+
     getRandomConnection() {
         if (this.connections.length > 0) {
             return this.connections[Math.floor(Math.random() * this.connections.length)];
@@ -210,12 +231,19 @@ class Tile {
         var laneVectors = this.getLane(head, lane);
         var fx = laneVectors.nx**2 * laneVectors.px + laneVectors.ny**2 * x + laneVectors.nx * laneVectors.ny * (laneVectors.py - y)
         var fy = laneVectors.ny**2 * laneVectors.py + laneVectors.nx**2 * y + laneVectors.nx * laneVectors.ny * (laneVectors.px - x)
-        return {x: fx, y: fy};
+        return new Point(fx, fy);
     }
 
-    distanceToLane(x, y, head, lane) {
+    getDistanceToLane(x, y, head, lane) {
         var point = this.getClosestPointInLane(x, y, head, lane);
         return Math.sqrt((x - point.x)**2 + (y - point.y)**2);
+    }
+
+    getLaneTargetPoint(head, lane) {
+        var dist = 0.2 * config.Tile.width;
+        var x = this.x + Math.sin(head * Math.PI/180) * dist;
+        var y = this.y - Math.cos(head * Math.PI/180) * dist;
+        return this.getClosestPointInLane(x, y, head, lane);
     }
 
     addCar(car) {
@@ -233,5 +261,23 @@ class Tile {
 
     getCarIndex(car) {
         return this.carHashes.indexOf(car.hash);
+    }
+
+    hasFreeParkingLot(head) {
+        if (!this.isStraight()) {
+            return false;
+        }
+        if (this.isHighway()) {
+            return false;
+        }
+        if (!this.connections.includes(convertInt(head))) {
+            return false;
+        }
+        for (var i = 0; i < this.cars.length; i++) {
+            if (this.cars[i].isParking() && this.cars[i].getHead() === convertInt(head)) {
+                return false;
+            }
+        }
+        return true;
     }
 }

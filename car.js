@@ -9,6 +9,7 @@ class Car {
         this.startInParkingLot(tile);
         this.queue = [this.callbackPark];
         this.waiting = 0;
+        this.turnPath = null;
     }
 
     disable() {
@@ -78,8 +79,11 @@ class Car {
             var dx = Math.sin(this.getHead() * Math.PI/180) * this.v * dt;
             var dy = -Math.cos(this.getHead() * Math.PI/180) * this.v * dt;
 
-            if (false) {
-                //callqueueinsert       
+            var xTry = this.x + config.Car.collisionSpacing * dx;
+            var yTry = this.y + config.Car.collisionSpacing * dy;
+
+            if (this.collision(xTry, yTry, this.head)) {
+                this.queue.splice(0, 0, this.callbackWait);
             } else {
                 this.waiting = 0;
                 this.x += dx;
@@ -154,6 +158,87 @@ class Car {
         return config.Car.headingOrder[index];
     }
 
+    getClosestHead(head, floor) {
+        if (head < 0 || 360 <= head) {
+            error('Heading out of range', this, this.disable);
+        }
+
+        var headingOrderCopy = config.Car.headingOrder.slice(0);
+        if (floor) {
+            headingOrderCopy.sort(function (a, b) {
+                return a-b;
+            });
+            for (var i = 0; i < headingOrderCopy.length-1; i++) {
+                if (headingOrderCopy[i] <= head && head < headingOrderCopy[i+1]) {
+                    return headingOrderCopy[i];
+                }
+            }
+            return headingOrderCopy.reverse()[0];
+        } else {
+            if (head > 300) {
+                headingOrderCopy[config.Car.headingOrder.indexOf(0)] = 360;
+            }
+            var closestHead = headingOrderCopy.reduce(function (a, b) {
+                if (Math.abs(a-head) < Math.abs(b-head)) {
+                    return a;
+                }
+                return b;
+            });
+            if (closestHead === 360) {
+                return 0;
+            }
+            return closestHead;
+        }
+    }
+
+    getTurnDirection(fromHead, toHead) {
+        if (0 < toHead-fromHead && toHead-fromHead < 180) {
+            return 1;
+        } else if (-180 <= toHead-fromHead && toHead-fromHead < 0) {
+            return -1;
+        } else if (toHead-fromHead >= 180) {
+            return -1;
+        } else if (-180 > toHead-fromHead) {
+            return 1;
+        }
+        error('Invalid turn', this, this.disable);
+    }
+
+    getTurnPath(targetHead) {
+        var turn = this.getTurnDirection(this.head, targetHead);
+
+        var p1 = new Point(this.x, this.y);
+        var dx1 = Math.sin(this.head * Math.PI/180);
+        var dy1 = -Math.cos(this.head * Math.PI/180);
+
+        var p2 = this.tile.getLaneTargetPoint(targetHead, config.Street.laneDrive);
+        var dx2 = Math.sin(targetHead * Math.PI/180);
+        var dy2 = -Math.cos(targetHead * Math.PI/180);
+
+        var deltaHead = 0;
+        if (turn < 0) {
+            if (targetHead > this.head) {
+                deltaHead = this.head - (targetHead - 360);
+            } else {
+                deltaHead = this.head - targetHead;
+            }
+        } else if (turn > 0) {
+            if (targetHead < this.head) {
+                deltaHead = (targetHead + 360) - this.head;
+            } else {
+                deltaHead = targetHead - this.head;
+            }
+        }
+
+        var bezierFactor = config.Car.bezierFactor * deltaHead;
+        var curve = new BezierCurve([p1,
+                                     new Point(p1.x + bezierFactor*dx1, p1.y + bezierFactor*dy1),
+                                     new Point(p2.x - bezierFactor*dx2, p2.y - bezierFactor*dy2),
+                                     p2]);
+        var dt = 1. / config.World.stepsPerSecond;
+        return curve.getPath(config.Car.velocityTurn * dt);
+    }
+
     laneAssist() {
         var point = this.tile.getClosestPointInLane(this.x, this.y, this.getHead(), config.Street.laneDrive);
         this.x = point.x;
@@ -176,6 +261,15 @@ class Car {
             head += 360;
         }
         return head;
+    }
+
+    getMaxDistancePerStep() {
+        var dt = 1. / config.World.stepsPerSecond;
+        return Math.ceil(this.v * dt);
+    }
+
+    collision(x, y, head) {
+        return false;           
     }
 
     callbackPark() {
@@ -214,11 +308,9 @@ class Car {
     callbackProceedToTargetLane(targetHead, targetLane) {
         this.v = config.Car.velocityTurn;
 
-        var dt = 1. / config.World.stepsPerSecond;
-        var maxDistancePerStep = Math.ceil(this.v * dt);
-        var distanceToLane = this.tile.distanceToLane(this.x, this.y, targetHead, targetLane);
-        if (distanceToLane < maxDistancePerStep) {
-            //if (collision)
+        var distanceToLane = this.tile.getDistanceToLane(this.x, this.y, targetHead, targetLane);
+        if (distanceToLane < this.getMaxDistancePerStep()) {
+            //if (collision)            
             this.head = targetHead;
             this.fhead = this.head;
             return true;
@@ -227,6 +319,10 @@ class Car {
     }
 
     callbackDrive() {
+        if (this.queue.length !== 1) {
+            error('Callback queue corrupted', this, this.disable);
+        }
+
         if (this.tile.isHighway()) {
             this.v = config.Car.velocityHighway;
         } else {
@@ -243,6 +339,45 @@ class Car {
             }
         }
 
+        return false;
+    }
+
+    callbackWait() {
+        return true;
+    }
+
+    callbackTurn(targetHead) {
+        this.v = 0.001;
+
+        var distanceToLane = this.tile.getDistanceToLane(this.x, this.y, targetHead, config.Street.laneDrive);
+        if (distanceToLane < this.getMaxDistancePerStep()) {
+            this.turnPath = null;
+            return true;
+        }
+
+        if (this.turnPath === null) {
+            this.turnPath = this.getTurnPath(targetHead);
+        }
+
+        var head = this.turnPath[0].head;
+        var x = this.turnPath[0].x;
+        var y = this.turnPath[0].y;
+
+        var closestHead = this.getClosestHead(head, true);
+        if (this.collision(x, y, closestHead)) {
+            this.v = 0;
+            return false;
+        }
+
+        this.head = head;
+        this.x = x;
+        this.y = y;
+        this.turnPath.splice(0, 1);
+
+        if (this.turnPath.length === 0) {
+            this.turnPath = null;
+            return true;
+        }
         return false;
     }
 }

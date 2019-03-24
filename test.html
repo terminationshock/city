@@ -9,6 +9,8 @@
     <script src="tile_test.js"></script>
     <script src="carai.js"></script>
     <script src="carai_test.js"></script>
+    <script src="bezier.js"></script>
+    <script src="bezier_test.js"></script>
     <script src="car.js"></script>
     <script src="car_test.js"></script>
 </head>
@@ -25,6 +27,7 @@
             config = game.cache.getJSON('config');
             new TileTest();
             new CarAITest();
+            new BezierCurveTest();
             new CarTest();
             console.log('Tests finished')
         }
