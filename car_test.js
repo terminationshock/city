@@ -18,7 +18,7 @@ class CarTest {
         this.testGetNextHead();
         this.testGetClosestHead();
         this.testGetTurnDirection();
-        this.testGetTurnPath();
+        this.testGetNextTurn();
         this.testIsInFront();
         this.testGetHeadFromDxDy();
         this.testGetMaxDistancePerStep();
@@ -26,11 +26,11 @@ class CarTest {
 
         this.testCallbackPark();
         this.testCallbackLeaveParkingLot();
+        this.testCallbackEnterParkingLot();
         this.testCallbackChangeLane();
         this.testCallbackProceedToTargetLane();
         this.testCallbackDrive();
         this.testCallbackWait();
-        this.testCallbackTurn();
     }
 
     testInit() {
@@ -78,8 +78,8 @@ class CarTest {
         console.assert(this.car.getTurnDirection(270, 180) === -1);
     }
 
-    testGetTurnPath() {
-        
+    testGetNextTurn() {
+            
     }
 
     testIsInFront() {
@@ -127,11 +127,20 @@ class CarTest {
         console.assert(this.car.queue[2] === this.car.callbackDrive);
         console.assert(res);
 
+        this.car.tile.cars = [],
         this.car.tile.addCar(this.otherCar);
         this.otherCar.head = this.car.head;
         this.otherCar.queue = [this.otherCar.callbackDrive];
         var res = this.car.callbackLeaveParkingLot();
         console.assert(!res);
+    }
+
+    testCallbackEnterParkingLot() {
+        this.car.queue = [];
+        var res = this.car.callbackEnterParkingLot();
+        console.assert(this.car.queue.length === 3);
+        console.assert(this.car.queue[2] === this.car.callbackPark);
+        console.assert(res);
     }
 
     testCallbackChangeLane() {
@@ -157,15 +166,17 @@ class CarTest {
     }
 
     testCallbackDrive() {
-            
+        this.car.queue = [this.car.callbackDrive];
+        this.car.tile.cars = [];
+        this.car.tile.addCar(this.otherCar);
+        this.car.tile.addCar(this.car);
+        var res = this.car.callbackDrive();
+        console.assert(!res);
+        console.assert(this.car.v === 0);
     }
 
     testCallbackWait() {
         var res = this.car.callbackWait();
         console.assert(res);
-    }
-
-    testCallbackTurn() {
-            
     }
 }

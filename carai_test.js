@@ -1,5 +1,0 @@
-class CarAITest {
-    constructor() {
-
-    }
-}
