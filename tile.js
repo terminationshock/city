@@ -13,7 +13,6 @@ class Tile {
         this.trees = null;
         this.cars = [];
         this.carHashes = [];
-        this.group = null;
     }
 
     updateImage(fileId) {
@@ -22,14 +21,13 @@ class Tile {
         this.imgY = this.imgY + config.Tile.imgHeight - image.height;
     }
 
-    draw(group) {
-        this.group = group;
-        this.group.add(game.add.sprite(this.imgX, this.imgY, this.fileId));
+    draw(masterGroup, rowGroup) {
+        rowGroup.add(game.add.sprite(this.imgX, this.imgY, this.fileId));
         if (this.trees !== null) {
-            this.trees.draw(this.group);
+            this.trees.draw(rowGroup);
         }
         this.cars.forEach(function (car) {
-            car.draw();
+            car.draw(masterGroup);
         });
     }
 
@@ -41,7 +39,6 @@ class Tile {
         this.cars.forEach(function (car) {
             car.update();
         });
-                        
     }
 
     isGrass() {

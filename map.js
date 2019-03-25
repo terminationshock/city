@@ -2,13 +2,15 @@ class Map {
     constructor() {
         this.tiles = [];
         this.tileRowId = [];
-        this.groups = [];
+        this.masterGroup = null;
+        this.rowGroups = [];
         this.nCols = 0;
         this.nRows = 0;
     }
 
     loadMap(fileContent) {
         var lines = fileContent.trim().split('\n');
+        this.masterGroup = game.add.group();
 
         for (var y = 0; y < lines.length; y++) {
             if (lines[y].includes(',')) {
@@ -17,7 +19,9 @@ class Map {
                 this.nCols = Math.max(this.nCols, fileIds.length);
 
                 var group = game.add.group();
-                this.groups.push(group);
+                group.yz = (y-1)*config.Tile.dy + config.Tile.height/2 - config.Car.imgSize*2/3;
+                this.rowGroups.push(group);
+                this.masterGroup.add(group);
 
                 var xoff = -config.Tile.dx * (1 - (y % 2));
 
@@ -56,7 +60,7 @@ class Map {
 
     draw() {
         for (var i = 0; i < this.tiles.length; i++) {
-            this.tiles[i].draw(this.groups[this.tileRowId[i]]);
+            this.tiles[i].draw(this.masterGroup, this.rowGroups[this.tileRowId[i]]);
         }
     }
 
@@ -64,6 +68,7 @@ class Map {
         this.tiles.forEach(function (tile) {
             tile.update();
         });
+        this.masterGroup.sort('yz');
     }
 }
 

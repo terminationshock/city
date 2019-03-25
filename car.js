@@ -5,7 +5,6 @@ class Car {
         this.colorId = carImages[Math.floor(Math.random() * carImages.length)];
         this.typeId = Math.floor(Math.random() * config.Car.numTypes);
         this.sprite = null;
-        this.group = null;
         this.tile = tile;
         this.oldTile = 'null';
         this.v = 0;
@@ -19,8 +18,8 @@ class Car {
     }
 
     disable() {
+        this.y = -100;
         this.error = true;
-        this.group.destroy();
     }
 
     equals(other) {
@@ -48,22 +47,16 @@ class Car {
         return this.typeId * config.Car.headingOrder.length + col;
     }
 
-    draw() {
+    draw(group) {
         var x = this.x - config.Car.imgSize/2;
         var y = this.y - config.Car.imgSize/2;
         this.sprite = game.add.sprite(x, y, this.colorId);
         this.sprite.frame = this.getFrameIndex();
-
-        this.group = game.add.group();
-        this.group.add(this.sprite);
-
-        while (this.group.z > this.tile.group.z + 1) {
-            game.world.moveDown(this.group);
-        }
+        group.add(this.sprite);
     }
 
     update() {
-        if (this.group.game === null) {
+        if (this.error) {
             return;
         }
 
@@ -100,13 +93,7 @@ class Car {
 
                 this.sprite.x = this.x - config.Car.imgSize/2;
                 this.sprite.y = this.y - config.Car.imgSize/2;
-
-                while (this.group.z > this.tile.group.z + 1) {
-                    game.world.moveDown(this.group);
-                }
-                while (this.group.z < this.tile.group.z + 1) {
-                    game.world.moveUp(this.group);
-                }
+                this.sprite.yz = this.y;
             }
         }
         this.sprite.frame = this.getFrameIndex();
