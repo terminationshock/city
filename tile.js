@@ -41,14 +41,15 @@ class Tile {
         this.cars.forEach(function (car) {
             car.update();
         });
+                        
     }
 
     isGrass() {
-        return this.fileId === 'g0000';
+        return this.fileId === config.Tile.grass;
     }
 
     isStreet() {
-        return this.fileId.startsWith('r');
+        return this.fileId.startsWith(config.Tile.streetPrefix);
     }
 
     isStraight() {

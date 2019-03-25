@@ -101,14 +101,11 @@ class Car {
                 this.sprite.x = this.x - config.Car.imgSize/2;
                 this.sprite.y = this.y - config.Car.imgSize/2;
 
-                if (this.group.z > this.tile.group.z + 1) {
+                while (this.group.z > this.tile.group.z + 1) {
                     game.world.moveDown(this.group);
-                } else if (this.group.z < this.tile.group.z + 1) {
-                    game.world.moveUp(this.group);
                 }
-
-                if (this.group.z > this.tile.group.z + 1) {
-                    game.world.moveDown(this.group);
+                while (this.group.z < this.tile.group.z + 1) {
+                    game.world.moveUp(this.group);
                 }
             }
         }
@@ -402,7 +399,7 @@ class Car {
 
         if (this.plannedHead === null) {
             if (!this.tile.isStraight() && this.tile.nearCenter(this.x, this.y)) {
-                this.plannedHead = this.getNextTurn();                  
+                this.plannedHead = this.getNextTurn();
                 if (this.plannedHead === this.getHead()) {
                     this.queue.push(this.callbackDrive);
                 } else {

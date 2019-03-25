@@ -6,7 +6,9 @@
         "height": 74,
         "imgHeight": 94,
         "probHouse": 0.9,
-        "probCar": 0.5
+        "probCar": 0.5,
+        "grass": "g0000",
+        "streetPrefix": "r"
     },
     "Tree": {
         "numTrees": 6,
@@ -18,7 +20,8 @@
         "straights": ["r0017", "r0021", "r0081", "r0085"],
         "lanePark": 25,
         "laneDrive": 9,
-        "centerSizeFactor": 0.7
+        "centerSizeFactor": 0.7,
+        "color": "#585b58"
     },
     "Car": {
         "imgSize": 32,

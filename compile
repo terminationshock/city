@@ -1,0 +1,17 @@
+#!/bin/bash
+
+js=game.js
+
+cat error.js >> _$js
+cat utils.js >> _$js
+cat loader.js >> _$js
+cat trees.js >> _$js
+cat tile.js >> _$js
+cat map.js >> _$js
+cat carai.js >> _$js
+cat bezier.js >> _$js
+cat car.js >> _$js
+cat main.js >> _$js
+
+minify _$js > $js
+rm _$js
