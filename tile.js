@@ -18,7 +18,7 @@ class Tile {
     updateImage(fileId) {
         this.fileId = fileId;
         var image = game.cache.getImage(this.fileId);
-        this.imgY = this.imgY + config.Tile.imgHeight - image.height;
+        this.imgY = this.imgY + config.Tile.height - image.height;
     }
 
     draw(masterGroup, rowGroup) {

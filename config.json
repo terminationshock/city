@@ -4,7 +4,6 @@
         "dy": 37,
         "width": 128,
         "height": 74,
-        "imgHeight": 94,
         "probHouse": 0.9,
         "probCar": 0.5,
         "grass": "g0000",
