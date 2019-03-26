@@ -1,6 +1,6 @@
 class CarAI {
     leaveParkingLot() {
-        return Math.random() < config.AI.proStepDrive;
+        return Math.random() < config.AI.probStepDrive;
     }
 
     decideTurn(options) {

@@ -20,6 +20,7 @@ class Car {
     disable() {
         this.y = -100;
         this.error = true;
+        this.sprite.destroy();
     }
 
     equals(other) {
@@ -48,11 +49,18 @@ class Car {
     }
 
     draw(group) {
-        var x = this.x - config.Car.imgSize/2;
-        var y = this.y - config.Car.imgSize/2;
-        this.sprite = game.add.sprite(x, y, this.colorId);
-        this.sprite.frame = this.getFrameIndex(this.getHead());
+        this.sprite = game.add.sprite(0, 0, this.colorId);
+        this.updateSprite(this.x, this.y, this.getHead());
         group.add(this.sprite);
+    }
+
+    updateSprite(x, y, head) {
+        if (this.sprite !== null) {
+            this.sprite.x = x - config.Car.imgSize/2;
+            this.sprite.y = y - config.Car.imgSize/2;
+            this.sprite.yz = this.y;
+            this.sprite.frame = this.getFrameIndex(head);
+        }
     }
 
     update() {
@@ -89,22 +97,12 @@ class Car {
                 if (!this.tile.inside(this.x, this.y)) {
                     error('Car has left its tile', this, this.disable);
                 }
-
-                this.sprite.yz = this.y;
             }
             this.updateSprite(this.x, this.y, intHead);
         }
 
         if (this.waiting > config.Car.waitingForever) {
             error('Car is waiting forever', this, this.disable);
-        }
-    }
-
-    updateSprite(x, y, head) {
-        if (this.sprite !== null) {
-            this.sprite.x = x - config.Car.imgSize/2;
-            this.sprite.y = y - config.Car.imgSize/2;
-            this.sprite.frame = this.getFrameIndex(head);
         }
     }
 
