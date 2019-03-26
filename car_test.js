@@ -2,6 +2,16 @@ class DriverMock {
     leaveParkingLot() {
         return true;
     }
+
+    decideTurn(conn) {
+        return conn;
+    }
+}
+
+class SpriteMock {
+    getBounds() {
+        return new Phaser.Rectangle(0, 0, 100, 100);
+    }
 }
 
 class CarTest {
@@ -79,7 +89,22 @@ class CarTest {
     }
 
     testGetNextTurn() {
-            
+        var tile1 = new Tile('r0021', -20, -20);
+        var tile2 = new Tile('r0081', -20, 20);
+        var tile3 = new Tile('r0053', 20, 20);
+        var tile4 = new Tile('r0017', 20, -20);
+        var tiles = [this.car.tile, tile1, tile2, tile3, tile4];
+        this.tile.connections = [];
+        this.car.tile.computeAllNeighbours(tiles);
+        tiles.forEach(function (t) {
+            t.computeStreetConnections();
+        });
+        this.car.tile.computeStreetNeighbours(tiles);
+        this.car.oldTile = tile2.hash;
+        var res = this.car.getNextTurn();
+        console.assert(res.includes(60));
+        console.assert(res.includes(120));
+        console.assert(res.includes(300));
     }
 
     testIsInFront() {
@@ -108,7 +133,25 @@ class CarTest {
     }
 
     testCollideWith() {
-            
+        this.otherCar.error = true;
+        console.assert(!this.car.collideWith(this.otherCar));
+        console.assert(!this.car.collideWith(this.car));
+        this.otherCar.error = false;
+        this.otherCar.v = 0;
+        this.otherCar.queue = [this.otherCar.callbackPark];
+        console.assert(!this.car.collideWith(this.otherCar));
+        this.otherCar.v = 10;
+        this.otherCar.queue = [this.otherCar.callbackDrive];
+        this.car.head = 60;
+        this.otherCar.x = this.car.x + 10;
+        this.otherCar.y = this.car.y - 10;
+        this.car.sprite = new SpriteMock();
+        this.otherCar.sprite = new SpriteMock();
+        var check = [false, false, false, false, true, true, true, true, true, true, true, true, true, false, false, false];
+        for (var i = 0; i < config.Car.headingOrder.length; i++) {
+            this.otherCar.head = config.Car.headingOrder[i];
+            console.assert(this.car.collideWith(this.otherCar) === check[i]);
+        }
     }
 
     testCallbackPark() {

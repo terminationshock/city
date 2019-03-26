@@ -1,7 +1,6 @@
 var game = new Phaser.Game('100', '100', Phaser.CANVAS, 'canvas', { preload: preload, create: create, update: update });
 var loader = new Loader();
 var map = new Map();
-var houses = [];
 var config;
 var cursors;
 
@@ -32,7 +31,7 @@ function create() {
     game.world.resize(map.getWidth(), map.getHeight());
     map.draw();
 
-    var dt = 1. / config.World.stepsPerSecond;
+    var dt = 1.0 / config.World.stepsPerSecond;
     game.time.events.loop(dt, step);
 }
 

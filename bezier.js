@@ -27,16 +27,19 @@ class BezierCurve {
 
         var t0 = 0;
         var point1 = this.anchorPoints[0];
+        var point2 = null;
 
         while (t0 < 1) {
             var t = t0;
             var dxy = 0;
+            var dx = 0;
+            var dy = 0;
             while (dxy < wayPerStep) {
                 t += 0.005;
 
-                var point2 = this.get(t);
-                var dx = point2.x - point1.x;
-                var dy = point2.y - point1.y;
+                point2 = this.get(t);
+                dx = point2.x - point1.x;
+                dy = point2.y - point1.y;
                 dxy = Math.sqrt(dx**2 + dy**2);
             }
 

@@ -64,7 +64,7 @@ class Car {
             this.queue.shift();
         }
 
-        var dt = 1. / config.World.stepsPerSecond;
+        var dt = 1.0 / config.World.stepsPerSecond;
         this.waiting += dt;
 
         if (convertInt(this.v) === 0) {
@@ -230,7 +230,7 @@ class Car {
                                      new Point(p1.x + bezierFactor*dx1, p1.y + bezierFactor*dy1),
                                      new Point(p2.x - bezierFactor*dx2, p2.y - bezierFactor*dy2),
                                      p2]);
-        var dt = 1. / config.World.stepsPerSecond;
+        var dt = 1.0 / config.World.stepsPerSecond;
         return curve.getPath(config.Car.velocityTurn * dt);
     }
 
@@ -296,17 +296,16 @@ class Car {
     }
 
     getMaxDistancePerStep() {
-        var dt = 1. / config.World.stepsPerSecond;
+        var dt = 1.0 / config.World.stepsPerSecond;
         return Math.ceil(this.v * dt);
     }
 
     collision() {                     
-            for (var j = 0; j < this.tile.cars.length; j++) {
-                if (this.collideWith(this.tile.cars[j])) {
-                    return true;
-                }
+        for (var j = 0; j < this.tile.cars.length; j++) {
+            if (this.collideWith(this.tile.cars[j])) {
+                return true;
             }
-
+        }
         for (var i = 0; i < this.tile.neighbours.length; i++) {
             for (var j = 0; j < this.tile.neighbours[i].cars.length; j++) {
                 if (this.collideWith(this.tile.neighbours[i].cars[j])) {
