@@ -127,7 +127,7 @@ class Car {
                     this.tile.addCar(this);
                     this.plannedHead = null;
 
-                    //parkNow                       
+                    this.parkNow();
                     return;
                 }
             }
@@ -336,6 +336,12 @@ class Car {
             }
         }
         return Phaser.Rectangle.intersects(this.sprite.getBounds().scale(config.Car.collisionScale), other.sprite.getBounds().scale(config.Car.collisionScale));
+    }
+
+    parkNow() {
+        if (this.queue[0] === this.callbackDrive && this.driver.parkNow() && this.tile.hasFreeParkingLot(this.getHead())) {
+            this.queue = [this.callbackEnterParkingLot];
+        }
     }
 
     callbackPark() {

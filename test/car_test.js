@@ -6,6 +6,10 @@ class DriverMock {
     decideTurn(conn) {
         return conn;
     }
+
+    parkNow() {
+        return true;
+    }
 }
 
 class SpriteMock {
@@ -33,6 +37,7 @@ class CarTest {
         this.testGetHeadFromDxDy();
         this.testGetMaxDistancePerStep();
         this.testCollideWith();
+        this.testParkNow();
 
         this.testCallbackPark();
         this.testCallbackLeaveParkingLot();
@@ -152,6 +157,20 @@ class CarTest {
             this.otherCar.head = config.Car.headingOrder[i];
             console.assert(this.car.collideWith(this.otherCar) === check[i]);
         }
+    }
+
+    testParkNow() {
+        this.car.tile = new Tile('r0017', 0, 0);
+        this.car.tile.computeStreetConnections();
+        this.car.head = 60;
+        this.car.queue = [this.car.callbackLeaveParkingLot, this.car.callbackDrive];
+        this.car.parkNow();
+        console.assert(this.car.queue[0] === this.car.callbackLeaveParkingLot);
+        this.car.queue = [this.car.callbackDrive];
+        this.car.parkNow();
+        console.assert(this.car.queue.length === 1);
+        console.assert(this.car.queue[0] === this.car.callbackEnterParkingLot);
+        this.car.tile = this.tile;
     }
 
     testCallbackPark() {

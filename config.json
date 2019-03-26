@@ -37,6 +37,7 @@
         "stepsPerSecond": 30
     },
     "AI": {
-        "probStepDrive": 0.001
+        "probStepDrive": 0.001,
+        "probTilePark": 0.05
     }
 }
