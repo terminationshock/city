@@ -152,7 +152,7 @@ class CarTest {
         this.otherCar.y = this.car.y - 10;
         this.car.sprite = new SpriteMock();
         this.otherCar.sprite = new SpriteMock();
-        var check = [false, false, false, false, true, true, true, true, true, true, true, true, true, false, false, false];
+        var check = [false, false, false, false, false, true, true, true, true, true, true, true, false, false, false, false];
         for (var i = 0; i < config.Car.headingOrder.length; i++) {
             this.otherCar.head = config.Car.headingOrder[i];
             console.assert(this.car.collideWith(this.otherCar) === check[i]);

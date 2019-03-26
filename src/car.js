@@ -27,6 +27,10 @@ class Car {
         return this.hash === other.hash;
     }
 
+    closeTo(other) {
+        return (this.x-other.x)**2 + (this.y-other.y)**2 < (2.5*config.Car.imgSize)**2;
+    }
+
     startInParkingLot() {
         this.head = this.tile.getRandomConnection();
         var intHead = this.getHead();
@@ -58,7 +62,7 @@ class Car {
         if (this.sprite !== null) {
             this.sprite.x = x - config.Car.imgSize/2;
             this.sprite.y = y - config.Car.imgSize/2;
-            this.sprite.yz = this.y;
+            this.sprite.yz = y;
             this.sprite.frame = this.getFrameIndex(head);
         }
     }
@@ -98,10 +102,11 @@ class Car {
                     error('Car has left its tile', this, this.disable);
                 }
             }
+
             this.updateSprite(this.x, this.y, intHead);
         }
 
-        if (this.waiting > config.Car.waitingForever) {
+        if (this.waiting > config.Car.waitForever) {
             error('Car is waiting forever', this, this.disable);
         }
     }
@@ -325,6 +330,9 @@ class Car {
         if (this.equals(other)) {
             return false;
         }
+        if (!this.closeTo(other)) {
+            return false;
+        }
         if (other.isParking()) {
             return false;
         }
@@ -332,7 +340,7 @@ class Car {
         if (!this.isInFront(other, this.x, this.y, head)) {
             return false;
         }
-        for (var turn = 5; turn < 12; turn++) {
+        for (var turn = 4; turn < 13; turn++) {
             if (other.getNextHead(turn) === head) {
                 return false;
             }
