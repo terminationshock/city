@@ -9,6 +9,10 @@ class Car {
         this.oldTile = 'null';
         this.v = 0;
         this.head = 0;
+        this.cachedHead = null;
+        this.cachedClosestHead = null;
+        this.cachedSpriteHead = null;
+        this.cachedSpriteFrameIndex = null;
         this.startInParkingLot();
         this.queue = [this.callbackPark];
         this.waiting = 0;
@@ -28,7 +32,7 @@ class Car {
     }
 
     closeTo(other) {
-        return (this.x-other.x)**2 + (this.y-other.y)**2 < (2.5*config.Car.imgSize)**2;
+        return (this.x-other.x)**2 + (this.y-other.y)**2 < (1.5*config.Car.imgSize)**2;
     }
 
     startInParkingLot() {
@@ -45,11 +49,16 @@ class Car {
     }
 
     getFrameIndex(head) {
-        var col = config.Car.headingOrder.indexOf(convertInt(head));
-        if (col === -1) {
-            error('Heading not in car sprite', this, this.disable);
+        head = convertInt(head);
+        if (this.cachedSpriteHead !== head) {
+            var col = config.Car.headingOrder.indexOf(head);
+            if (col === -1) {
+                error('Heading not in car sprite', this, this.disable);
+            }
+            this.cachedSpriteHead = head;
+            this.cachedSpriteFrameIndex = this.typeId * config.Car.headingOrder.length + col;
         }
-        return this.typeId * config.Car.headingOrder.length + col;
+        return this.cachedSpriteFrameIndex;
     }
 
     draw(group) {
@@ -146,7 +155,11 @@ class Car {
     }
 
     getHead() {
-        return this.getClosestHead(this.head, false);
+        if (this.cachedHead !== this.head) {
+            this.cachedHead = this.head;
+            this.cachedClosestHead = this.getClosestHead(this.head, false);
+        }
+        return this.cachedClosestHead;
     }
 
     getNextHead(turn) {
@@ -324,10 +337,10 @@ class Car {
     }
 
     collideWith(other) {
-        if (other.error) {
+        if (this.equals(other)) {
             return false;
         }
-        if (this.equals(other)) {
+        if (other.error) {
             return false;
         }
         if (!this.closeTo(other)) {
