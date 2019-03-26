@@ -39,8 +39,8 @@ class Car {
         this.y = (lane.nx * (lane.px-this.x) + lane.ny * lane.py) / lane.ny;
     }
 
-    getFrameIndex() {
-        var col = config.Car.headingOrder.indexOf(this.getHead());
+    getFrameIndex(head) {
+        var col = config.Car.headingOrder.indexOf(convertInt(head));
         if (col === -1) {
             error('Heading not in car sprite', this, this.disable);
         }
@@ -51,7 +51,7 @@ class Car {
         var x = this.x - config.Car.imgSize/2;
         var y = this.y - config.Car.imgSize/2;
         this.sprite = game.add.sprite(x, y, this.colorId);
-        this.sprite.frame = this.getFrameIndex();
+        this.sprite.frame = this.getFrameIndex(this.getHead());
         group.add(this.sprite);
     }
 
@@ -76,10 +76,9 @@ class Car {
             var dx = Math.sin(intHead * Math.PI/180) * this.v * dt;
             var dy = -Math.cos(intHead * Math.PI/180) * this.v * dt;
 
-            var xTry = this.x + config.Car.collisionSpacing * dx;
-            var yTry = this.y + config.Car.collisionSpacing * dy;
+            this.updateSprite(this.x+dx, this.y+dy, intHead);
 
-            if (this.collision(xTry, yTry, this.head)) {
+            if (this.collision()) {
                 this.queue.splice(0, 0, this.callbackWait);
             } else {
                 this.waiting = 0;
@@ -91,12 +90,18 @@ class Car {
                     error('Car has left its tile', this, this.disable);
                 }
 
-                this.sprite.x = this.x - config.Car.imgSize/2;
-                this.sprite.y = this.y - config.Car.imgSize/2;
                 this.sprite.yz = this.y;
             }
+            this.updateSprite(this.x, this.y, intHead);
         }
-        this.sprite.frame = this.getFrameIndex();
+    }
+
+    updateSprite(x, y, head) {
+        if (this.sprite !== null) {
+            this.sprite.x = x - config.Car.imgSize/2;
+            this.sprite.y = y - config.Car.imgSize/2;
+            this.sprite.frame = this.getFrameIndex(head);
+        }
     }
 
     enterNewTile() {
@@ -295,8 +300,43 @@ class Car {
         return Math.ceil(this.v * dt);
     }
 
-    collision(x, y, head) {
-        return false;           
+    collision() {                     
+            for (var j = 0; j < this.tile.cars.length; j++) {
+                if (this.collideWith(this.tile.cars[j])) {
+                    return true;
+                }
+            }
+
+        for (var i = 0; i < this.tile.neighbours.length; i++) {
+            for (var j = 0; j < this.tile.neighbours[i].cars.length; j++) {
+                if (this.collideWith(this.tile.neighbours[i].cars[j])) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    collideWith(other) {
+        if (other.error) {
+            return false;
+        }
+        if (this.equals(other)) {
+            return false;
+        }
+        if (other.isParking()) {
+            return false;
+        }
+        var head = this.getHead();
+        if (!this.isInFront(other, this.x, this.y, head)) {
+            return false;
+        }
+        for (var turn = 5; turn < 12; turn++) {
+            if (other.getNextHead(turn) === head) {
+                return false;
+            }
+        }
+        return Phaser.Rectangle.intersects(this.sprite.getBounds().scale(config.Car.collisionScale), other.sprite.getBounds().scale(config.Car.collisionScale));
     }
 
     callbackPark() {
@@ -352,7 +392,8 @@ class Car {
 
         var distanceToLane = this.tile.getDistanceToLane(this.x, this.y, targetHead, targetLane);
         if (distanceToLane < this.getMaxDistancePerStep()) {
-            if (this.collision(this.x, this.y, targetHead)) {
+            this.updateSprite(this.x, this.y, targetHead);
+            if (this.collision()) {
                 this.v = 0;
                 return false;
             }
@@ -425,7 +466,8 @@ class Car {
         var y = this.turnPath[0].y;
 
         var closestHead = this.getClosestHead(head, true);
-        if (this.collision(x, y, closestHead)) {
+        this.updateSprite(x, y, closestHead);
+        if (this.collision()) {
             this.v = 0;
             return false;
         }

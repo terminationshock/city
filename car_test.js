@@ -22,7 +22,7 @@ class CarTest {
         this.testIsInFront();
         this.testGetHeadFromDxDy();
         this.testGetMaxDistancePerStep();
-        this.testCollision();
+        this.testCollideWith();
 
         this.testCallbackPark();
         this.testCallbackLeaveParkingLot();
@@ -39,7 +39,7 @@ class CarTest {
     }
 
     testGetFrameIndex() {
-        console.assert(this.car.getFrameIndex() === 24);
+        console.assert(this.car.getFrameIndex(60) === 24);
     }
 
     testGetNextHead() {
@@ -107,7 +107,7 @@ class CarTest {
         console.assert(this.car.getMaxDistancePerStep() === 2);
     }
 
-    testCollision() {
+    testCollideWith() {
             
     }
 
