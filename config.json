@@ -30,6 +30,7 @@
         "velocityCity": 50,
         "velocityHighway": 80,
         "waitBlocked": 10,
+        "waitForever": 30,
         "collisionScale": 0.8,
         "bezierFactor": 0.09
     },

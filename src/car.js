@@ -94,6 +94,10 @@ class Car {
             }
             this.updateSprite(this.x, this.y, intHead);
         }
+
+        if (this.waiting > config.Car.waitingForever) {
+            error('Car is waiting forever', this, this.disable);
+        }
     }
 
     updateSprite(x, y, head) {
@@ -300,7 +304,7 @@ class Car {
         return Math.ceil(this.v * dt);
     }
 
-    collision() {                     
+    collision() {
         for (var j = 0; j < this.tile.cars.length; j++) {
             if (this.collideWith(this.tile.cars[j])) {
                 return true;
