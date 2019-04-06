@@ -3,7 +3,8 @@ class Map {
         this.tiles = [];
         this.tileRowId = [];
         this.masterGroup = null;
-        this.rowGroups = [];
+        this.rowGroupsGround = [];
+        this.rowGroupsHouses = [];
         this.nCols = 0;
         this.nRows = 0;
         this.trackHashes = [];
@@ -21,10 +22,14 @@ class Map {
                 this.nRows++;
                 this.nCols = Math.max(this.nCols, tileCodes.length);
 
-                var group = game.add.group();
-                group.yz = (y-1)*config.Tile.dy + config.Tile.height/2 - config.Car.imgSize*2/3;
-                this.rowGroups.push(group);
-                this.masterGroup.add(group);
+                var groupGround = game.add.group();
+                var groupHouses = game.add.group();
+                groupGround.yz = (y-1)*config.Tile.dy;
+                groupHouses.yz = (y-1)*config.Tile.dy + config.Tile.height;
+                this.rowGroupsGround.push(groupGround);
+                this.rowGroupsHouses.push(groupHouses);
+                this.masterGroup.add(groupGround);
+                this.masterGroup.add(groupHouses);
 
                 var xoff = -config.Tile.dx * (1 - (y % 2));
 
@@ -82,7 +87,7 @@ class Map {
 
     draw() {
         for (var i = 0; i < this.tiles.length; i++) {
-            this.tiles[i].draw(this.masterGroup, this.rowGroups[this.tileRowId[i]]);
+            this.tiles[i].draw(this.masterGroup, this.rowGroupsGround[this.tileRowId[i]], this.rowGroupsHouses[this.tileRowId[i]]);
         }
     }
 

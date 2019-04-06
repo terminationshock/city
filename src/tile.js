@@ -22,12 +22,16 @@ class Tile {
         this.imgY = this.imgY + config.Tile.height - image.height;
     }
 
-    draw(masterGroup, rowGroup) {
-        rowGroup.add(game.add.image(this.imgX, this.imgY, this.fileId));
-        this.drawTrackPoints(rowGroup);
+    draw(masterGroup, rowGroupGround, rowGroupHouses) {
+        if (this.isGrass() || this.isStreet()) {
+            rowGroupGround.add(game.add.image(this.imgX, this.imgY, this.fileId));
+        } else {
+            rowGroupHouses.add(game.add.image(this.imgX, this.imgY, this.fileId));
+        }
+        this.drawTrackPoints(rowGroupGround);
 
         if (this.trees !== null) {
-            this.trees.draw(rowGroup);
+            this.trees.draw(rowGroupHouses);
         }
         this.cars.forEach(function (car) {
             car.draw(masterGroup);
