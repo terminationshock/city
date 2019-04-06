@@ -13,8 +13,11 @@ class DriverMock {
 }
 
 class SpriteMock {
+    constructor() {
+        this.height = 32;
+    }
     getBounds() {
-        return new Phaser.Rectangle(0, 0, 100, 100);
+        return new Phaser.Rectangle(0, 0, 32, 32);
     }
 }
 
@@ -31,7 +34,6 @@ class CarTest {
         this.testGetFrameIndex();
         this.testGetNextHead();
         this.testGetClosestHead();
-        this.testGetTurnDirection();
         this.testGetNextTurn();
         this.testIsInFront();
         this.testGetHeadFromDxDy();
@@ -80,17 +82,6 @@ class CarTest {
         console.assert(this.car.getClosestHead(44, true) === 0);
         console.assert(this.car.getClosestHead(225, true) === 225);
         console.assert(this.car.getClosestHead(239, true) === 225);
-    }
-
-    testGetTurnDirection() {
-        console.assert(this.car.getTurnDirection(0, 90) === 1);
-        console.assert(this.car.getTurnDirection(0, 270) === -1);
-        console.assert(this.car.getTurnDirection(90, 180) === 1);
-        console.assert(this.car.getTurnDirection(90, 0) === -1);
-        console.assert(this.car.getTurnDirection(180, 270) === 1);
-        console.assert(this.car.getTurnDirection(180, 90) === -1);
-        console.assert(this.car.getTurnDirection(270, 0) === 1);
-        console.assert(this.car.getTurnDirection(270, 180) === -1);
     }
 
     testGetNextTurn() {
@@ -144,14 +135,14 @@ class CarTest {
         this.otherCar.error = false;
         this.otherCar.v = 0;
         this.otherCar.queue = [this.otherCar.callbackPark];
+        this.car.sprite = new SpriteMock();
+        this.otherCar.sprite = new SpriteMock();
         console.assert(!this.car.collideWith(this.otherCar));
         this.otherCar.v = 10;
         this.otherCar.queue = [this.otherCar.callbackDrive];
         this.car.head = 60;
         this.otherCar.x = this.car.x + 10;
         this.otherCar.y = this.car.y - 10;
-        this.car.sprite = new SpriteMock();
-        this.otherCar.sprite = new SpriteMock();
         var check = [false, false, false, false, false, true, true, true, true, true, true, true, false, false, false, false];
         for (var i = 0; i < config.Car.headingOrder.length; i++) {
             this.otherCar.head = config.Car.headingOrder[i];

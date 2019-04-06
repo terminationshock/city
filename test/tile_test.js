@@ -36,6 +36,7 @@ class TileTest {
         this.testComputeAllNeighbours();
         this.testComputeStreetNeighbours();
         this.testComputeStreetConnections();
+        this.testGetTurnDirection();
         this.testInside();
         this.testCenterAhead();
         this.testGetLane();
@@ -220,6 +221,17 @@ class TileTest {
         console.assert(this.tile_road[45].connections.includes(300));
     }
 
+    testGetTurnDirection() {
+        console.assert(this.tile_road[45].getTurnDirection(0, 90) === 1);
+        console.assert(this.tile_road[45].getTurnDirection(0, 270) === -1);
+        console.assert(this.tile_road[45].getTurnDirection(90, 180) === 1);
+        console.assert(this.tile_road[45].getTurnDirection(90, 0) === -1);
+        console.assert(this.tile_road[45].getTurnDirection(180, 270) === 1);
+        console.assert(this.tile_road[45].getTurnDirection(180, 90) === -1);
+        console.assert(this.tile_road[45].getTurnDirection(270, 0) === 1);
+        console.assert(this.tile_road[45].getTurnDirection(270, 180) === -1);
+    }
+
     testInside() {
         var x = this.tile_grass.x;
         var y = this.tile_grass.y;
@@ -276,8 +288,8 @@ class TileTest {
     }
 
     testGetLaneTargetPoint() {
-        var point1 = this.tile_road[45].getLaneTargetPoint(45, 0);
-        var point2 = this.tile_road[45].getLaneTargetPoint(225, 0);
+        var point1 = this.tile_road[45].getLaneTargetPoint(45, 0, config.Street.lanePointFactor);
+        var point2 = this.tile_road[45].getLaneTargetPoint(225, 0, config.Street.lanePointFactor);
         var x1 = 5 * (point1.x-this.tile_road[45].x) / Math.sqrt(2);
         var y1 = 5 * (point1.y-this.tile_road[45].y) / Math.sqrt(2);
         var x2 = 5 * (point2.x-this.tile_road[45].x) / Math.sqrt(2);
