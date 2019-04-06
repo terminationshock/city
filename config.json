@@ -34,6 +34,10 @@
         "collisionScale": 0.8,
         "bezierFactor": 0.09
     },
+    "Tram": {
+        "imgSize": 64,
+        "numTypes": 1
+    },
     "World": {
         "stepsPerSecond": 30
     },

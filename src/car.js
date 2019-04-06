@@ -1,9 +1,9 @@
 class Car {
-    constructor(tile, carImages) {
+    constructor(tile, carImages, numTypes) {
         this.hash = generateRandomId();
         this.driver = new CarAI();
         this.colorId = carImages[Math.floor(Math.random() * carImages.length)];
-        this.typeId = Math.floor(Math.random() * config.Car.numTypes);
+        this.typeId = Math.floor(Math.random() * numTypes);
         this.sprite = null;
         this.tile = tile;
         this.oldTile = 'null';
@@ -32,7 +32,7 @@ class Car {
     }
 
     closeTo(other) {
-        return (this.x-other.x)**2 + (this.y-other.y)**2 < (1.5*config.Car.imgSize)**2;
+        return (this.x-other.x)**2 + (this.y-other.y)**2 < (1.5*this.sprite.height)**2;
     }
 
     startInParkingLot() {
@@ -69,8 +69,8 @@ class Car {
 
     updateSprite(x, y, head) {
         if (this.sprite !== null) {
-            this.sprite.x = x - config.Car.imgSize/2;
-            this.sprite.y = y - config.Car.imgSize/2;
+            this.sprite.x = x - this.sprite.width/2;
+            this.sprite.y = y - this.sprite.height/2;
             this.sprite.yz = y;
             this.sprite.frame = this.getFrameIndex(head);
         }

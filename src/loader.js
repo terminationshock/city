@@ -117,6 +117,8 @@ class Loader {
             'v12'
         ];
 
+        this.trams = ['v00'];
+
         this.streets.forEach(function (street) {
             game.load.image(street, 'img/'+street+'.png');
         });
@@ -131,6 +133,10 @@ class Loader {
 
         this.cars.forEach(function (car) {
             game.load.spritesheet(car, 'img/'+car+'.png', config.Car.imgSize, config.Car.imgSize, config.Car.headingOrder.length*config.Car.numTypes);
+        });
+
+        this.trams.forEach(function (tram) {
+            game.load.spritesheet(tram, 'img/'+tram+'.png', config.Tram.imgSize, config.Tram.imgSize, config.Car.headingOrder.length*config.Tram.numTypes);
         });
     }
 }

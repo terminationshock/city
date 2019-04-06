@@ -98,7 +98,7 @@ class Tile {
     generateCars(carImages) {
         if (this.isStreet() && this.isStraight() && !this.isHighway()) {
             if (Math.random() < config.Tile.probCar) {
-                var car = new Car(this, carImages);
+                var car = new Car(this, carImages, config.Car.numTypes);
                 this.addCar(car);
             }
         }
