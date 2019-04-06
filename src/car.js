@@ -1,5 +1,5 @@
 class Car {
-    constructor(tile, carImages, numTypes) {
+    constructor(tile, carImages, numTypes, boundToTracks) {
         this.hash = generateRandomId();
         this.driver = new CarAI();
         this.colorId = carImages[Math.floor(Math.random() * carImages.length)];
@@ -9,12 +9,17 @@ class Car {
         this.oldTile = 'null';
         this.v = 0;
         this.head = 0;
+        this.queue = [];
         this.cachedHead = null;
         this.cachedClosestHead = null;
         this.cachedSpriteHead = null;
         this.cachedSpriteFrameIndex = null;
-        this.startInParkingLot();
-        this.queue = [this.callbackPark];
+        if (boundToTracks) {
+            this.startOnStreet();
+        } else {
+            this.startInParkingLot();
+        }
+        this.boundToTracks = boundToTracks;
         this.waiting = 0;
         this.turnPath = null;
         this.plannedHead = null;
@@ -36,11 +41,24 @@ class Car {
     }
 
     startInParkingLot() {
-        this.head = this.tile.getRandomConnection();
+        this.head = this.tile.getRandomConnection(false);
         var intHead = this.getHead();
         var lane = this.tile.getLane(intHead, config.Street.lanePark);
+        this.startXY(intHead, lane);
+        this.queue = [this.callbackPark];
+    }
+
+    startOnStreet() {
+        this.head = this.tile.getRandomConnection(true);
+        var intHead = this.getHead();
+        var lane = this.tile.getLane(intHead, config.Street.laneDrive);
+        this.startXY(intHead, lane);
+        this.queue = [this.callbackDrive];
+    }
+
+    startXY(head, lane) {
         this.x = this.tile.x;
-        if (intHead === 60 || intHead === 300) {
+        if (head === 60 || head === 300) {
             this.x += config.Tile.width / 4;
         } else {
             this.x -= config.Tile.width / 4;
@@ -215,6 +233,11 @@ class Car {
     }
 
     getNextTurn() {
+        if (this.boundToTracks) {
+            var head = this.tile.neighbourConnections[this.oldTile];
+            return this.tile.track[head];
+        }
+
         var conn = this.tile.connections.slice(0);
 
         if (!this.tile.isDeadEnd()) {
@@ -320,7 +343,7 @@ class Car {
     }
 
     parkNow() {
-        if (this.queue[0] === this.callbackDrive && this.driver.parkNow() && this.tile.hasFreeParkingLot(this.getHead())) {
+        if (!this.boundToTracks && this.queue[0] === this.callbackDrive && this.driver.parkNow() && this.tile.hasFreeParkingLot(this.getHead())) {
             this.queue = [this.callbackEnterParkingLot];
         }
     }

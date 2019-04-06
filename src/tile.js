@@ -35,13 +35,16 @@ class Tile {
     }
 
     drawTrackPoints(group) {
-        if (Object.keys(this.track).length > 0) {
+        if (this.hasTrack()) {
             var canvas = new Phaser.Graphics(game, 0, 0);
             canvas.lineStyle(1, Phaser.Color.hexToRGB(config.Track.color), 1);
 
             for (var headFrom in this.track) {
                 var headTo = this.track[headFrom];
-                headFrom = convertInt(headFrom);
+                headFrom = convertInt(headFrom) + 180;
+                if (headFrom >= 360) {
+                    headFrom -= 360;
+                }
 
                 for (var j = -1; j <= 1; j += 2) {
                     var p1 = this.getLaneStartPoint(headFrom, config.Street.laneDrive + j*config.Track.width/2, config.Track.lanePointFactor);
@@ -106,6 +109,10 @@ class Tile {
         return this.connections.length === 1;
     }
 
+    hasTrack() {
+        return Object.keys(this.track).length > 0;
+    }
+
     generateHouse(houseImages) {
         if (!this.isGrass()) {
             return;
@@ -135,8 +142,7 @@ class Tile {
     generateCars(carImages) {
         if (this.isStreet() && this.isStraight() && !this.isHighway()) {
             if (Math.random() < config.Tile.probCar) {
-                var car = new Car(this, carImages, config.Car.numTypes);
-                this.addCar(car);
+                this.addCar(new Car(this, carImages, config.Car.numTypes, false));
             }
         }
     }
@@ -160,13 +166,10 @@ class Tile {
             }
 
             var headTo = this.neighbourConnections[track[indexNext]];
-            var headFrom = this.neighbourConnections[track[indexPrev]] + 180;
-            if (headFrom >= 360) {
-                headFrom -= 360;
-            }
-
-            this.track[headFrom] = headTo;
+            var negativeHeadFrom = this.neighbourConnections[track[indexPrev]];
+            this.track[negativeHeadFrom] = headTo;
         }
+        return this.hasTrack() && this.isStraight();
     }
 
     computeAllNeighbours(tiles) {
@@ -316,8 +319,12 @@ class Tile {
         return x > this.x;
     }
 
-    getRandomConnection() {
+    getRandomConnection(bindToTrack) {
         if (this.connections.length > 0) {
+            if (bindToTrack && this.hasTrack()) {
+                var connections = Object.keys(this.track);
+                return this.track[connections[Math.floor(Math.random() * connections.length)]];
+            }
             return this.connections[Math.floor(Math.random() * this.connections.length)];
         }
         error('Empty connection list', this, null);

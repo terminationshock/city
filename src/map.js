@@ -6,7 +6,8 @@ class Map {
         this.rowGroups = [];
         this.nCols = 0;
         this.nRows = 0;
-        this.track = [];
+        this.trackHashes = [];
+        this.trackTiles = [];
         this.counterHashMap = {};
     }
 
@@ -43,7 +44,7 @@ class Map {
     }
 
     loadTrack(fileContent) {
-        this.track = fileContent.trim().split(',').map(x => this.counterHashMap[x]);
+        this.trackHashes = fileContent.trim().split(',').map(x => this.counterHashMap[x]);
     }
 
     getWidth() {
@@ -66,8 +67,17 @@ class Map {
             tile.computeStreetNeighbours(tiles);
         });
         for (var i = 0; i < this.tiles.length; i++) {
-            this.tiles[i].generateTrack(this.track);
+            var hasTrack = this.tiles[i].generateTrack(this.trackHashes);
+            if (hasTrack) {
+                this.trackTiles.push(this.tiles[i]);
+            }
         }
+    }
+
+    initPlayer(trams) {
+        var tile = this.trackTiles[Math.floor(Math.random() * this.trackTiles.length)];
+        var tram = new Car(tile, trams, config.Tram.numTypes, true);
+        tile.addCar(tram);
     }
 
     draw() {

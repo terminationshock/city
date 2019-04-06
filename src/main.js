@@ -29,6 +29,7 @@ function create() {
     map.loadMap(game.cache.getText('world'));
     map.loadTrack(game.cache.getText('track'));
     map.initTiles(loader.houses, loader.trees, loader.cars);
+    map.initPlayer(loader.trams);
 
     game.world.resize(map.getWidth(), map.getHeight());
     map.draw();
