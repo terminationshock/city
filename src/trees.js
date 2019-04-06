@@ -34,7 +34,7 @@ class Trees {
 
     draw(group) {
         this.trees.forEach(function (tree) {
-            group.add(game.add.sprite(tree.imgX, tree.imgY, tree.tree));
+            group.add(game.add.image(tree.imgX, tree.imgY, tree.tree));
         });
     }
 }

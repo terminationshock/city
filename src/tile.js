@@ -23,7 +23,7 @@ class Tile {
     }
 
     draw(masterGroup, rowGroup) {
-        rowGroup.add(game.add.sprite(this.imgX, this.imgY, this.fileId));
+        rowGroup.add(game.add.image(this.imgX, this.imgY, this.fileId));
         this.drawTrackPoints(rowGroup);
 
         if (this.trees !== null) {
