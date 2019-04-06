@@ -37,24 +37,33 @@ class Tile {
     drawTrackPoints(group) {
         if (Object.keys(this.track).length > 0) {
             var canvas = new Phaser.Graphics(game, 0, 0);
-            canvas.lineStyle(1, Phaser.Color.hexToRGB(config.Tram.trackColor), 1);
+            canvas.lineStyle(1, Phaser.Color.hexToRGB(config.Track.color), 1);
 
             for (var headFrom in this.track) {
                 var headTo = this.track[headFrom];
+                headFrom = convertInt(headFrom);
 
                 for (var j = -1; j <= 1; j += 2) {
-                    var p1 = this.getLaneStartPoint(headFrom, config.Street.laneDrive + j*config.Tram.trackWidth/2, 0.32);
-                    var p2 = this.getLaneTargetPoint(headTo, config.Street.laneDrive + j*config.Tram.trackWidth/2, 0.32);
+                    var p1 = this.getLaneStartPoint(headFrom, config.Street.laneDrive + j*config.Track.width/2, config.Track.lanePointFactor);
+                    var p2 = this.getLaneTargetPoint(headTo, config.Street.laneDrive + j*config.Track.width/2, config.Track.lanePointFactor);
 
-                    var curve = this.getCurve(p1, p2, headFrom, headTo, config.Tram.bezierFactor);
-                    var path = curve.getPath(config.Tram.trackCurveFactor);
+                    if (headFrom === headTo) {
+                        canvas.moveTo(p1.x, p1.y);
+                        canvas.lineTo(p2.x, p2.y);
+                    } else {
+                        var curve = this.getCurve(p1, p2, headFrom, headTo, config.Track.bezierFactor);
+                        var path = curve.getPath(config.Track.curveFactor);
 
-                    canvas.moveTo(path[0].x, path[0].y);
-                    for (var i = 1; i < path.length; i++) {
-                        canvas.lineTo(path[i].x, path[i].y);
+                        canvas.moveTo(p1.x, p1.y);
+                        canvas.lineTo(path[0].x, path[0].y);
+                        for (var i = 1; i < path.length; i++) {
+                            canvas.lineTo(path[i].x, path[i].y);
+                        }
+                        canvas.lineTo(p2.x, p2.y);
                     }
                 }
             }
+
             group.add(canvas);
         }
     }

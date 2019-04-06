@@ -207,10 +207,10 @@ class Car {
 
     getTurnPath(targetHead) {
         var p1 = new Point(this.x, this.y);
-        var p2 = this.tile.getLaneTargetPoint(targetHead, config.Street.laneDrive, 0.2);
+        var p2 = this.tile.getLaneTargetPoint(targetHead, config.Street.laneDrive, config.Street.lanePointFactor);
         var dt = 1.0 / config.World.stepsPerSecond;
 
-        var curve = this.tile.getCurve(p1, p2, this.getHead(), targetHead, config.Car.bezierFactor);
+        var curve = this.tile.getCurve(p1, p2, this.getHead(), targetHead, config.Street.bezierFactor);
         return curve.getPath(config.Car.velocityTurn * dt);
     }
 

@@ -20,7 +20,16 @@
         "lanePark": 25,
         "laneDrive": 9,
         "centerSizeFactor": 0.7,
+        "lanePointFactor": 0.2,
+        "bezierFactor": 0.09,
         "color": "#585b58"
+    },
+    "Track": {
+        "lanePointFactor": 0.29,
+        "curveFactor": 7,
+        "bezierFactor": 0.25,
+        "color": "#333333",
+        "width": 4
     },
     "Car": {
         "imgSize": 32,
@@ -31,16 +40,11 @@
         "velocityHighway": 80,
         "waitBlocked": 10,
         "waitForever": 30,
-        "collisionScale": 0.8,
-        "bezierFactor": 0.09
+        "collisionScale": 0.8
     },
     "Tram": {
         "imgSize": 64,
-        "numTypes": 1,
-        "trackColor": "#333333",
-        "trackCurveFactor": 5,
-        "trackWidth": 4,
-        "bezierFactor": 0.4
+        "numTypes": 1
     },
     "World": {
         "stepsPerSecond": 30
