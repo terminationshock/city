@@ -29,7 +29,7 @@
         "curveFactor": 7,
         "bezierFactor": 0.25,
         "color": "#333333",
-        "width": 4
+        "width": 6
     },
     "Car": {
         "imgSize": 32,
@@ -43,7 +43,7 @@
         "collisionScale": 0.8
     },
     "Tram": {
-        "imgSize": 64,
+        "imgSize": 92,
         "numTypes": 1
     },
     "World": {

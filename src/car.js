@@ -89,7 +89,7 @@ class Car {
         if (this.sprite !== null) {
             this.sprite.x = x - this.sprite.width/2;
             this.sprite.y = y - this.sprite.height/2;
-            this.sprite.yz = y;
+            this.sprite.yz = y + this.sprite.height/2;
             this.sprite.frame = this.getFrameIndex(head);
         }
     }
