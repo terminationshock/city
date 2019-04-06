@@ -6,6 +6,8 @@ class Map {
         this.rowGroups = [];
         this.nCols = 0;
         this.nRows = 0;
+        this.track = [];
+        this.counterHashMap = {};
     }
 
     loadMap(fileContent) {
@@ -14,9 +16,9 @@ class Map {
 
         for (var y = 0; y < lines.length; y++) {
             if (lines[y].includes(',')) {
-                var fileIds = lines[y].split(',');
+                var tileCodes = lines[y].split(',');
                 this.nRows++;
-                this.nCols = Math.max(this.nCols, fileIds.length);
+                this.nCols = Math.max(this.nCols, tileCodes.length);
 
                 var group = game.add.group();
                 group.yz = (y-1)*config.Tile.dy + config.Tile.height/2 - config.Car.imgSize*2/3;
@@ -25,16 +27,23 @@ class Map {
 
                 var xoff = -config.Tile.dx * (1 - (y % 2));
 
-                for (var x = 0; x < fileIds.length; x++) {
-                    var fileId = fileIds[x].trim();
-                    if (fileId.length > 0) {
+                for (var x = 0; x < tileCodes.length; x++) {
+                    var tileCode = tileCodes[x].trim();
+                    if (tileCode.length > 0) {
+                        var counter = tileCode.substring(0, 4);
+                        var fileId = tileCode.substring(4);
                         var tile = new Tile(fileId, xoff + 2*x*config.Tile.dx, (y-1)*config.Tile.dy);
+                        this.counterHashMap[counter] = tile.hash;
                         this.tiles.push(tile);
                         this.tileRowId.push(this.nRows-1);
                     }
                 }
             }
         }
+    }
+
+    loadTrack(fileContent) {
+        this.track = fileContent.trim().split(',').map(x => this.counterHashMap[x]);
     }
 
     getWidth() {
@@ -56,6 +65,9 @@ class Map {
         this.tiles.forEach(function (tile, index, tiles) {
             tile.computeStreetNeighbours(tiles);
         });
+        for (var i = 0; i < this.tiles.length; i++) {
+            this.tiles[i].generateTrack(this.track);
+        }
     }
 
     draw() {

@@ -207,10 +207,10 @@ class Car {
 
     getTurnPath(targetHead) {
         var p1 = new Point(this.x, this.y);
-        var p2 = this.tile.getLaneTargetPoint(targetHead, config.Street.laneDrive);
+        var p2 = this.tile.getLaneTargetPoint(targetHead, config.Street.laneDrive, 0.2);
         var dt = 1.0 / config.World.stepsPerSecond;
 
-        var curve = this.tile.getCurve(p1, p2, this.getHead(), targetHead);
+        var curve = this.tile.getCurve(p1, p2, this.getHead(), targetHead, config.Car.bezierFactor);
         return curve.getPath(config.Car.velocityTurn * dt);
     }
 
@@ -218,9 +218,7 @@ class Car {
         var conn = this.tile.connections.slice(0);
 
         if (!this.tile.isDeadEnd()) {
-            var neighbourHashes = this.tile.streetNeighbours.map(function (tile) {
-                return tile.hash;
-            });
+            var neighbourHashes = this.tile.streetNeighbours.map(tile => tile.hash);
             if (neighbourHashes.includes(this.oldTile)) {
                 var head = this.tile.neighbourConnections[this.oldTile];
                 if (conn.includes(head)) {

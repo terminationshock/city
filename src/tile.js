@@ -10,6 +10,7 @@ class Tile {
         this.streetNeighbours = [];
         this.neighbourConnections = {};
         this.connections = [];
+        this.track = {};
         this.trees = null;
         this.cars = [];
         this.carHashes = [];
@@ -23,12 +24,34 @@ class Tile {
 
     draw(masterGroup, rowGroup) {
         rowGroup.add(game.add.sprite(this.imgX, this.imgY, this.fileId));
+        this.drawTrackPoints(rowGroup);
+
         if (this.trees !== null) {
             this.trees.draw(rowGroup);
         }
         this.cars.forEach(function (car) {
             car.draw(masterGroup);
         });
+    }
+
+    drawTrackPoints(group) {
+        for (var headFrom in this.track) {
+            var headTo = this.track[headFrom];
+
+            var p1 = this.getLaneStartPoint(headFrom, config.Street.laneDrive, 0.32);
+            var p2 = this.getLaneTargetPoint(headTo, config.Street.laneDrive, 0.32);
+
+            var curve = this.getCurve(p1, p2, headFrom, headTo, config.Tram.bezierFactor);
+            var path = curve.getPath(config.Tram.trackCurveFactor);
+
+            var canvas = new Phaser.Graphics(game, 0, 0);
+            canvas.lineStyle(1, Phaser.Color.hexToRGB(config.Tram.trackColor), 1);
+            canvas.moveTo(path[0].x, path[0].y);
+            for (var i = 1; i < path.length; i++) {
+                canvas.lineTo(path[i].x, path[i].y);
+            }
+            group.add(canvas);
+        }
     }
 
     equals(other) {
@@ -101,6 +124,28 @@ class Tile {
                 var car = new Car(this, carImages, config.Car.numTypes);
                 this.addCar(car);
             }
+        }
+    }
+
+    generateTrack(track) {
+        if (track.includes(this.hash)) {
+            var index = track.indexOf(this.hash);
+            var indexNext = index + 1;
+            var indexPrev = index - 1;
+            if (indexNext === track.length) {
+                indexNext = 0;
+            }
+            if (indexPrev === -1) {
+                indexPrev = track.length - 1;
+            }
+
+            var headTo = this.neighbourConnections[track[indexNext]];
+            var headFrom = this.neighbourConnections[track[indexPrev]] + 180;
+            if (headFrom >= 360) {
+                headFrom -= 360;
+            }
+
+            this.track[headFrom] = headTo;
         }
     }
 
@@ -185,7 +230,7 @@ class Tile {
         this.connections.forEach(convertInt);
     }
 
-    getCurve(p1, p2, head1, head2) {
+    getCurve(p1, p2, head1, head2, bezierFactor) {
         var turn = this.getTurnDirection(head1, head2);
 
         var dx1 = Math.sin(head1 * Math.PI/180);
@@ -209,7 +254,10 @@ class Tile {
             }
         }
 
-        var bezierFactor = config.Tile.bezierFactor * deltaHead;
+        var bezierFactor = bezierFactor * deltaHead;
+        if (deltaHead === 0) {
+            return new BezierCurve([p1, p2]);
+        }
         return new BezierCurve([p1,
                                 new Point(p1.x + bezierFactor*dx1, p1.y + bezierFactor*dy1),
                                 new Point(p2.x - bezierFactor*dx2, p2.y - bezierFactor*dy2),
@@ -226,7 +274,7 @@ class Tile {
         } else if (-180 > toHead-fromHead) {
             return 1;
         }
-        error('Invalid turn', this, null);
+        return 0;
     }
 
     inside(x, y, factor) {
@@ -281,10 +329,17 @@ class Tile {
         return Math.sqrt((x - point.x)**2 + (y - point.y)**2);
     }
 
-    getLaneTargetPoint(head, lane) {
-        var dist = 0.2 * config.Tile.width;
+    getLaneTargetPoint(head, lane, factor) {
+        var dist = factor * config.Tile.width;
         var x = this.x + Math.sin(head * Math.PI/180) * dist;
         var y = this.y - Math.cos(head * Math.PI/180) * dist;
+        return this.getClosestPointInLane(x, y, head, lane);
+    }
+
+    getLaneStartPoint(head, lane, factor) {
+        var dist = factor * config.Tile.width;
+        var x = this.x - Math.sin(head * Math.PI/180) * dist;
+        var y = this.y + Math.cos(head * Math.PI/180) * dist;
         return this.getClosestPointInLane(x, y, head, lane);
     }
 
