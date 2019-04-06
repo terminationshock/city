@@ -35,20 +35,25 @@ class Tile {
     }
 
     drawTrackPoints(group) {
-        for (var headFrom in this.track) {
-            var headTo = this.track[headFrom];
-
-            var p1 = this.getLaneStartPoint(headFrom, config.Street.laneDrive, 0.32);
-            var p2 = this.getLaneTargetPoint(headTo, config.Street.laneDrive, 0.32);
-
-            var curve = this.getCurve(p1, p2, headFrom, headTo, config.Tram.bezierFactor);
-            var path = curve.getPath(config.Tram.trackCurveFactor);
-
+        if (Object.keys(this.track).length > 0) {
             var canvas = new Phaser.Graphics(game, 0, 0);
             canvas.lineStyle(1, Phaser.Color.hexToRGB(config.Tram.trackColor), 1);
-            canvas.moveTo(path[0].x, path[0].y);
-            for (var i = 1; i < path.length; i++) {
-                canvas.lineTo(path[i].x, path[i].y);
+
+            for (var headFrom in this.track) {
+                var headTo = this.track[headFrom];
+
+                for (var j = -1; j <= 1; j += 2) {
+                    var p1 = this.getLaneStartPoint(headFrom, config.Street.laneDrive + j*config.Tram.trackWidth/2, 0.32);
+                    var p2 = this.getLaneTargetPoint(headTo, config.Street.laneDrive + j*config.Tram.trackWidth/2, 0.32);
+
+                    var curve = this.getCurve(p1, p2, headFrom, headTo, config.Tram.bezierFactor);
+                    var path = curve.getPath(config.Tram.trackCurveFactor);
+
+                    canvas.moveTo(path[0].x, path[0].y);
+                    for (var i = 1; i < path.length; i++) {
+                        canvas.lineTo(path[i].x, path[i].y);
+                    }
+                }
             }
             group.add(canvas);
         }
@@ -128,10 +133,16 @@ class Tile {
     }
 
     generateTrack(track) {
-        if (track.includes(this.hash)) {
-            var index = track.indexOf(this.hash);
-            var indexNext = index + 1;
-            var indexPrev = index - 1;
+        var indices = [];
+        var index = track.indexOf(this.hash);
+        while (index != -1) {
+            indices.push(index);
+            index = track.indexOf(this.hash, index + 1);
+        }
+
+        for (var i = 0; i < indices.length; i++) {
+            var indexNext = indices[i] + 1;
+            var indexPrev = indices[i] - 1;
             if (indexNext === track.length) {
                 indexNext = 0;
             }

@@ -39,6 +39,7 @@
         "numTypes": 1,
         "trackColor": "#333333",
         "trackCurveFactor": 5,
+        "trackWidth": 4,
         "bezierFactor": 0.4
     },
     "World": {
