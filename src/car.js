@@ -205,52 +205,12 @@ class Car {
         }
     }
 
-    getTurnDirection(fromHead, toHead) {
-        if (0 < toHead-fromHead && toHead-fromHead < 180) {
-            return 1;
-        } else if (-180 <= toHead-fromHead && toHead-fromHead < 0) {
-            return -1;
-        } else if (toHead-fromHead >= 180) {
-            return -1;
-        } else if (-180 > toHead-fromHead) {
-            return 1;
-        }
-        error('Invalid turn', this, this.disable);
-    }
-
     getTurnPath(targetHead) {
-        var intHead = this.getHead();
-        var turn = this.getTurnDirection(intHead, targetHead);
-
         var p1 = new Point(this.x, this.y);
-        var dx1 = Math.sin(intHead * Math.PI/180);
-        var dy1 = -Math.cos(intHead * Math.PI/180);
-
         var p2 = this.tile.getLaneTargetPoint(targetHead, config.Street.laneDrive);
-        var dx2 = Math.sin(targetHead * Math.PI/180);
-        var dy2 = -Math.cos(targetHead * Math.PI/180);
-
-        var deltaHead = 0;
-        if (turn < 0) {
-            if (targetHead > intHead) {
-                deltaHead = intHead - (targetHead - 360);
-            } else {
-                deltaHead = intHead - targetHead;
-            }
-        } else if (turn > 0) {
-            if (targetHead < intHead) {
-                deltaHead = (targetHead + 360) - intHead;
-            } else {
-                deltaHead = targetHead - intHead;
-            }
-        }
-
-        var bezierFactor = config.Car.bezierFactor * deltaHead;
-        var curve = new BezierCurve([p1,
-                                     new Point(p1.x + bezierFactor*dx1, p1.y + bezierFactor*dy1),
-                                     new Point(p2.x - bezierFactor*dx2, p2.y - bezierFactor*dy2),
-                                     p2]);
         var dt = 1.0 / config.World.stepsPerSecond;
+
+        var curve = this.tile.getCurve(p1, p2, this.getHead(), targetHead);
         return curve.getPath(config.Car.velocityTurn * dt);
     }
 

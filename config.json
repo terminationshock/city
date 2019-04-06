@@ -7,7 +7,8 @@
         "probHouse": 0.9,
         "probCar": 0.5,
         "grass": "g0000",
-        "streetPrefix": "r"
+        "streetPrefix": "r",
+        "bezierFactor": 0.09
     },
     "Tree": {
         "numTrees": 6,
@@ -31,8 +32,7 @@
         "velocityHighway": 80,
         "waitBlocked": 10,
         "waitForever": 30,
-        "collisionScale": 0.8,
-        "bezierFactor": 0.09
+        "collisionScale": 0.8
     },
     "Tram": {
         "imgSize": 64,

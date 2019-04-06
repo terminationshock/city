@@ -185,6 +185,50 @@ class Tile {
         this.connections.forEach(convertInt);
     }
 
+    getCurve(p1, p2, head1, head2) {
+        var turn = this.getTurnDirection(head1, head2);
+
+        var dx1 = Math.sin(head1 * Math.PI/180);
+        var dy1 = -Math.cos(head1 * Math.PI/180);
+
+        var dx2 = Math.sin(head2 * Math.PI/180);
+        var dy2 = -Math.cos(head2 * Math.PI/180);
+
+        var deltaHead = 0;
+        if (turn < 0) {
+            if (head2 > head1) {
+                deltaHead = head1 - (head2 - 360);
+            } else {
+                deltaHead = head1 - head2;
+            }
+        } else if (turn > 0) {
+            if (head2 < head1) {
+                deltaHead = (head2 + 360) - head1;
+            } else {
+                deltaHead = head2 - head1;
+            }
+        }
+
+        var bezierFactor = config.Tile.bezierFactor * deltaHead;
+        return new BezierCurve([p1,
+                                new Point(p1.x + bezierFactor*dx1, p1.y + bezierFactor*dy1),
+                                new Point(p2.x - bezierFactor*dx2, p2.y - bezierFactor*dy2),
+                                p2]);
+    }
+
+    getTurnDirection(fromHead, toHead) {
+        if (0 < toHead-fromHead && toHead-fromHead < 180) {
+            return 1;
+        } else if (-180 <= toHead-fromHead && toHead-fromHead < 0) {
+            return -1;
+        } else if (toHead-fromHead >= 180) {
+            return -1;
+        } else if (-180 > toHead-fromHead) {
+            return 1;
+        }
+        error('Invalid turn', this, null);
+    }
+
     inside(x, y, factor) {
         factor = (typeof factor === 'undefined') ? 1.0 : factor;
         var xx = this.x - x;
