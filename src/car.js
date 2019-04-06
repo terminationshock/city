@@ -37,7 +37,7 @@ class Car {
     }
 
     closeTo(other) {
-        return (this.x-other.x)**2 + (this.y-other.y)**2 < (1.5*this.sprite.height)**2;
+        return (this.x-other.x)**2 + (this.y-other.y)**2 < (this.sprite.height + other.sprite.height)**2;
     }
 
     startInParkingLot() {
