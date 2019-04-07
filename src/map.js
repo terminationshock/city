@@ -7,8 +7,7 @@ class Map {
         this.rowGroupsHouses = [];
         this.nCols = 0;
         this.nRows = 0;
-        this.trackHashes = [];
-        this.trackTiles = [];
+        this.newTrack = [];
         this.counterHashMap = {};
     }
 
@@ -48,13 +47,6 @@ class Map {
         }
     }
 
-    loadTracks(fileContent) {
-        var lines = fileContent.trim().split('\n');
-        for (var i = 0; i < lines.length; i++) {
-            this.trackHashes.push(lines[i].trim().split(',').map(x => this.counterHashMap[x]));
-        }
-    }
-
     getWidth() {
         return 2*this.nCols*config.Tile.dx - Math.floor(config.Tile.width/2);
     }
@@ -74,29 +66,27 @@ class Map {
         this.tiles.forEach(function (tile, index, tiles) {
             tile.computeStreetNeighbours(tiles);
         });
-        for (var i = 0; i < this.tiles.length; i++) {
-            for (var j = 0; j < this.trackHashes.length; j++) {
-                var hasTrack = this.tiles[i].generateTrack(this.trackHashes[j]);
-                if (hasTrack) {
-                    this.trackTiles.push(this.tiles[i]);
-                }
-            }
-        }
     }
 
-    initTrams(trams) {
-        for (var i = 0; i < config.Tram.numTrams; i++) {
-            var j = Math.floor(this.trackTiles.length/config.Tram.numTrams);
-            var tiles = this.trackTiles.slice(i*j, (i+1)*j);
-            var tile = tiles[Math.floor(Math.random() * tiles.length)];
-            var tram = new Car(tile, trams, config.Tram.numTypes, true);
-            tile.addCar(tram);
-        }
-    }
+ //   initTrams(trams) {
+ //       for (var i = 0; i < config.Tram.numTrams; i++) {
+ //           var j = Math.floor(this.trackTiles.length/config.Tram.numTrams);
+ //           var tiles = this.trackTiles.slice(i*j, (i+1)*j);
+ //           var tile = tiles[Math.floor(Math.random() * tiles.length)];
+ //           var tram = new Car(tile, trams, config.Tram.numTypes, true);
+ //           tile.addCar(tram);
+ //       }
+ //   }
 
     draw() {
         for (var i = 0; i < this.tiles.length; i++) {
             this.tiles[i].draw(this.masterGroup, this.rowGroupsGround[this.tileRowId[i]], this.rowGroupsHouses[this.tileRowId[i]]);
+        }
+    }
+
+    drawTracks() {
+        for (var i = 0; i < this.tiles.length; i++) {
+            this.tiles[i].drawTracks(this.rowGroupsGround[this.tileRowId[i]]);
         }
     }
 
@@ -105,6 +95,60 @@ class Map {
             tile.update();
         });
         this.masterGroup.sort('yz');
+    }
+
+    newTrackHover(x, y) {
+        for (var i = 0; i < this.tiles.length; i++) {
+            if (this.tiles[i].inside(x, y)) {
+            }
+        }
+    }
+
+    newTrackClick(x, y) {
+        var foundTile = false;
+
+        for (var i = 0; i < this.tiles.length; i++) {
+            if (this.tiles[i].inside(x, y)) {
+                if (this.newTrack.length === 0 || this.newTrack[this.newTrack.length-1].isTrackNeighbourOf(this.tiles[i])) {
+                    this.newTrack.push(this.tiles[i]);
+                    var newTrackHashes = this.newTrack.map(x => x.hash);
+
+                    this.tiles[i].generateTrack(newTrackHashes);
+                    if (this.newTrack.length > 1) {
+                        this.newTrack[0].generateTrack(newTrackHashes);
+                        this.newTrack[this.newTrack.length-2].generateTrack(newTrackHashes);
+                    }
+                    foundTile = true;
+                    break;
+                }
+            }
+        }
+
+        if (foundTile) {
+            this.drawTracks();
+        }
+
+        if (this.newTrack.length > 1 && this.newTrack[0].isTrackNeighbourOf(this.newTrack[this.newTrack.length-1])) {
+            return true;
+        }
+
+        return false;
+    }
+
+    newTrackFinalize() {
+        if (this.newTrack.length > 1) {
+            if (this.newTrack[0].isTrackNeighbourOf(this.newTrack[this.newTrack.length-1])) {
+                this.newTrack.forEach(function (tile) {
+                    tile.finalizeTrack();
+                });
+            } else {
+                this.newTrack.forEach(function (tile) {
+                    tile.generateTrack([]);
+                });
+            }
+            this.drawTracks();
+            this.newTrack = [];
+        }
     }
 }
 

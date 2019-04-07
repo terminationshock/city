@@ -3,6 +3,8 @@ var loader = new Loader();
 var map = new Map();
 var config;
 var cursors;
+var newTrackMode = false;
+var mouseDown = false;
 
 function loadConfig(progress, key, success, totalLoadedFile, totalFiles) {
     if (key === 'config') {
@@ -18,7 +20,6 @@ function step() {
 function preload() {
     game.load.onFileComplete.add(loadConfig, this);
     game.load.text('world', 'world.dat');
-    game.load.text('tracks', 'tracks.dat');
     game.load.json('config', 'config.json');
 }
 
@@ -27,15 +28,15 @@ function create() {
 
     game.stage.backgroundColor = config.Street.color;
     map.loadMap(game.cache.getText('world'));
-    map.loadTracks(game.cache.getText('tracks'));
     map.initTiles(loader.houses, loader.trees, loader.cars);
-    map.initTrams(loader.trams);
 
     game.world.resize(map.getWidth(), map.getHeight());
     map.draw();
 
     var dt = 1.0 / config.World.stepsPerSecond;
     game.time.events.loop(dt, step);
+
+    document.getElementById('button-tool').addEventListener('click', onButtonTool);
 }
 
 function update() {
@@ -50,4 +51,34 @@ function update() {
     } else if (cursors.right.isDown) {
         game.camera.x += 20;
     }
+
+    if (newTrackMode) {
+        if (game.input.mousePointer.leftButton.isDown) {
+            mouseDown = true;
+        }
+        if (game.input.mousePointer.leftButton.isUp && mouseDown) {
+            mouseDown = false;
+            var closedTrack = map.newTrackClick(game.input.mousePointer.x, game.input.mousePointer.y);
+            if (closedTrack) {
+                document.getElementById('button-tool').classList.remove('button-abort');
+                document.getElementById('button-tool').classList.add('button-finish');
+            } else {
+                document.getElementById('button-tool').classList.add('button-abort');
+                document.getElementById('button-tool').classList.remove('button-finish');
+            }
+        } else {
+            map.newTrackHover(game.input.mousePointer.x, game.input.mousePointer.y);
+        }
+    }
+}
+
+function onButtonTool() {
+    document.getElementById('button-tool').classList.remove('button-abort');
+    document.getElementById('button-tool').classList.remove('button-finish');
+    if (!newTrackMode) {
+        document.getElementById('button-tool').classList.add('button-abort');
+    } else {
+        map.newTrackFinalize();
+    }
+    newTrackMode = !newTrackMode;
 }

@@ -29,6 +29,7 @@
         "curveFactor": 7,
         "bezierFactor": 0.25,
         "color": "#333333",
+        "activeColor": "#FFFF00",
         "width": 6
     },
     "Car": {
