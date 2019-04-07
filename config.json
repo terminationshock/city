@@ -53,6 +53,7 @@
     },
     "AI": {
         "probStepDrive": 0.001,
-        "probTilePark": 0.05
+        "probTilePark": 0.05,
+        "waitAtStop": 100
     }
 }

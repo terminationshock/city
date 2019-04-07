@@ -109,7 +109,7 @@ class Car {
         this.waiting += dt;
 
         if (convertInt(this.v) === 0) {
-            if (this.isParking()) {
+            if (this.isParking() || this.isAtStop()) {
                 this.waiting = 0;
             }
         } else {
@@ -172,6 +172,10 @@ class Car {
 
     isParking() {
         return convertInt(this.v) === 0 && [this.callbackPark, this.callbackLeaveParkingLot].includes(this.queue[0]);
+    }
+
+    isAtStop() {
+        return convertInt(this.v) === 0 && this.queue[0] === this.callbackAtStop;
     }
 
     getHead() {
@@ -360,6 +364,16 @@ class Car {
         return false;
     }
 
+    callbackAtStop() {
+        this.v = 0;
+
+        if (this.driver.leaveStop()) {
+            this.queue.push(this.callbackDrive);
+            return true;
+        }
+        return false;
+    }
+
     callbackLeaveParkingLot() {
         for (var i = 0; i < this.tile.cars.length; i++) {
             if (!this.equals(this.tile.cars[i]) && !this.tile.cars[i].isParking() && this.tile.cars[i].getHead() === this.getHead()) {
@@ -424,6 +438,11 @@ class Car {
             this.v = config.Car.velocityHighway;
         } else {
             this.v = config.Car.velocityCity;
+        }
+
+        if (this.boundToTracks && this.tile.hasStop() && this.tile.nearCenter(this.x, this.y)) {
+            this.queue.push(this.callbackAtStop);                       
+            return true;
         }
 
         if (!this.tile.isStraightOrCurve()) {

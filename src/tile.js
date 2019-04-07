@@ -13,6 +13,7 @@ class Tile {
         this.track = {};
         this.newTrack = {};
         this.trackPoints = null;
+        this.stop = false;
         this.hover = null;
         this.trees = null;
         this.cars = [];
@@ -97,6 +98,10 @@ class Tile {
          }
     }
 
+    addStop() {
+        this.stop = true;
+    }
+
     equals(other) {
         return this.hash === other.hash;
     }
@@ -137,6 +142,10 @@ class Tile {
 
     hasTracks() {
         return Object.keys(this.track).length > 0;
+    }
+
+    hasStop() {
+        return this.stop;
     }
 
     generateHouse(houseImages) {

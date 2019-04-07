@@ -78,6 +78,23 @@ function update() {
             }
         }
     }
+
+    if (newStopMode) {
+        if (game.input.mousePointer.leftButton.isDown) {
+            mouseDown = true;
+        }
+        if (game.input.mousePointer.leftButton.isUp && mouseDown) {
+            mouseDown = false;
+            map.newStopClick(game.input.mousePointer.worldX, game.input.mousePointer.worldY, false);
+        } else {
+            var ok = map.newStopClick(game.input.mousePointer.worldX, game.input.mousePointer.worldY, true);
+            if (ok) {
+                document.getElementById('canvas').classList.remove('nok');
+            } else {
+                document.getElementById('canvas').classList.add('nok');
+            }
+        }
+    }
 }
 
 function onButtonTrack() {

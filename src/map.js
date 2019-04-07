@@ -121,6 +121,19 @@ class Map {
         return false;
     }
 
+    newStopClick(x, y, hover) {
+        for (var i = 0; i < this.tiles.length; i++) {
+            if (this.tiles[i].inside(x, y) && this.tiles[i].hasTracks() && this.tiles[i].isStraight() && !this.tiles[i].hasStop()) {
+                if (hover) {
+                    return true;
+                }
+
+                this.tiles[i].addStop();
+            }
+        }
+        return false;
+    }
+
     trackClosed() {
         if (this.newTrack.length > 2 && this.newTrack[0].isTrackNeighbourOf(this.newTrack[this.newTrack.length-1])) {
             if (!this.newTrack[0].equals(this.newTrack[this.newTrack.length-2]) && !this.newTrack[1].equals(this.newTrack[this.newTrack.length-1])) {
