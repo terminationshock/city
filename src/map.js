@@ -79,10 +79,14 @@ class Map {
         }
     }
 
-    initPlayer(trams) {
-        var tile = this.trackTiles[Math.floor(Math.random() * this.trackTiles.length)];
-        var tram = new Car(tile, trams, config.Tram.numTypes, true);
-        tile.addCar(tram);
+    initTrams(trams) {
+        for (var i = 0; i < config.Tram.numTrams; i++) {
+            var j = Math.floor(this.trackTiles.length/config.Tram.numTrams);
+            var tiles = this.trackTiles.slice(i*j, (i+1)*j);
+            var tile = tiles[Math.floor(Math.random() * tiles.length)];
+            var tram = new Car(tile, trams, config.Tram.numTypes, true);
+            tile.addCar(tram);
+        }
     }
 
     draw() {

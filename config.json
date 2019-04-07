@@ -44,7 +44,8 @@
     },
     "Tram": {
         "imgSize": 80,
-        "numTypes": 1
+        "numTypes": 1,
+        "numTrams": 2
     },
     "World": {
         "stepsPerSecond": 30

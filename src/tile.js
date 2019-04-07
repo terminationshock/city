@@ -375,8 +375,8 @@ class Tile {
     }
 
     addCar(car) {
-        this.cars.splice(1, 0, car);
-        this.carHashes.splice(1, 0, car.hash);
+        this.cars.push(car);
+        this.carHashes.push(car.hash);
     }
 
     removeCar(car) {
