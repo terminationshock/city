@@ -2,16 +2,14 @@
 
 js=game.js
 
-cat src/error.js >> _$js
-cat src/utils.js >> _$js
-cat src/loader.js >> _$js
-cat src/trees.js >> _$js
-cat src/tile.js >> _$js
-cat src/map.js >> _$js
-cat src/carai.js >> _$js
-cat src/bezier.js >> _$js
-cat src/car.js >> _$js
-cat src/main.js >> _$js
-
-minify _$js > $js
-rm _$js
+rm $js
+cat src/error.js >> $js
+cat src/utils.js >> $js
+cat src/loader.js >> $js
+cat src/trees.js >> $js
+cat src/tile.js >> $js
+cat src/map.js >> $js
+cat src/carai.js >> $js
+cat src/bezier.js >> $js
+cat src/car.js >> $js
+cat src/main.js >> $js

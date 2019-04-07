@@ -243,16 +243,21 @@ class Tile {
     finalizeTrack() {
         for (var head in this.newTrack) {
             if (head in this.track) {
-                var headsTo = this.track[head];
                 for (var i = 0; i < this.newTrack[head].length; i++) {
-                    if (!headsTo.includes(this.newTrack[head][i])) {
-                        headsTo.push(this.newTrack[head][i]);
-                    }
+                    this.track[head].push(this.newTrack[head][i]);
                 }
-                this.track[head] = headsTo;
             } else {
                 this.track[head] = this.newTrack[head];
             }
+        }
+        for (var headFrom in this.track) {
+            var headsTo = [];
+            for (var i = 0; i < this.track[headFrom].length; i++) {
+                if (!headsTo.includes(this.track[headFrom][i])) {
+                    headsTo.push(this.track[headFrom][i]);
+                }
+            }
+            this.track[headFrom] = headsTo;
         }
         this.newTrack = {};
     }

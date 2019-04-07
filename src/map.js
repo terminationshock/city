@@ -94,14 +94,15 @@ class Map {
         this.masterGroup.sort('yz');
     }
 
-    newTrackClick(x, y) {
-        var foundTile = false;
-
+    newTrackClick(x, y, hover) {
         for (var i = 0; i < this.tiles.length; i++) {
-            if (this.tiles[i].inside(x, y)) {
+            if (this.tiles[i].inside(x, y) && this.tiles[i].isStreet()) {
                 if (this.newTrack.length === 0 || this.newTrack[this.newTrack.length-1].isTrackNeighbourOf(this.tiles[i])) {
                     if (this.newTrack.length > 1 && this.newTrack[this.newTrack.length-2].equals(this.tiles[i])) {
-                        break;
+                        return false;
+                    }
+                    if (hover) {
+                        return true;
                     }
 
                     this.newTrack.push(this.tiles[i]);
@@ -112,17 +113,12 @@ class Map {
                         this.newTrack[0].generateTrack(newTrackHashes);
                         this.newTrack[this.newTrack.length-2].generateTrack(newTrackHashes);
                     }
-                    foundTile = true;
-                    break;
+                    this.drawTracks();
+                    return true;
                 }
             }
         }
-
-        if (foundTile) {
-            this.drawTracks();
-        }
-
-        return this.trackClosed();
+        return false;
     }
 
     trackClosed() {
@@ -135,7 +131,7 @@ class Map {
     }
 
     newTrackFinalize(tramImages) {
-        if (this.newTrack.length > 1) {
+        if (this.newTrack.length > 0) {
             if (this.trackClosed()) {
                 this.newTrack.forEach(function (tile) {
                     tile.finalizeTrack();

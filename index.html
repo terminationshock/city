@@ -16,12 +16,22 @@
             height: 100vh;
             width: 100vw;
         }
+        .nok {
+            cursor: not-allowed;
+        }
         .button {
             position: absolute;
-            right: 10px;
             top: 10px;
             width: 50px;
             height: 50px;
+        }
+        .button:hover {
+            background-color: #FFFFFF;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        .button-disabled {
+            pointer-events: none !important;
         }
         .button-abort {
             background-image: url('img/b2.png') !important;
@@ -35,20 +45,26 @@
         .button-finish:hover {
             background-image: url('img/b3_h.png') !important;
         }
-        #button-tool {
+        #button-track {
             background-image: url('img/b1.png');
+            right: 70px;
         }
-        #button-tool:hover {
+        #button-track:hover {
             background-image: url('img/b1_h.png');
-            background-color: #FFFFFF;
-            cursor: pointer;
-            border-radius: 5px;
+        }
+        #button-stop {
+            background-image: url('img/b4.png');
+            right: 10px;
+        }
+        #button-stop:hover {
+            background-image: url('img/b4_h.png');
         }
     </style>
 </head>
 <body style="margin: 0;">
     <div id="canvas"></div>
-    <div id="button-tool" class="button"></div>
+    <div id="button-track" class="button"></div>
+    <div id="button-stop" class="button"></div>
     <div id="copyright">Tram 3D model from cadnav.com</div>
 </body>
 </html>
