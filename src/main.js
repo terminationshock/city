@@ -58,7 +58,7 @@ function update() {
         }
         if (game.input.mousePointer.leftButton.isUp && mouseDown) {
             mouseDown = false;
-            var closedTrack = map.newTrackClick(game.input.mousePointer.x, game.input.mousePointer.y);
+            var closedTrack = map.newTrackClick(game.input.mousePointer.worldX, game.input.mousePointer.worldY);
             if (closedTrack) {
                 document.getElementById('button-tool').classList.remove('button-abort');
                 document.getElementById('button-tool').classList.add('button-finish');
