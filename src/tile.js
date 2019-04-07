@@ -13,6 +13,7 @@ class Tile {
         this.track = {};
         this.newTrack = {};
         this.trackPoints = null;
+        this.hover = null;
         this.trees = null;
         this.cars = [];
         this.carHashes = [];
@@ -24,7 +25,7 @@ class Tile {
         this.imgY = this.imgY + config.Tile.height - image.height;
     }
 
-    draw(masterGroup, rowGroupGround, rowGroupHouses) {
+    draw(rowGroupGround, rowGroupHouses) {
         if (this.isGrass() || this.isStreet()) {
             rowGroupGround.add(game.add.image(this.imgX, this.imgY, this.fileId));
         } else {
@@ -34,8 +35,11 @@ class Tile {
         if (this.trees !== null) {
             this.trees.draw(rowGroupHouses);
         }
+    }
+
+    drawCars(group) {
         this.cars.forEach(function (car) {
-            car.draw(masterGroup);
+            car.draw(group);
         });
     }
 
@@ -169,6 +173,14 @@ class Tile {
         }
     }
 
+    generateTrams(tramImages) {
+        if (this.hasTracks() && this.isStraight()) {
+            if (Math.random() < config.Track.probTram) {
+                this.addCar(new Car(this, tramImages, config.Tram.numTypes, true));
+            }
+        }
+    }
+
     generateTrack(track) {
         if (!this.isStreet()) {
             return;
@@ -198,22 +210,28 @@ class Tile {
                     indexPrev = track.length - 1;
                 }
 
+                var negativeHeadFrom = null;
+                var headTo = null;
                 if (track[indexPrev] in this.neighbourConnections && track[indexNext] in this.neighbourConnections) {
-                    var negativeHeadFrom = this.neighbourConnections[track[indexPrev]];
-                    var headTo = this.neighbourConnections[track[indexNext]];
-                    if (negativeHeadFrom in this.newTrack) {
-                        this.newTrack[negativeHeadFrom].push([headTo]);
-                    } else {
-                        this.newTrack[negativeHeadFrom] = [headTo];
-                    }
+                    negativeHeadFrom = this.neighbourConnections[track[indexPrev]];
+                    headTo = this.neighbourConnections[track[indexNext]];
                 } else if (track[indexPrev] in this.neighbourConnections) {
-                    var negativeHeadFrom = this.neighbourConnections[track[indexPrev]];
-                    var headTo = negativeHeadFrom + 180;
+                    negativeHeadFrom = this.neighbourConnections[track[indexPrev]];
+                    headTo = negativeHeadFrom + 180;
                     if (headTo >= 360) {
                         headTo -= 360;
                     }
+                } else if (track[indexNext] in this.neighbourConnections) {
+                    headTo = this.neighbourConnections[track[indexNext]];
+                    negativeHeadFrom = headTo + 180;
+                    if (negativeHeadFrom >= 360) {
+                        negativeHeadFrom -= 360;
+                    }
+                }
+
+                if (headTo !== null) {
                     if (negativeHeadFrom in this.newTrack) {
-                        this.newTrack[negativeHeadFrom].push([headTo]);
+                        this.newTrack[negativeHeadFrom].push(headTo);
                     } else {
                         this.newTrack[negativeHeadFrom] = [headTo];
                     }

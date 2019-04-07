@@ -68,25 +68,22 @@ class Map {
         });
     }
 
- //   initTrams(trams) {
- //       for (var i = 0; i < config.Tram.numTrams; i++) {
- //           var j = Math.floor(this.trackTiles.length/config.Tram.numTrams);
- //           var tiles = this.trackTiles.slice(i*j, (i+1)*j);
- //           var tile = tiles[Math.floor(Math.random() * tiles.length)];
- //           var tram = new Car(tile, trams, config.Tram.numTypes, true);
- //           tile.addCar(tram);
- //       }
- //   }
-
     draw() {
         for (var i = 0; i < this.tiles.length; i++) {
-            this.tiles[i].draw(this.masterGroup, this.rowGroupsGround[this.tileRowId[i]], this.rowGroupsHouses[this.tileRowId[i]]);
+            this.tiles[i].draw(this.rowGroupsGround[this.tileRowId[i]], this.rowGroupsHouses[this.tileRowId[i]]);
         }
+        this.drawCars();
     }
 
     drawTracks() {
         for (var i = 0; i < this.tiles.length; i++) {
             this.tiles[i].drawTracks(this.rowGroupsGround[this.tileRowId[i]]);
+        }
+    }
+
+    drawCars() {
+        for (var i = 0; i < this.tiles.length; i++) {
+            this.tiles[i].drawCars(this.masterGroup);
         }
     }
 
@@ -97,19 +94,16 @@ class Map {
         this.masterGroup.sort('yz');
     }
 
-    newTrackHover(x, y) {
-        for (var i = 0; i < this.tiles.length; i++) {
-            if (this.tiles[i].inside(x, y)) {
-            }
-        }
-    }
-
     newTrackClick(x, y) {
         var foundTile = false;
 
         for (var i = 0; i < this.tiles.length; i++) {
             if (this.tiles[i].inside(x, y)) {
                 if (this.newTrack.length === 0 || this.newTrack[this.newTrack.length-1].isTrackNeighbourOf(this.tiles[i])) {
+                    if (this.newTrack.length > 1 && this.newTrack[this.newTrack.length-2].equals(this.tiles[i])) {
+                        break;
+                    }
+
                     this.newTrack.push(this.tiles[i]);
                     var newTrackHashes = this.newTrack.map(x => x.hash);
 
@@ -128,18 +122,24 @@ class Map {
             this.drawTracks();
         }
 
-        if (this.newTrack.length > 1 && this.newTrack[0].isTrackNeighbourOf(this.newTrack[this.newTrack.length-1])) {
-            return true;
-        }
+        return this.trackClosed();
+    }
 
+    trackClosed() {
+        if (this.newTrack.length > 2 && this.newTrack[0].isTrackNeighbourOf(this.newTrack[this.newTrack.length-1])) {
+            if (!this.newTrack[0].equals(this.newTrack[this.newTrack.length-2]) && !this.newTrack[1].equals(this.newTrack[this.newTrack.length-1])) {
+                return true;
+            }
+        }
         return false;
     }
 
-    newTrackFinalize() {
+    newTrackFinalize(tramImages) {
         if (this.newTrack.length > 1) {
-            if (this.newTrack[0].isTrackNeighbourOf(this.newTrack[this.newTrack.length-1])) {
+            if (this.trackClosed()) {
                 this.newTrack.forEach(function (tile) {
                     tile.finalizeTrack();
+                    tile.generateTrams(tramImages);
                 });
             } else {
                 this.newTrack.forEach(function (tile) {
@@ -147,6 +147,7 @@ class Map {
                 });
             }
             this.drawTracks();
+            this.drawCars();
             this.newTrack = [];
         }
     }

@@ -80,9 +80,11 @@ class Car {
     }
 
     draw(group) {
-        this.sprite = game.add.sprite(0, 0, this.colorId);
-        this.updateSprite(this.x, this.y, this.getHead());
-        group.add(this.sprite);
+        if (this.sprite === null) {
+            this.sprite = game.add.sprite(0, 0, this.colorId);
+            this.updateSprite(this.x, this.y, this.getHead());
+            group.add(this.sprite);
+        }
     }
 
     updateSprite(x, y, head) {

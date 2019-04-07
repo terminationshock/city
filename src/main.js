@@ -66,8 +66,6 @@ function update() {
                 document.getElementById('button-tool').classList.add('button-abort');
                 document.getElementById('button-tool').classList.remove('button-finish');
             }
-        } else {
-            map.newTrackHover(game.input.mousePointer.x, game.input.mousePointer.y);
         }
     }
 }
@@ -78,7 +76,7 @@ function onButtonTool() {
     if (!newTrackMode) {
         document.getElementById('button-tool').classList.add('button-abort');
     } else {
-        map.newTrackFinalize();
+        map.newTrackFinalize(loader.trams);
     }
     newTrackMode = !newTrackMode;
 }

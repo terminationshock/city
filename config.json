@@ -30,7 +30,8 @@
         "bezierFactor": 0.25,
         "color": "#333333",
         "activeColor": "#FFFF00",
-        "width": 6
+        "width": 6,
+        "probTram": 0.1
     },
     "Car": {
         "imgSize": 32,
@@ -45,8 +46,7 @@
     },
     "Tram": {
         "imgSize": 80,
-        "numTypes": 1,
-        "numTrams": 4
+        "numTypes": 1
     },
     "World": {
         "stepsPerSecond": 30
