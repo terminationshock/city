@@ -45,7 +45,7 @@
     "Tram": {
         "imgSize": 80,
         "numTypes": 1,
-        "numTrams": 2
+        "numTrams": 4
     },
     "World": {
         "stepsPerSecond": 30

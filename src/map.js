@@ -48,8 +48,11 @@ class Map {
         }
     }
 
-    loadTrack(fileContent) {
-        this.trackHashes = fileContent.trim().split(',').map(x => this.counterHashMap[x]);
+    loadTracks(fileContent) {
+        var lines = fileContent.trim().split('\n');
+        for (var i = 0; i < lines.length; i++) {
+            this.trackHashes.push(lines[i].trim().split(',').map(x => this.counterHashMap[x]));
+        }
     }
 
     getWidth() {
@@ -72,9 +75,11 @@ class Map {
             tile.computeStreetNeighbours(tiles);
         });
         for (var i = 0; i < this.tiles.length; i++) {
-            var hasTrack = this.tiles[i].generateTrack(this.trackHashes);
-            if (hasTrack) {
-                this.trackTiles.push(this.tiles[i]);
+            for (var j = 0; j < this.trackHashes.length; j++) {
+                var hasTrack = this.tiles[i].generateTrack(this.trackHashes[j]);
+                if (hasTrack) {
+                    this.trackTiles.push(this.tiles[i]);
+                }
             }
         }
     }
