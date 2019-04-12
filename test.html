@@ -5,6 +5,7 @@
     <script src="phaser.min.js"></script>
     <script src="src/error.js"></script>
     <script src="src/utils.js"></script>
+    <script src="src/tracks.js"></script>
     <script src="src/tile.js"></script>
     <script src="src/carai.js"></script>
     <script src="src/bezier.js"></script>
@@ -12,6 +13,7 @@
     <script src="test/bezier_test.js"></script>
     <script src="test/car_test.js"></script>
     <script src="test/tile_test.js"></script>
+    <script src="test/tracks_test.js"></script>
 </head>
 <body>
     <script>
@@ -24,6 +26,7 @@
 
         function create() {
             config = game.cache.getJSON('config');
+            new TracksTest();
             new TileTest();
             new BezierCurveTest();
             new CarTest();

@@ -7,6 +7,7 @@ cat src/error.js >> $js
 cat src/utils.js >> $js
 cat src/loader.js >> $js
 cat src/trees.js >> $js
+cat src/tracks.js >> $js
 cat src/tile.js >> $js
 cat src/map.js >> $js
 cat src/carai.js >> $js

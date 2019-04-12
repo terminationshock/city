@@ -241,7 +241,7 @@ class Car {
     getNextTurn() {
         if (this.boundToTracks) {
             var head = this.tile.neighbourConnections[this.oldTile];
-            return this.driver.decideTurn(this.tile.track[head]);
+            return this.driver.decideTurn(this.tile.getTrackHeadFrom(head));
         }
 
         var conn = this.tile.connections.slice(0);
