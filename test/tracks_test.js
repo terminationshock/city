@@ -7,10 +7,7 @@ class TracksTest {
         var tile4 = new Tile('r0017', 20, -20);
         this.tiles = [tile, tile1, tile2, tile3, tile4];
         tile.computeAllNeighbours(this.tiles);
-        this.tiles.forEach(function (t) {
-            t.computeStreetConnections();
-        });
-        tile.computeStreetNeighbours(this.tiles);
+        tile.computeStreetNeighboursAndConnections();
         this.tracks = new Tracks(tile);
 
         this.testHasTracks();

@@ -7,7 +7,7 @@ class Tracks {
     }
 
     generate(track) {
-        if (!this.tile.isStreet()) {
+        if (this.tile.isHouse()) {
             return;
         }
 

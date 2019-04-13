@@ -17,6 +17,8 @@
     "Street": {
         "highways": ["r0081", "r0085"],
         "straights": ["r0017", "r0021", "r0081", "r0085"],
+        "curves": ["r0049", "r0053", "r0057", "r0061"],
+        "deadEnds": ["r0065", "r0069", "r0073", "r0077"],
         "lanePark": 25,
         "laneDrive": 9,
         "centerSizeFactor": 0.7,

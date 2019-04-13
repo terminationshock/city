@@ -244,7 +244,7 @@ class Car {
             return this.driver.decideTurn(this.tile.getTrackHeadFrom(head));
         }
 
-        var conn = this.tile.connections.slice(0);
+        var conn = this.tile.getStreetConnections().slice(0);
 
         if (!this.tile.isDeadEnd()) {
             var neighbourHashes = this.tile.streetNeighbours.map(tile => tile.hash);

@@ -21,8 +21,7 @@ class TileTest {
         this.tile_road[81] = new Tile('r0081', 0, 0);
         this.tile_road[85] = new Tile('r0085', 0, 0);
 
-        var tile = new Tile('r0001', 0, 0);
-        tile.computeStreetConnections();
+        var tile = new Tile('r0021', 0, 0);
         this.car1 = new Car(tile, [1]);
         this.car2 = new Car(tile, [2]);
 
@@ -30,12 +29,14 @@ class TileTest {
         this.testIsStreet();
         this.testIsStraight();
         this.testIsHighway();
+        this.testIsCurve();
         this.testIsStraightOrCurve();
         this.testIsJunctionOrCrossing();
         this.testIsDeadEnd();
         this.testComputeAllNeighbours();
-        this.testComputeStreetNeighbours();
-        this.testComputeStreetConnections();
+        this.testComputeStreetNeighboursAndConnections();
+        this.testIsConnectedTo();
+        this.testGetStreetConnections();
         this.testGetTurnDirection();
         this.testInside();
         this.testCenterAhead();
@@ -105,11 +106,29 @@ class TileTest {
         console.assert(this.tile_road[85].isHighway());
     }
 
+    testIsCurve() {
+        console.assert(!this.tile_grass.isCurve());
+        console.assert(!this.tile_house.isCurve());
+        console.assert(!this.tile_road[1].isCurve());
+        console.assert(!this.tile_road[5].isCurve());
+        console.assert(!this.tile_road[9].isCurve());
+        console.assert(!this.tile_road[13].isCurve());
+        console.assert(!this.tile_road[17].isCurve());
+        console.assert(!this.tile_road[21].isCurve());
+        console.assert(!this.tile_road[45].isCurve());
+        console.assert(this.tile_road[49].isCurve());
+        console.assert(this.tile_road[53].isCurve());
+        console.assert(this.tile_road[57].isCurve());
+        console.assert(this.tile_road[61].isCurve());
+        console.assert(!this.tile_road[65].isCurve());
+        console.assert(!this.tile_road[69].isCurve());
+        console.assert(!this.tile_road[73].isCurve());
+        console.assert(!this.tile_road[77].isCurve());
+        console.assert(!this.tile_road[81].isCurve());
+        console.assert(!this.tile_road[85].isCurve());
+    }
+
     testIsStraightOrCurve() {
-        for (var key in this.tile_road) {
-            this.tile_road[key].connections = [];
-            this.tile_road[key].computeStreetConnections();
-        }
         console.assert(!this.tile_road[1].isStraightOrCurve());
         console.assert(!this.tile_road[5].isStraightOrCurve());
         console.assert(!this.tile_road[9].isStraightOrCurve());
@@ -130,10 +149,6 @@ class TileTest {
     }
 
     testIsJunctionOrCrossing() {
-        for (var key in this.tile_road) {
-            this.tile_road[key].connections = [];
-            this.tile_road[key].computeStreetConnections();
-        }
         console.assert(this.tile_road[1].isJunctionOrCrossing());
         console.assert(this.tile_road[5].isJunctionOrCrossing());
         console.assert(this.tile_road[9].isJunctionOrCrossing());
@@ -154,10 +169,6 @@ class TileTest {
     }
 
     testIsDeadEnd() {
-        for (var key in this.tile_road) {
-            this.tile_road[key].connections = [];
-            this.tile_road[key].computeStreetConnections();
-        }
         console.assert(!this.tile_road[1].isDeadEnd());
         console.assert(!this.tile_road[5].isDeadEnd());
         console.assert(!this.tile_road[9].isDeadEnd());
@@ -190,7 +201,7 @@ class TileTest {
         console.assert(!tile.neighbours.includes(tile));
     }
 
-    testComputeStreetNeighbours() {
+    testComputeStreetNeighboursAndConnections() {
         var tile = new Tile('r0045', 0, 0);
         var tile1 = new Tile('r0021', -20, -20);
         var tile2 = new Tile('r0081', -20, 20);
@@ -198,10 +209,7 @@ class TileTest {
         var tile4 = new Tile('r0017', 20, -20);
         var tiles = [tile, tile1, tile2, tile3, tile4];
         tile.computeAllNeighbours(tiles);
-        tiles.forEach(function (t) {
-            t.computeStreetConnections();
-        });
-        tile.computeStreetNeighbours(tiles);
+        tile.computeStreetNeighboursAndConnections();
 
         console.assert(tile.streetNeighbours.includes(tile1));
         console.assert(tile.streetNeighbours.includes(tile2));
@@ -213,12 +221,31 @@ class TileTest {
         console.assert(tile.getNeighbourConnection(tile4) === 60);
     }
 
-    testComputeStreetConnections() {
-        this.tile_road[45].computeStreetConnections();
-        console.assert(this.tile_road[45].connections.includes(60));
-        console.assert(this.tile_road[45].connections.includes(120));
-        console.assert(this.tile_road[45].connections.includes(240));
-        console.assert(this.tile_road[45].connections.includes(300));
+    testIsConnectedTo() {
+        console.assert(this.tile_road[45].isConnectedTo(60));
+        console.assert(this.tile_road[45].isConnectedTo(120));
+        console.assert(this.tile_road[45].isConnectedTo(240));
+        console.assert(this.tile_road[45].isConnectedTo(300));
+    }
+
+    testGetStreetConnections() {
+        console.assert(this.tile_road[1].getStreetConnections().length === 3);
+        console.assert(this.tile_road[5].getStreetConnections().length === 3);
+        console.assert(this.tile_road[9].getStreetConnections().length === 3);
+        console.assert(this.tile_road[13].getStreetConnections().length === 3);
+        console.assert(this.tile_road[17].getStreetConnections().length === 2);
+        console.assert(this.tile_road[21].getStreetConnections().length === 2);
+        console.assert(this.tile_road[45].getStreetConnections().length === 4);
+        console.assert(this.tile_road[49].getStreetConnections().length === 2);
+        console.assert(this.tile_road[53].getStreetConnections().length === 2);
+        console.assert(this.tile_road[57].getStreetConnections().length === 2);
+        console.assert(this.tile_road[61].getStreetConnections().length === 2);
+        console.assert(this.tile_road[65].getStreetConnections().length === 1);
+        console.assert(this.tile_road[69].getStreetConnections().length === 1);
+        console.assert(this.tile_road[73].getStreetConnections().length === 1);
+        console.assert(this.tile_road[77].getStreetConnections().length === 1);
+        console.assert(this.tile_road[81].getStreetConnections().length === 2);
+        console.assert(this.tile_road[85].getStreetConnections().length === 2);
     }
 
     testGetTurnDirection() {

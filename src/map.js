@@ -58,13 +58,12 @@ class Map {
     initTiles(houseImages, treeImages, carImages) {
         this.tiles.forEach(function (tile, index, tiles) {
             tile.computeAllNeighbours(tiles);
-            tile.computeStreetConnections();
+        });
+        this.tiles.forEach(function (tile) {
+            tile.computeStreetNeighboursAndConnections();
             tile.generateHouse(houseImages);
             tile.generateTrees(treeImages);
             tile.generateCars(carImages);
-        });
-        this.tiles.forEach(function (tile, index, tiles) {
-            tile.computeStreetNeighbours(tiles);
         });
     }
 
@@ -96,7 +95,7 @@ class Map {
 
     newTrackClick(x, y, hover) {
         for (var i = 0; i < this.tiles.length; i++) {
-            if (this.tiles[i].inside(x, y) && this.tiles[i].isStreet()) {
+            if (this.tiles[i].inside(x, y) && !this.tiles[i].isHouse()) {
                 if (this.newTrack.length === 0 || this.newTrack[this.newTrack.length-1].isTrackNeighbourOf(this.tiles[i])) {
                     if (this.newTrack.length > 1 && this.newTrack[this.newTrack.length-2].equals(this.tiles[i])) {
                         return false;

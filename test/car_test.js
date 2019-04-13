@@ -28,7 +28,6 @@ class SpriteMock {
 class CarTest {
     constructor() {
         this.tile = new Tile('r0045', 0, 0);
-        this.tile.connections = [60];
         this.car = new Car(this.tile, ['colorId']);
         this.car.typeId = 1;
         this.car.driver = new DriverMock();
@@ -57,7 +56,7 @@ class CarTest {
 
     testInit() {
         console.assert(this.car.colorId === 'colorId');
-        console.assert(this.car.head === 60);
+        console.assert([60, 120, 240, 300].includes(this.car.head));
     }
 
     testGetFrameIndex() {
@@ -65,6 +64,7 @@ class CarTest {
     }
 
     testGetNextHead() {
+        this.car.head = 60;
         console.assert(this.car.getNextHead(1) === 75);
         console.assert(this.car.getNextHead(-1) === 45);
         console.assert(this.car.getNextHead(8) === 240);
@@ -95,12 +95,8 @@ class CarTest {
         var tile3 = new Tile('r0053', 20, 20);
         var tile4 = new Tile('r0017', 20, -20);
         var tiles = [this.car.tile, tile1, tile2, tile3, tile4];
-        this.tile.connections = [];
         this.car.tile.computeAllNeighbours(tiles);
-        tiles.forEach(function (t) {
-            t.computeStreetConnections();
-        });
-        this.car.tile.computeStreetNeighbours(tiles);
+        this.car.tile.computeStreetNeighboursAndConnections();
         this.car.oldTile = tile2.hash;
         var res = this.car.getNextTurn();
         console.assert(res.includes(60));
@@ -157,7 +153,6 @@ class CarTest {
 
     testParkNow() {
         this.car.tile = new Tile('r0017', 0, 0);
-        this.car.tile.computeStreetConnections();
         this.car.head = 60;
         this.car.queue = [this.car.callbackLeaveParkingLot, this.car.callbackDrive];
         this.car.parkNow();
