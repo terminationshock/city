@@ -3,6 +3,7 @@ class Trees {
         this.tile = tile;
         this.treeImages = treeImages;
         this.trees = [];
+        this.sprites = [];
     }
 
     generateTrees() {
@@ -33,8 +34,17 @@ class Trees {
     }
 
     draw(group) {
-        this.trees.forEach(function (tree) {
-            group.add(game.add.image(tree.imgX, tree.imgY, tree.tree));
+        for (var i = 0; i < this.trees.length; i++) {
+            this.sprites.push(game.add.image(this.trees[i].imgX, this.trees[i].imgY, this.trees[i].tree));
+        }
+        this.sprites.forEach(function (sprite) {
+            group.add(sprite);
+        });
+    }
+
+    remove() {
+        this.sprites.forEach(function (sprite) {
+            sprite.destroy();
         });
     }
 }

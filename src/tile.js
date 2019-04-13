@@ -37,6 +37,9 @@ class Tile {
 
     drawTracks(group) {
         this.tracks.draw(group);
+        if (this.hasTracks() && this.trees !== null) {
+            this.trees.remove();
+        }
     }
 
     drawCars(group) {
@@ -73,6 +76,16 @@ class Tile {
 
     isStraight() {
         return config.Street.straights.includes(this.fileId);
+    }
+
+    isStraightStreetOrTrack(selectTrack) {
+        if (selectTrack) {
+            if (this.hasTracks()) {
+                return this.tracks.isStraight();
+            }
+            return false;
+        }
+        return this.isStraight();
     }
 
     isHighway() {
@@ -150,7 +163,7 @@ class Tile {
     }
 
     generateTrams(tramImages) {
-        if (this.hasTracks() && this.isStraight()) {
+        if (this.hasTracks() && this.tracks.isStraight()) {
             if (Math.random() < config.Track.probTram) {
                 this.addCar(new Car(this, tramImages, config.Tram.numTypes, true));
             }
@@ -210,7 +223,7 @@ class Tile {
     }
 
     isTrackNeighbourOf(tile) {
-        return this.neighbours.includes(tile) && !tile.isHouse(); //  tile.hash in this.neighbourConnections;
+        return this.neighbours.includes(tile) && !tile.isHouse();
     }
 
     isConnectedTo(head) {

@@ -125,6 +125,22 @@ class Tracks {
         return Object.keys(this.track).length > 0;
     }
 
+    isStraight() {
+        for (var negativeHeadFrom in this.track) {
+            if (this.track[negativeHeadFrom].length > 1) {
+                return false;
+            }
+            var headTo = convertInt(negativeHeadFrom) + 180;
+            if (headTo >= 360) {
+                headTo -= 360;
+            }
+            if (convertInt(this.track[negativeHeadFrom]) !== headTo) {
+                return false;
+            }
+        }
+        return true;
+    }
+
     getHeadFrom(head) {
         return this.track[head];
     }
