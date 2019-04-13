@@ -20,51 +20,58 @@
             cursor: not-allowed;
         }
         .button {
+            display: table;
             position: absolute;
-            top: 10px;
-            width: 50px;
-            height: 50px;
+            top: 20px;
+            width: 60px;
+            height: 60px;
+            border-radius: 10px;
+            border-color: rgb(255, 255, 255);
+            border-style: solid;
+            background-color: rgba(50, 50, 50, 0.5);
         }
         .button:hover {
-            background-color: #FFFFFF;
             cursor: pointer;
-            border-radius: 5px;
+            background-color: rgb(255, 255, 255);
+        }
+        .button-icon {
+            display: table-cell;
+            font: 40px Arial;
+            text-align: center;
+            vertical-align: middle;
         }
         .button-disabled {
             pointer-events: none !important;
+            visibility: hidden;
         }
-        .button-abort {
-            background-image: url('img/b2.png') !important;
+        .button-active {
+            pointer-events: none !important;
+            background-color: rgb(255, 255, 255);
         }
-        .button-abort:hover {
-            background-image: url('img/b2_h.png') !important;
-        }
-        .button-finish {
-            background-image: url('img/b3.png') !important;
-        }
-        .button-finish:hover {
-            background-image: url('img/b3_h.png') !important;
+        #button-finish {
+            right: 340px;
         }
         #button-track {
-            background-image: url('img/b1.png');
-            right: 70px;
-        }
-        #button-track:hover {
-            background-image: url('img/b1_h.png');
+            right: 260px;
         }
         #button-stop {
-            background-image: url('img/b4.png');
-            right: 10px;
+            right: 180px;
         }
-        #button-stop:hover {
-            background-image: url('img/b4_h.png');
+        #button-line {
+            right: 100px;
+        }
+        #button-tram {
+            right: 20px;
         }
     </style>
 </head>
 <body style="margin: 0;">
     <div id="canvas"></div>
-    <div id="button-track" class="button"></div>
-    <div id="button-stop" class="button"></div>
+    <div id="button-finish" class="button button-disabled"><div class="button-icon">&#9989;</div></div>
+    <div id="button-track" class="button"><div class="button-icon">&#128740;</div></div>
+    <div id="button-stop" class="button"><div class="button-icon">&#128655;</div></div>
+    <div id="button-line" class="button"><div class="button-icon">&#128259;</div></div>
+    <div id="button-tram" class="button"><div class="button-icon">&#128651;</div></div>
     <div id="copyright">Tram 3D model from cadnav.com</div>
 </body>
 </html>

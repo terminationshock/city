@@ -13,4 +13,5 @@ cat src/map.js >> $js
 cat src/carai.js >> $js
 cat src/bezier.js >> $js
 cat src/car.js >> $js
+cat src/ui.js >> $js
 cat src/main.js >> $js

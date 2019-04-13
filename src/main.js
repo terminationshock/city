@@ -39,6 +39,7 @@ function create() {
 
     document.getElementById('button-track').addEventListener('click', onButtonTrack);
     document.getElementById('button-stop').addEventListener('click', onButtonStop);
+    document.getElementById('button-finish').addEventListener('click', onButtonFinish);
 }
 
 function update() {
@@ -54,79 +55,47 @@ function update() {
         game.camera.x += 20;
     }
 
-    if (newTrackMode) {
+    if (newTrackMode || newStopMode) {
         if (game.input.mousePointer.leftButton.isDown) {
             mouseDown = true;
         }
         if (game.input.mousePointer.leftButton.isUp && mouseDown) {
             mouseDown = false;
-            map.newTrackClick(game.input.mousePointer.worldX, game.input.mousePointer.worldY, false);
-            var closedTrack = map.trackClosed();
-            if (closedTrack) {
-                document.getElementById('button-track').classList.remove('button-abort');
-                document.getElementById('button-track').classList.add('button-finish');
-            } else {
-                document.getElementById('button-track').classList.add('button-abort');
-                document.getElementById('button-track').classList.remove('button-finish');
+            if (newTrackMode) {
+                map.newTrackClick(game.input.mousePointer.worldX, game.input.mousePointer.worldY, false);
+            } else if (newStopMode) {
+                map.newStopClick(game.input.mousePointer.worldX, game.input.mousePointer.worldY, false);
             }
         } else {
-            var ok = map.newTrackClick(game.input.mousePointer.worldX, game.input.mousePointer.worldY, true);
-            if (ok) {
-                document.getElementById('canvas').classList.remove('nok');
-            } else {
-                document.getElementById('canvas').classList.add('nok');
+            var ok = null;
+            if (newTrackMode) {
+                ok = map.newTrackClick(game.input.mousePointer.worldX, game.input.mousePointer.worldY, true);
+            } else if (newStopMode) {
+                ok = map.newStopClick(game.input.mousePointer.worldX, game.input.mousePointer.worldY, true);
             }
-        }
-    }
-
-    if (newStopMode) {
-        if (game.input.mousePointer.leftButton.isDown) {
-            mouseDown = true;
-        }
-        if (game.input.mousePointer.leftButton.isUp && mouseDown) {
-            mouseDown = false;
-            map.newStopClick(game.input.mousePointer.worldX, game.input.mousePointer.worldY, false);
-        } else {
-            var ok = map.newStopClick(game.input.mousePointer.worldX, game.input.mousePointer.worldY, true);
-            if (ok) {
-                document.getElementById('canvas').classList.remove('nok');
-            } else {
-                document.getElementById('canvas').classList.add('nok');
-            }
+            ui.setCursorNok(!ok);
         }
     }
 }
 
 function onButtonTrack() {
-    if (newStopMode) {
-        return;
-    }
-    if (!newTrackMode) {
-        document.getElementById('button-track').classList.add('button-abort');
-        document.getElementById('button-stop').classList.add('button-disabled');
-        document.getElementById('canvas').classList.add('nok');
-    } else {
-        document.getElementById('button-track').classList.remove('button-abort');
-        document.getElementById('button-track').classList.remove('button-finish');
-        document.getElementById('button-stop').classList.remove('button-disabled');
-        document.getElementById('canvas').classList.remove('nok');
-        map.newTrackFinalize(loader.trams);
-    }
-    newTrackMode = !newTrackMode;
+    ui.setButtonActive('button-track');
+    ui.setCursorNok(true);
+    newTrackMode = true;
 }
 
 function onButtonStop() {
+    ui.setButtonActive('button-stop');
+    ui.setCursorNok(true);
+    newStopMode = true;
+}
+
+function onButtonFinish() {
     if (newTrackMode) {
-        return;
+        map.newTrackFinalize(loader.trams);
     }
-    if (!newStopMode) {
-        document.getElementById('button-stop').classList.add('button-abort');
-        document.getElementById('button-track').classList.add('button-disabled');
-        document.getElementById('canvas').classList.add('nok');
-    } else {
-        document.getElementById('button-stop').classList.remove('button-abort');
-        document.getElementById('button-track').classList.remove('button-disabled');
-        document.getElementById('canvas').classList.remove('nok');
-    }
-    newStopMode = !newStopMode;
+    ui.setButtonsInactive();
+    ui.setCursorNok(false);
+    newTrackMode = false;
+    newStopMode = false;
 }
