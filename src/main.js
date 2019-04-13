@@ -73,20 +73,20 @@ function update() {
             } else if (newStopMode) {
                 ok = map.newStopClick(game.input.mousePointer.worldX, game.input.mousePointer.worldY, true);
             }
-            ui.setCursorNok(!ok);
+            ui.setCursorOk(ok);
         }
     }
 }
 
 function onButtonTrack() {
     ui.setButtonActive('button-track');
-    ui.setCursorNok(true);
+    ui.setCursorOk(false);
     newTrackMode = true;
 }
 
 function onButtonStop() {
     ui.setButtonActive('button-stop');
-    ui.setCursorNok(true);
+    ui.setCursorOk(false);
     newStopMode = true;
 }
 
@@ -95,7 +95,7 @@ function onButtonFinish() {
         map.newTrackFinalize(loader.trams);
     }
     ui.setButtonsInactive();
-    ui.setCursorNok(false);
+    ui.setCursorDefault();
     newTrackMode = false;
     newStopMode = false;
 }

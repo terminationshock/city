@@ -30,10 +30,17 @@ ui.setButtonsInactive = function () {
     ui.enableButtons();
 }
 
-ui.setCursorNok = function (nok) {
-    if (nok) {
-        document.getElementById('canvas').classList.add('nok');
+ui.setCursorOk = function (ok) {
+    if (ok) {
+        document.getElementById('canvas').classList.remove('nok');
+        document.getElementById('canvas').classList.add('ok');
     } else {
-    document.getElementById('canvas').classList.remove('nok');
+        document.getElementById('canvas').classList.remove('ok');
+        document.getElementById('canvas').classList.add('nok');
     }
+}
+
+ui.setCursorDefault = function () {
+    document.getElementById('canvas').classList.remove('ok');
+    document.getElementById('canvas').classList.remove('nok');
 }
