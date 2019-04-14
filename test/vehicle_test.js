@@ -25,7 +25,7 @@ class SpriteMock {
     }
 }
 
-class CarTest {
+class VehicleTest {
     constructor() {
         this.tile = new Tile('r0045', 0, 0);
         this.car = new Car(this.tile, ['colorId']);
@@ -145,8 +145,8 @@ class CarTest {
         this.otherCar.x = this.car.x + 10;
         this.otherCar.y = this.car.y - 10;
         var check = [false, false, false, false, false, true, true, true, true, true, true, true, false, false, false, false];
-        for (var i = 0; i < config.Car.headingOrder.length; i++) {
-            this.otherCar.head = config.Car.headingOrder[i];
+        for (var i = 0; i < config.Vehicle.headingOrder.length; i++) {
+            this.otherCar.head = config.Vehicle.headingOrder[i];
             console.assert(this.car.collideWith(this.otherCar) === check[i]);
         }
     }
@@ -189,7 +189,7 @@ class CarTest {
         console.assert(res);
 
         this.car.tile.cars = [],
-        this.car.tile.addCar(this.otherCar);
+        this.car.tile.addVehicle(this.otherCar);
         this.otherCar.head = this.car.head;
         this.otherCar.queue = [this.otherCar.callbackDrive];
         var res = this.car.callbackLeaveParkingLot();
@@ -216,7 +216,7 @@ class CarTest {
             return 0;
         };
         var res = this.car.callbackProceedToTargetLane(300, 0);
-        console.assert(this.car.v === config.Car.velocityTurn);
+        console.assert(this.car.v === config.Vehicle.velocityTurn);
         console.assert(this.car.head === 300);
         console.assert(res);
         this.tile.getDistanceToLane = function(a,b,c,d) {
@@ -229,8 +229,8 @@ class CarTest {
     testCallbackDrive() {
         this.car.queue = [this.car.callbackDrive];
         this.car.tile.cars = [];
-        this.car.tile.addCar(this.otherCar);
-        this.car.tile.addCar(this.car);
+        this.car.tile.addVehicle(this.otherCar);
+        this.car.tile.addVehicle(this.car);
         var res = this.car.callbackDrive();
         console.assert(!res);
         console.assert(this.car.v === 0);

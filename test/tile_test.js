@@ -44,9 +44,9 @@ class TileTest {
         this.testGetClosestPointInLane();
         this.testGetDistanceToLane();
         this.testGetLaneTargetPoint();
-        this.testAddCar();
-        this.testGetCarIndex();
-        this.testRemoveCar();
+        this.testAddVehicle();
+        this.testGetVehicleIndex();
+        this.testRemoveVehicle();
         this.testHasFreeParkingLot();
     }
 
@@ -166,6 +166,68 @@ class TileTest {
         console.assert(!this.tile_road[77].isJunctionOrCrossing());
         console.assert(!this.tile_road[81].isJunctionOrCrossing());
         console.assert(!this.tile_road[85].isJunctionOrCrossing());
+
+        this.tile_road[17].tracks.track = {};
+        this.tile_road[17].tracks.track[240] = [60];
+        console.assert(!this.tile_road[17].isJunctionOrCrossing());
+        this.tile_road[17].tracks.track = {};
+        this.tile_road[17].tracks.track[60] = [240];
+        console.assert(!this.tile_road[17].isJunctionOrCrossing());
+        this.tile_road[17].tracks.track = {};
+        this.tile_road[17].tracks.track[60] = [240];
+        this.tile_road[17].tracks.track[240] = [60];
+        console.assert(!this.tile_road[17].isJunctionOrCrossing());
+        this.tile_road[17].tracks.track = {};
+        this.tile_road[17].tracks.track[240] = [120];
+        console.assert(this.tile_road[17].isJunctionOrCrossing());
+        this.tile_road[17].tracks.track = {};
+        this.tile_road[17].tracks.track[240] = [60,120];
+        console.assert(this.tile_road[17].isJunctionOrCrossing());
+        this.tile_road[17].tracks.track = {};
+        this.tile_road[17].tracks.track[60] = [240];
+        this.tile_road[17].tracks.track[240] = [60,120];
+        console.assert(this.tile_road[17].isJunctionOrCrossing());
+        this.tile_road[17].tracks.track = {};
+        this.tile_road[17].tracks.track[300] = [120];
+        this.tile_road[17].tracks.track[240] = [60];
+        console.assert(this.tile_road[17].isJunctionOrCrossing());
+        this.tile_road[17].tracks.track = {};
+        this.tile_road[17].tracks.track[60] = [240];
+        this.tile_road[17].tracks.track[240] = [60];
+        this.tile_road[17].tracks.track[300] = [60];
+        console.assert(this.tile_road[17].isJunctionOrCrossing());
+        this.tile_road[17].tracks.track = {};
+        this.tile_road[17].tracks.track[60] = [240];
+        this.tile_road[17].tracks.track[240] = [60];
+        this.tile_road[17].tracks.track[60] = [300];
+        console.assert(this.tile_road[17].isJunctionOrCrossing());
+
+        this.tile_grass.tracks.track = {};
+        console.assert(!this.tile_grass.isJunctionOrCrossing());
+        this.tile_grass.tracks.track[60] = [120];
+        console.assert(!this.tile_grass.isJunctionOrCrossing());
+        this.tile_grass.tracks.track = {};
+        this.tile_grass.tracks.track[60] = [120];
+        this.tile_grass.tracks.track[120] = [60];
+        console.assert(!this.tile_grass.isJunctionOrCrossing());
+        this.tile_grass.tracks.track = {};
+        this.tile_grass.tracks.track[60] = [120,300];
+        this.tile_grass.tracks.track[120] = [60];
+        console.assert(this.tile_grass.isJunctionOrCrossing());
+        this.tile_grass.tracks.track = {};
+        this.tile_grass.tracks.track[60] = [120];
+        this.tile_grass.tracks.track[120] = [60];
+        this.tile_grass.tracks.track[300] = [60];
+        console.assert(this.tile_grass.isJunctionOrCrossing());
+        this.tile_grass.tracks.track = {};
+        this.tile_grass.tracks.track[60] = [120];
+        this.tile_grass.tracks.track[120] = [60];
+        this.tile_grass.tracks.track[240] = [300];
+        console.assert(this.tile_grass.isJunctionOrCrossing());
+        this.tile_grass.tracks.track = {};
+        this.tile_grass.tracks.track[60] = [120];
+        this.tile_grass.tracks.track[240] = [300];
+        console.assert(this.tile_grass.isJunctionOrCrossing());
     }
 
     testIsDeadEnd() {
@@ -331,25 +393,25 @@ class TileTest {
         console.assert(Math.abs(y2 - config.Tile.width/2) < 0.01);
     }
 
-    testAddCar() {
-        this.tile_road[1].addCar(this.car1);
-        this.tile_road[1].addCar(this.car2);
-        console.assert(this.tile_road[1].cars.length === 2);
-        console.assert(this.tile_road[1].carHashes.length === 2);
-        console.assert(this.tile_road[1].carHashes[0] === this.car1.hash);
-        console.assert(this.tile_road[1].carHashes[1] === this.car2.hash);
+    testAddVehicle() {
+        this.tile_road[1].addVehicle(this.car1);
+        this.tile_road[1].addVehicle(this.car2);
+        console.assert(this.tile_road[1].vehicles.length === 2);
+        console.assert(this.tile_road[1].vehicleHashes.length === 2);
+        console.assert(this.tile_road[1].vehicleHashes[0] === this.car1.hash);
+        console.assert(this.tile_road[1].vehicleHashes[1] === this.car2.hash);
     }
 
-    testGetCarIndex() {
-        var index = this.tile_road[1].getCarIndex(this.car2);
+    testGetVehicleIndex() {
+        var index = this.tile_road[1].getVehicleIndex(this.car2);
         console.assert(index === 1);
     }
 
-    testRemoveCar() {
-        this.tile_road[1].removeCar(this.car1);
-        console.assert(this.tile_road[1].cars.length === 1);
-        console.assert(this.tile_road[1].carHashes.length === 1);
-        console.assert(this.tile_road[1].carHashes[0] === this.car2.hash);
+    testRemoveVehicle() {
+        this.tile_road[1].removeVehicle(this.car1);
+        console.assert(this.tile_road[1].vehicles.length === 1);
+        console.assert(this.tile_road[1].vehicleHashes.length === 1);
+        console.assert(this.tile_road[1].vehicleHashes[0] === this.car2.hash);
     }
 
     testHasFreeParkingLot() {
@@ -375,7 +437,7 @@ class TileTest {
         console.assert(this.tile_road[21].hasFreeParkingLot(120));
         this.car1.queue = [this.car1.callbackPark];
         this.car1.head = 60;
-        this.tile_road[17].cars.push(this.car1);
+        this.tile_road[17].vehicles.push(this.car1);
         console.assert(!this.tile_road[17].hasFreeParkingLot(60));
     }
 }

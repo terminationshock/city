@@ -5,4 +5,5 @@ function error(message, object, resolution) {
     } else {
         resolution.call(object);
     }
+    alert(message);
 }

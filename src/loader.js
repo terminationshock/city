@@ -132,11 +132,11 @@ class Loader {
         });
 
         this.cars.forEach(function (car) {
-            game.load.spritesheet(car, 'img/'+car+'.png', config.Car.imgSize, config.Car.imgSize, config.Car.headingOrder.length*config.Car.numTypes);
+            game.load.spritesheet(car, 'img/'+car+'.png', config.Car.imgSize, config.Car.imgSize, config.Vehicle.headingOrder.length*config.Car.numTypes);
         });
 
         this.trams.forEach(function (tram) {
-            game.load.spritesheet(tram, 'img/'+tram+'.png', config.Tram.imgSize, config.Tram.imgSize, config.Car.headingOrder.length*config.Tram.numTypes);
+            game.load.spritesheet(tram, 'img/'+tram+'.png', config.Tram.imgSize, config.Tram.imgSize, config.Vehicle.headingOrder.length*config.Tram.numTypes);
         });
     }
 }

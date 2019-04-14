@@ -34,8 +34,8 @@ class Trees {
     }
 
     draw(group) {
-        for (var i = 0; i < this.trees.length; i++) {
-            this.sprites.push(game.add.image(this.trees[i].imgX, this.trees[i].imgY, this.trees[i].tree));
+        for (var tree of this.trees) {
+            this.sprites.push(game.add.image(tree.imgX, tree.imgY, tree.tree));
         }
         this.sprites.forEach(function (sprite) {
             group.add(sprite);

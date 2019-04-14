@@ -13,8 +13,8 @@ class Tile {
         this.stop = false;
         this.hover = null;
         this.trees = null;
-        this.cars = [];
-        this.carHashes = [];
+        this.vehicles = [];
+        this.vehicleHashes = [];
     }
 
     updateImage(fileId) {
@@ -42,9 +42,9 @@ class Tile {
         }
     }
 
-    drawCars(group) {
-        this.cars.forEach(function (car) {
-            car.draw(group);
+    drawVehicles(group) {
+        this.vehicles.forEach(function (vehicle) {
+            vehicle.draw(group);
         });
     }
 
@@ -57,8 +57,8 @@ class Tile {
     }
 
     update() {
-        this.cars.forEach(function (car) {
-            car.update();
+        this.vehicles.forEach(function (vehicle) {
+            vehicle.update();
         });
     }
 
@@ -78,14 +78,11 @@ class Tile {
         return config.Street.straights.includes(this.fileId);
     }
 
-    isStraightStreetOrTrack(selectTrack) {
-        if (selectTrack) {
-            if (this.hasTracks()) {
-                return this.tracks.isStraight();
-            }
-            return false;
+    isStraightTrack() {
+        if (this.hasTracks()) {
+            return this.tracks.isStraight();
         }
-        return this.isStraight();
+        return false;
     }
 
     isHighway() {
@@ -101,7 +98,34 @@ class Tile {
     }
 
     isJunctionOrCrossing() {
-        return !this.isDeadEnd() && !this.isStraightOrCurve();
+        if (!this.isDeadEnd() && !this.isStraightOrCurve() && !this.isGrass()) {
+            return true;
+        }
+        var connections = this.getStreetConnections();
+        if (this.hasTracks()) {
+            var keys = this.tracks.getKeys().map(x => convertInt(x));
+            if (keys.length > 2) {
+                return true;
+            }
+            for (var head of keys) {
+                if (this.getTrackHeadsFrom(head).length > 1) {
+                    return true;
+                }
+                if (connections.length > 0) {
+                    if (!connections.includes(head)) {
+                        return true;
+                    }
+                    if (!connections.includes(this.getTrackHeadsFrom(head)[0])) {
+                        return true;
+                    }
+                } else {
+                    if (keys.length === 2 && !keys.includes(this.getTrackHeadsFrom(head)[0])) {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
     }
 
     isDeadEnd() {
@@ -122,8 +146,8 @@ class Tile {
         }
 
         var atStreet = false;
-        for (var i = 0; i < this.neighbours.length; i++) {
-            if (this.neighbours[i].isStreet() && !this.neighbours[i].isHighway()) {
+        for (var neighbour of this.neighbours) {
+            if (neighbour.isStreet() && !neighbour.isHighway()) {
                 atStreet = true;
                 break;
             }
@@ -145,7 +169,7 @@ class Tile {
     generateCars(carImages) {
         if (this.isStreet() && this.isStraight() && !this.isHighway()) {
             if (Math.random() < config.Tile.probCar) {
-                this.addCar(new Car(this, carImages, config.Car.numTypes, false));
+                this.addVehicle(new Car(this, carImages, config.Car.numTypes));
             }
         }
     }
@@ -158,42 +182,41 @@ class Tile {
         this.tracks.finalize();
     }
 
-    getTrackHeadFrom(head) {
-        return this.tracks.getHeadFrom(head);
+    getTrackHeadsFrom(head) {
+        return this.tracks.getHeadsFrom(head);
     }
 
     generateTrams(tramImages) {
         if (this.hasTracks() && this.tracks.isStraight()) {
             if (Math.random() < config.Track.probTram) {
-                this.addCar(new Car(this, tramImages, config.Tram.numTypes, true));
+                this.addVehicle(new Tram(this, tramImages, config.Tram.numTypes));
             }
         }
     }
 
     computeAllNeighbours(tiles) {
         var buf = 10;
-        for (var i = 0; i < tiles.length; i++) {
-            if (!this.equals(tiles[i])) {
-                if (this.x + buf < tiles[i].x && tiles[i].x < this.x + config.Tile.width - buf
-                    && this.y - config.Tile.height + buf < tiles[i].y && tiles[i].y < this.y - buf) {
-                    this.neighbours.push(tiles[i]);
-                } else if (this.x + buf < tiles[i].x && tiles[i].x < this.x + config.Tile.width - buf
-                    && this.y + buf < tiles[i].y && tiles[i].y < this.y + config.Tile.height - buf) {
-                    this.neighbours.push(tiles[i]);
-                } else if (this.x - config.Tile.width + buf < tiles[i].x && tiles[i].x < this.x - buf
-                    && this.y + buf < tiles[i].y && tiles[i].y < this.y + config.Tile.height - buf) {
-                    this.neighbours.push(tiles[i]);
-                } else if (this.x - config.Tile.width + buf < tiles[i].x && tiles[i].x < this.x - buf
-                    && this.y - config.Tile.height + buf < tiles[i].y && tiles[i].y < this.y - buf) {
-                    this.neighbours.push(tiles[i]);
+        for (var tile of tiles) {
+            if (!this.equals(tile)) {
+                if (this.x + buf < tile.x && tile.x < this.x + config.Tile.width - buf
+                    && this.y - config.Tile.height + buf < tile.y && tile.y < this.y - buf) {
+                    this.neighbours.push(tile);
+                } else if (this.x + buf < tile.x && tile.x < this.x + config.Tile.width - buf
+                    && this.y + buf < tile.y && tile.y < this.y + config.Tile.height - buf) {
+                    this.neighbours.push(tile);
+                } else if (this.x - config.Tile.width + buf < tile.x && tile.x < this.x - buf
+                    && this.y + buf < tile.y && tile.y < this.y + config.Tile.height - buf) {
+                    this.neighbours.push(tile);
+                } else if (this.x - config.Tile.width + buf < tile.x && tile.x < this.x - buf
+                    && this.y - config.Tile.height + buf < tile.y && tile.y < this.y - buf) {
+                    this.neighbours.push(tile);
                 }
             }
         }
     }
 
     computeStreetNeighboursAndConnections() {
-        for (var i = 0; i < this.neighbours.length; i++) {
-            var tile = this.neighbours[i];
+        for (var tile of this.neighbours) {
             if (!tile.isHouse()) {
                 var direction = null;
 
@@ -374,21 +397,21 @@ class Tile {
         return this.getClosestPointInLane(x, y, head, lane);
     }
 
-    addCar(car) {
-        this.cars.push(car);
-        this.carHashes.push(car.hash);
+    addVehicle(vehicle) {
+        this.vehicles.push(vehicle);
+        this.vehicleHashes.push(vehicle.hash);
     }
 
-    removeCar(car) {
-        var index = this.carHashes.indexOf(car.hash);
+    removeVehicle(vehicle) {
+        var index = this.vehicleHashes.indexOf(vehicle.hash);
         if (index >= 0) {
-            this.cars.splice(index, 1);
-            this.carHashes.splice(index, 1);
+            this.vehicles.splice(index, 1);
+            this.vehicleHashes.splice(index, 1);
         }
     }
 
-    getCarIndex(car) {
-        return this.carHashes.indexOf(car.hash);
+    getVehicleIndex(vehicle) {
+        return this.vehicleHashes.indexOf(vehicle.hash);
     }
 
     hasFreeParkingLot(head) {
@@ -401,8 +424,8 @@ class Tile {
         if (!this.isConnectedTo(head)) {
             return false;
         }
-        for (var i = 0; i < this.cars.length; i++) {
-            if (this.cars[i].isParking() && this.cars[i].getHead() === convertInt(head)) {
+        for (var vehicle of this.vehicles) {
+            if (vehicle.isParking() && vehicle.getHead() === convertInt(head)) {
                 return false;
             }
         }

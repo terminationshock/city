@@ -28,9 +28,9 @@ class Tracks {
             index = track.indexOf(this.tile.hash, index + 1);
         }
 
-        for (var i = 0; i < indices.length; i++) {
-            var indexNext = indices[i] + 1;
-            var indexPrev = indices[i] - 1;
+        for (var index of indices) {
+            var indexNext = index + 1;
+            var indexPrev = index - 1;
             if (indexNext === track.length) {
                 indexNext = 0;
             }
@@ -108,8 +108,8 @@ class Tracks {
 
                  this.trackPoints.moveTo(p1.x, p1.y);
                  this.trackPoints.lineTo(path[0].x, path[0].y);
-                 for (var i = 1; i < path.length; i++) {
-                     this.trackPoints.lineTo(path[i].x, path[i].y);
+                 for (var point of path) {
+                     this.trackPoints.lineTo(point.x, point.y);
                  }
                  this.trackPoints.lineTo(p2.x, p2.y);
              }
@@ -117,12 +117,16 @@ class Tracks {
     }
 
     getRandomConnection() {
-        var connections = Object.keys(this.track);
+        var connections = this.getKeys();
         return this.track[connections[Math.floor(Math.random() * connections.length)]];
     }
 
+    getKeys() {
+        return Object.keys(this.track);
+    }
+
     hasTracks() {
-        return Object.keys(this.track).length > 0;
+        return this.getKeys().length > 0;
     }
 
     isStraight() {
@@ -141,8 +145,11 @@ class Tracks {
         return true;
     }
 
-    getHeadFrom(head) {
-        return this.track[head];
+    getHeadsFrom(head) {
+        if (head in this.track) {
+            return this.track[head];
+        }
+        return null;
     }
 
     draw(group) {
@@ -156,15 +163,15 @@ class Tracks {
             this.trackPoints.lineStyle(1, Phaser.Color.hexToRGB(config.Track.color), 1);
             for (var headFrom in this.track) {
                 var headsTo = this.track[headFrom];
-                for (var i = 0; i < headsTo.length; i++) {
-                    this.addSingleTrack(headFrom, headsTo[i]);
+                for (var headTo of headsTo) {
+                    this.addSingleTrack(headFrom, headTo);
                 }
             }
             this.trackPoints.lineStyle(1, Phaser.Color.hexToRGB(config.Track.activeColor), 1);
             for (var headFrom in this.newTrack) {
                 var headsTo = this.newTrack[headFrom];
-                for (var i = 0; i < headsTo.length; i++) {
-                    this.addSingleTrack(headFrom, headsTo[i]);
+                for (var headTo of headsTo) {
+                    this.addSingleTrack(headFrom, headTo);
                 }
             }
 

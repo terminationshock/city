@@ -1,4 +1,4 @@
-class CarAI {
+class Driver {
     constructor() {
         this.waiting = 0;
     }

@@ -10,8 +10,10 @@ cat src/trees.js >> $js
 cat src/tracks.js >> $js
 cat src/tile.js >> $js
 cat src/map.js >> $js
-cat src/carai.js >> $js
+cat src/driver.js >> $js
 cat src/bezier.js >> $js
+cat src/vehicle.js >> $js
 cat src/car.js >> $js
+cat src/tram.js >> $js
 cat src/ui.js >> $js
 cat src/main.js >> $js

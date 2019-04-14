@@ -35,9 +35,7 @@
         "width": 6,
         "probTram": 0.1
     },
-    "Car": {
-        "imgSize": 32,
-        "numTypes": 12,
+    "Vehicle": {
         "headingOrder": [240, 255, 270, 285, 300, 315, 0, 45, 60, 75, 90, 105, 120, 135, 180, 225],
         "velocityTurn": 30,
         "velocityCity": 50,
@@ -45,6 +43,10 @@
         "waitBlocked": 10,
         "waitForever": 30,
         "collisionScale": 0.8
+    },
+    "Car": {
+        "imgSize": 32,
+        "numTypes": 12
     },
     "Tram": {
         "imgSize": 80,

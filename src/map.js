@@ -71,7 +71,7 @@ class Map {
         for (var i = 0; i < this.tiles.length; i++) {
             this.tiles[i].draw(this.rowGroupsGround[this.tileRowId[i]], this.rowGroupsHouses[this.tileRowId[i]]);
         }
-        this.drawCars();
+        this.drawVehicles();
     }
 
     drawTracks() {
@@ -80,9 +80,9 @@ class Map {
         }
     }
 
-    drawCars() {
+    drawVehicles() {
         for (var i = 0; i < this.tiles.length; i++) {
-            this.tiles[i].drawCars(this.masterGroup);
+            this.tiles[i].drawVehicles(this.masterGroup);
         }
     }
 
@@ -155,7 +155,7 @@ class Map {
                 });
             }
             this.drawTracks();
-            this.drawCars();
+            this.drawVehicles();
             this.newTrack = [];
         }
     }
