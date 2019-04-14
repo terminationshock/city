@@ -130,30 +130,36 @@ class Map {
         return false;
     }
 
-    trackClosed() {
+    trackClosed() {                     
         if (this.newTrack.length > 2 && this.newTrack[0].isTrackNeighbourOf(this.newTrack[this.newTrack.length-1])) {
             return true;
         }
         return false;
     }
 
-    // Also allow open tracks                                                                               
-    // Auto-close tracks                                                                                    
-    // Show abort button                                                                                    
-    newTrackFinalize(tramImages) {
+    newTrackAbort() {
         if (this.newTrack.length > 0) {
-            if (this.trackClosed()) {
-                this.newTrack.forEach(function (tile) {
-                    tile.finalizeTrack();
-                    tile.generateTrams(tramImages);
-                });
-            } else {
-                this.newTrack.forEach(function (tile) {
-                    tile.generateTrack([]);
-                });
-            }
+            this.newTrack.forEach(function (tile) {
+                tile.generateTrack([]);
+            });
             this.drawTracks();
-            this.drawVehicles();
+            this.newTrack = [];
+        }
+    }
+
+    newTrackFinalize(tramImages) {
+        if (this.newTrack.length < 2) {
+            this.newTrackAbort();
+            return;
+        }
+
+        if (this.newTrack.length > 0) {
+            this.newTrack.forEach(function (tile) {
+                tile.finalizeTrack();
+                //tile.generateTrams(tramImages);             
+            });
+            this.drawTracks();
+            //this.drawVehicles();              
             this.newTrack = [];
         }
     }

@@ -39,6 +39,7 @@ function create() {
 
     document.getElementById('button-track').addEventListener('click', onButtonTrack);
     document.getElementById('button-stop').addEventListener('click', onButtonStop);
+    document.getElementById('button-abort').addEventListener('click', onButtonAbort);
     document.getElementById('button-finish').addEventListener('click', onButtonFinish);
 }
 
@@ -79,15 +80,25 @@ function update() {
 }
 
 function onButtonTrack() {
-    ui.setButtonActive('button-track');
+    ui.setButtonActive('button-track', true);
     ui.setCursorOk(false);
     newTrackMode = true;
 }
 
 function onButtonStop() {
-    ui.setButtonActive('button-stop');
+    ui.setButtonActive('button-stop', false);
     ui.setCursorOk(false);
     newStopMode = true;
+}
+
+function onButtonAbort() {
+    if (newTrackMode) {
+        map.newTrackAbort();
+    }
+    ui.setButtonsInactive();
+    ui.setCursorDefault();
+    newTrackMode = false;
+    newStopMode = false;
 }
 
 function onButtonFinish() {
