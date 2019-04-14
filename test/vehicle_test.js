@@ -28,10 +28,10 @@ class SpriteMock {
 class VehicleTest {
     constructor() {
         this.tile = new Tile('r0045', 0, 0);
-        this.car = new Car(this.tile, ['colorId']);
+        this.car = new Car(this.tile, 60, ['colorId'], 1);
         this.car.typeId = 1;
         this.car.driver = new DriverMock();
-        this.otherCar = new Car(this.tile, ['colorId']);
+        this.otherCar = new Car(this.tile, 60, ['colorId'], 1);
 
         this.testInit();
         this.testGetFrameIndex();
@@ -56,7 +56,7 @@ class VehicleTest {
 
     testInit() {
         console.assert(this.car.colorId === 'colorId');
-        console.assert([60, 120, 240, 300].includes(this.car.head));
+        console.assert(this.car.head === 60);
     }
 
     testGetFrameIndex() {

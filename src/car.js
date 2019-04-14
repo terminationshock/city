@@ -1,6 +1,5 @@
 class Car extends Vehicle {
     start() {
-        this.head = this.tile.getRandomConnection(false);
         var intHead = this.getHead();
         var lane = this.tile.getLane(intHead, config.Street.lanePark);
         this.startXY(intHead, lane);
@@ -50,6 +49,10 @@ class Car extends Vehicle {
 
     isOnStraight() {
         return this.tile.isStraight();
+    }
+
+    isOnCurve() {
+        return this.tile.isCurve();
     }
 
     isParking() {

@@ -85,6 +85,13 @@ class Tile {
         return false;
     }
 
+    isCurveTrack() {
+        if (this.hasTracks()) {
+            return this.tracks.isCurve();
+        }
+        return false;
+    }
+
     isHighway() {
         return config.Street.highways.includes(this.fileId);
     }
@@ -173,9 +180,26 @@ class Tile {
     }
 
     generateCars(carImages) {
-        if (this.isStreet() && this.isStraight() && !this.isHighway()) {
-            if (Math.random() < config.Tile.probCar) {
-                this.addVehicle(new Car(this, carImages, config.Car.numTypes));
+        if (this.isStreet()) {
+            var connections = this.getStreetConnections();
+            var head = connections[Math.floor(Math.random() * connections.length)];
+
+            if (this.hasFreeParkingLot(head)) {
+                if (Math.random() < config.Tile.probCar) {
+                    this.addVehicle(new Car(this, head, carImages, config.Car.numTypes));
+                }
+            }
+        }
+    }
+
+    generateTrams(tramImages) {
+        if (this.hasTracks()) {
+            var head = this.tracks.getRandomConnection();
+
+            if (this.tracks.isStraight()) {
+                if (Math.random() < config.Track.probTram) {
+                    this.addVehicle(new Tram(this, head, tramImages, config.Tram.numTypes));
+                }
             }
         }
     }
@@ -190,14 +214,6 @@ class Tile {
 
     getTrackHeadsFrom(head) {
         return this.tracks.getHeadsFrom(head);
-    }
-
-    generateTrams(tramImages) {
-        if (this.hasTracks() && this.tracks.isStraight()) {
-            if (Math.random() < config.Track.probTram) {
-                this.addVehicle(new Tram(this, tramImages, config.Tram.numTypes));
-            }
-        }
     }
 
     computeAllNeighbours(tiles) {
@@ -286,28 +302,13 @@ class Tile {
     }
 
     getCurve(p1, p2, head1, head2, bezierFactor) {
-        var turn = this.getTurnDirection(head1, head2);
-
         var dx1 = Math.sin(head1 * Math.PI/180);
         var dy1 = -Math.cos(head1 * Math.PI/180);
 
         var dx2 = Math.sin(head2 * Math.PI/180);
         var dy2 = -Math.cos(head2 * Math.PI/180);
 
-        var deltaHead = 0;
-        if (turn < 0) {
-            if (head2 > head1) {
-                deltaHead = head1 - (head2 - 360);
-            } else {
-                deltaHead = head1 - head2;
-            }
-        } else if (turn > 0) {
-            if (head2 < head1) {
-                deltaHead = (head2 + 360) - head1;
-            } else {
-                deltaHead = head2 - head1;
-            }
-        }
+        var deltaHead = this.getDeltaHead(head1, head2);
 
         var bezierFactor = bezierFactor * deltaHead;
         if (deltaHead === 0) {
@@ -317,6 +318,26 @@ class Tile {
                                 new Point(p1.x + bezierFactor*dx1, p1.y + bezierFactor*dy1),
                                 new Point(p2.x - bezierFactor*dx2, p2.y - bezierFactor*dy2),
                                 p2]);
+    }
+
+    getDeltaHead(fromHead, toHead) {
+        var turn = this.getTurnDirection(fromHead, toHead);
+
+        var deltaHead = 0;
+        if (turn < 0) {
+            if (toHead > fromHead) {
+                deltaHead = fromHead - (toHead - 360);
+            } else {
+                deltaHead = fromHead - toHead;
+            }
+        } else if (turn > 0) {
+            if (toHead < fromHead) {
+                deltaHead = (toHead + 360) - fromHead;
+            } else {
+                deltaHead = toHead - fromHead;
+            }
+        }
+        return deltaHead;
     }
 
     getTurnDirection(fromHead, toHead) {
@@ -349,18 +370,6 @@ class Tile {
             return x < this.x;
         }
         return x > this.x;
-    }
-
-    getRandomConnection(bindToTrack) {
-        if (bindToTrack && this.hasTracks()) {
-            return this.tracks.getRandomConnection();
-        }
-
-        var connections = this.getStreetConnections();
-        if (connections.length === 0) {
-            error('Empty connection list', this, null);
-        }
-        return connections[Math.floor(Math.random() * connections.length)];
     }
 
     getLane(head, lane) {
@@ -420,11 +429,26 @@ class Tile {
         return this.vehicleHashes.indexOf(vehicle.hash);
     }
 
+    onlySameVehicleType(vehicle) {
+        if (this.vehicles.length > 0) {
+            var clazz = getClassOf(this.vehicles[0]);
+            for (var i = 1; i < this.vehicles.length; i++) {
+                if (getClassOf(this.vehicles[i]) !== clazz) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
     hasFreeParkingLot(head) {
         if (!this.isStraight()) {
             return false;
         }
         if (this.isHighway()) {
+            return false;
+        }
+        if (this.isDeadEndOrJunctionOrCrossing()) {
             return false;
         }
         if (!this.isConnectedTo(head)) {

@@ -1,5 +1,5 @@
 class Vehicle {
-    constructor(tile, vehicleImages, numTypes) {
+    constructor(tile, head, vehicleImages, numTypes) {
         this.hash = generateRandomId();
         this.driver = new Driver();
         this.colorId = vehicleImages[Math.floor(Math.random() * vehicleImages.length)];
@@ -8,7 +8,7 @@ class Vehicle {
         this.tile = tile;
         this.oldTile = 'null';
         this.v = 0;
-        this.head = 0;
+        this.head = head;
         this.queue = [];
         this.cachedHead = null;
         this.cachedClosestHead = null;
@@ -318,14 +318,13 @@ class Vehicle {
         }
 
         if (this.tile.isDeadEndOrJunctionOrCrossing()) {
-            if (this.isOnStraight()) {
-               //check only same vehicle type                                                
-            }
-            var index = this.tile.getVehicleIndex(this);
-            for (var i = 0; i < index; i++) {
-                if (this.tile.vehicles[i].waiting <= config.Vehicle.waitBlocked) {
-                    this.v = 0;
-                    return false;
+            if (!((this.isOnStraight() || this.isOnCurve()) && this.tile.onlySameVehicleType(this))) {
+                var index = this.tile.getVehicleIndex(this);
+                for (var i = 0; i < index; i++) {
+                    if (!this.tile.vehicles[i].isParking() && this.tile.vehicles[i].waiting <= config.Vehicle.waitBlocked) {
+                        this.v = 0;
+                        return false;
+                    }
                 }
             }
         }

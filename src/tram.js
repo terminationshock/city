@@ -1,6 +1,5 @@
 class Tram extends Vehicle {
     start() {
-        this.head = this.tile.getRandomConnection(true);
         var intHead = this.getHead();
         var lane = this.tile.getLane(intHead, config.Street.laneDrive);
         this.startXY(intHead, lane);
@@ -18,6 +17,10 @@ class Tram extends Vehicle {
 
     isOnStraight() {
         return this.tile.isStraightTrack();
+    }
+
+    isOnCurve() {
+        return this.tile.isCurveTrack();
     }
 
     isParking() {

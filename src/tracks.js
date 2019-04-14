@@ -130,15 +130,46 @@ class Tracks {
     }
 
     isStraight() {
+        var keys = this.getKeys().map(x => convertInt(x));
+        if (keys.length > 2) {
+            return false;
+        }
         for (var negativeHeadFrom in this.track) {
             if (this.track[negativeHeadFrom].length > 1) {
                 return false;
             }
-            var headTo = convertInt(negativeHeadFrom) + 180;
-            if (headTo >= 360) {
-                headTo -= 360;
+            var headFrom = convertInt(negativeHeadFrom) + 180;
+            if (headFrom >= 360) {
+                headFrom -= 360;
             }
-            if (convertInt(this.track[negativeHeadFrom]) !== headTo) {
+            if (headFrom !== convertInt(this.track[negativeHeadFrom])) {
+                return false;
+            }
+            if (keys.length === 2 && !keys.includes(this.track[negativeHeadFrom][0])) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    isCurve() {
+        var keys = this.getKeys().map(x => convertInt(x));
+        if (keys.length > 2) {
+            return false;
+        }
+        for (var negativeHeadFrom in this.track) {
+            if (this.track[negativeHeadFrom].length > 1) {
+                return false;
+            }
+            var headFrom = convertInt(negativeHeadFrom) + 180;
+            if (headFrom >= 360) {
+                headFrom -= 360;
+            }
+            var deltaHead = this.tile.getDeltaHead(headFrom, this.track[negativeHeadFrom]);
+            if (deltaHead === 0 || deltaHead === 180) {
+                return false;
+            }
+            if (keys.length === 2 && !keys.includes(this.track[negativeHeadFrom][0])) {
                 return false;
             }
         }

@@ -10,6 +10,10 @@ function generateRandomId() {
     return id;
 }
 
+function getClassOf(instance) {
+    return instance.constructor.name;
+}
+
 class Point {
     constructor(x, y) {
         this.x = x;

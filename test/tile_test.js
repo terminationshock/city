@@ -21,9 +21,9 @@ class TileTest {
         this.tile_road[81] = new Tile('r0081', 0, 0);
         this.tile_road[85] = new Tile('r0085', 0, 0);
 
-        var tile = new Tile('r0021', 0, 0);
-        this.car1 = new Car(tile, [1]);
-        this.car2 = new Car(tile, [2]);
+        this.car1 = new Car(this.tile_road[21], 60, [1], 1);
+        this.car2 = new Car(this.tile_road[21], 60, [2], 1);
+        this.tram = new Tram(this.tile_road[21], 60, [1], 1);
 
         this.testIsGrass();
         this.testIsStreet();
@@ -37,6 +37,7 @@ class TileTest {
         this.testComputeStreetNeighboursAndConnections();
         this.testIsConnectedTo();
         this.testGetStreetConnections();
+        this.testGetDeltaHead();
         this.testGetTurnDirection();
         this.testInside();
         this.testCenterAhead();
@@ -47,6 +48,7 @@ class TileTest {
         this.testAddVehicle();
         this.testGetVehicleIndex();
         this.testRemoveVehicle();
+        this.testOnlySameVehicleType();
         this.testHasFreeParkingLot();
     }
 
@@ -207,6 +209,7 @@ class TileTest {
         this.tile_road[17].tracks.track[240] = [60];
         this.tile_road[17].tracks.track[60] = [300];
         console.assert(this.tile_road[17].isDeadEndOrJunctionOrCrossing());
+        this.tile_road[17].tracks.track = {};
 
         this.tile_grass.tracks.track = {};
         console.assert(!this.tile_grass.isDeadEndOrJunctionOrCrossing());
@@ -236,6 +239,11 @@ class TileTest {
         this.tile_grass.tracks.track[60] = [120];
         this.tile_grass.tracks.track[120] = [60];
         this.tile_grass.tracks.track[240] = [300];
+        console.assert(this.tile_grass.isDeadEndOrJunctionOrCrossing());
+        this.tile_grass.tracks.track = {};
+        this.tile_grass.tracks.track[60] = [240];
+        this.tile_grass.tracks.track[240] = [60];
+        this.tile_grass.tracks.track[120] = [300];
         console.assert(this.tile_grass.isDeadEndOrJunctionOrCrossing());
         this.tile_grass.tracks.track = {};
         this.tile_grass.tracks.track[60] = [120];
@@ -321,6 +329,19 @@ class TileTest {
         console.assert(this.tile_road[77].getStreetConnections().length === 1);
         console.assert(this.tile_road[81].getStreetConnections().length === 2);
         console.assert(this.tile_road[85].getStreetConnections().length === 2);
+    }
+
+    testGetDeltaHead() {
+        console.assert(this.tile_road[45].getDeltaHead(0, 90) === 90);
+        console.assert(this.tile_road[45].getDeltaHead(90, 0) === 90);
+        console.assert(this.tile_road[45].getDeltaHead(0, 180) === 180);
+        console.assert(this.tile_road[45].getDeltaHead(180, 0) === 180);
+        console.assert(this.tile_road[45].getDeltaHead(0, 270) === 90);
+        console.assert(this.tile_road[45].getDeltaHead(270, 0) === 90);
+        console.assert(this.tile_road[45].getDeltaHead(359, 1) === 2);
+        console.assert(this.tile_road[45].getDeltaHead(1, 359) === 2);
+        console.assert(this.tile_road[45].getDeltaHead(1, 0) === 1);
+        console.assert(this.tile_road[45].getDeltaHead(359, 0) === 1);
     }
 
     testGetTurnDirection() {
@@ -425,6 +446,22 @@ class TileTest {
         console.assert(this.tile_road[1].vehicles.length === 1);
         console.assert(this.tile_road[1].vehicleHashes.length === 1);
         console.assert(this.tile_road[1].vehicleHashes[0] === this.car2.hash);
+    }
+
+    testOnlySameVehicleType() {
+        this.tile_road[21].vehicles = [this.car1, this.car2];
+        console.assert(this.tile_road[21].onlySameVehicleType());
+        this.tile_road[21].vehicles = [this.car1];
+        console.assert(this.tile_road[21].onlySameVehicleType());
+        this.tile_road[21].vehicles = [this.tram];
+        console.assert(this.tile_road[21].onlySameVehicleType());
+        this.tile_road[21].vehicles = [];
+        console.assert(this.tile_road[21].onlySameVehicleType());
+        this.tile_road[21].vehicles = [this.car1, this.tram];
+        console.assert(!this.tile_road[21].onlySameVehicleType());
+        this.tile_road[21].vehicles = [this.car1, this.car2, this.tram];
+        console.assert(!this.tile_road[21].onlySameVehicleType());
+        this.tile_road[21].vehicles = [];
     }
 
     testHasFreeParkingLot() {
