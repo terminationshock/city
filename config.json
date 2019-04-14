@@ -32,8 +32,7 @@
         "bezierFactor": 0.25,
         "color": "#333333",
         "activeColor": "#FFFF00",
-        "width": 6,
-        "probTram": 0.1
+        "width": 6
     },
     "Vehicle": {
         "headingOrder": [240, 255, 270, 285, 300, 315, 0, 45, 60, 75, 90, 105, 120, 135, 180, 225],

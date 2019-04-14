@@ -5,6 +5,7 @@ var config;
 var cursors;
 var newTrackMode = false;
 var newStopMode = false;
+var newTramMode = false;
 var mouseDown = false;
 
 function loadConfig(progress, key, success, totalLoadedFile, totalFiles) {
@@ -39,6 +40,7 @@ function create() {
 
     document.getElementById('button-track').addEventListener('click', onButtonTrack);
     document.getElementById('button-stop').addEventListener('click', onButtonStop);
+    document.getElementById('button-tram').addEventListener('click', onButtonTram);
     document.getElementById('button-abort').addEventListener('click', onButtonAbort);
     document.getElementById('button-finish').addEventListener('click', onButtonFinish);
 }
@@ -56,7 +58,7 @@ function update() {
         game.camera.x += 20;
     }
 
-    if (newTrackMode || newStopMode) {
+    if (newTrackMode || newStopMode || newTramMode) {
         if (game.input.mousePointer.leftButton.isDown) {
             mouseDown = true;
         }
@@ -66,6 +68,8 @@ function update() {
                 map.newTrackClick(game.input.mousePointer.worldX, game.input.mousePointer.worldY, false);
             } else if (newStopMode) {
                 map.newStopClick(game.input.mousePointer.worldX, game.input.mousePointer.worldY, false);
+            } else if (newTramMode) {
+                map.newTramClick(game.input.mousePointer.worldX, game.input.mousePointer.worldY, false, loader.trams);
             }
         } else {
             var ok = null;
@@ -73,6 +77,8 @@ function update() {
                 ok = map.newTrackClick(game.input.mousePointer.worldX, game.input.mousePointer.worldY, true);
             } else if (newStopMode) {
                 ok = map.newStopClick(game.input.mousePointer.worldX, game.input.mousePointer.worldY, true);
+            } else if (newTramMode) {
+                ok = map.newTramClick(game.input.mousePointer.worldX, game.input.mousePointer.worldY, true, loader.trams);
             }
             ui.setCursorOk(ok);
         }
@@ -91,6 +97,12 @@ function onButtonStop() {
     newStopMode = true;
 }
 
+function onButtonTram() {
+    ui.setButtonActive('button-tram', false);
+    ui.setCursorOk(false);
+    newTramMode = true;
+}
+
 function onButtonAbort() {
     if (newTrackMode) {
         map.newTrackAbort();
@@ -99,14 +111,16 @@ function onButtonAbort() {
     ui.setCursorDefault();
     newTrackMode = false;
     newStopMode = false;
+    newTramMode = false;
 }
 
 function onButtonFinish() {
     if (newTrackMode) {
-        map.newTrackFinalize(loader.trams);
+        map.newTrackFinalize();
     }
     ui.setButtonsInactive();
     ui.setCursorDefault();
     newTrackMode = false;
     newStopMode = false;
+    newTramMode = false;
 }

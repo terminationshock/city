@@ -4,6 +4,8 @@ class Tracks {
         this.track = {};
         this.newTrack = {};
         this.trackPoints = null;
+        this.headsFrom = [];
+        this.headsTo = [];
     }
 
     generate(track) {
@@ -86,6 +88,8 @@ class Tracks {
             }
             this.track[headFrom] = headsTo;
         }
+        this.headsFrom = Object.keys(this.track);
+        this.headsTo = Object.values(this.track);
         this.newTrack = {};
     }
 
@@ -117,20 +121,15 @@ class Tracks {
     }
 
     getRandomConnection() {
-        var connections = this.getKeys();
-        return this.track[connections[Math.floor(Math.random() * connections.length)]];
-    }
-
-    getKeys() {
-        return Object.keys(this.track);
+        return this.headsTo[Math.floor(Math.random() * this.headsTo.length)];
     }
 
     hasTracks() {
-        return this.getKeys().length > 0;
+        return this.headsFrom.length > 0;
     }
 
     isStraight() {
-        var keys = this.getKeys().map(x => convertInt(x));
+        var keys = this.headsFrom.map(x => convertInt(x));
         if (keys.length > 2) {
             return false;
         }
@@ -153,7 +152,7 @@ class Tracks {
     }
 
     isCurve() {
-        var keys = this.getKeys().map(x => convertInt(x));
+        var keys = this.headsFrom.map(x => convertInt(x));
         if (keys.length > 2) {
             return false;
         }

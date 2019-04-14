@@ -112,7 +112,7 @@ class Tile {
             return true;
         }
         if (this.hasTracks()) {
-            var keys = this.tracks.getKeys().map(x => convertInt(x));
+            var keys = this.tracks.headsFrom.map(x => convertInt(x));
             if (keys.length > 2) {
                 return true;
             }
@@ -187,18 +187,6 @@ class Tile {
             if (this.hasFreeParkingLot(head)) {
                 if (Math.random() < config.Tile.probCar) {
                     this.addVehicle(new Car(this, head, carImages, config.Car.numTypes));
-                }
-            }
-        }
-    }
-
-    generateTrams(tramImages) {
-        if (this.hasTracks()) {
-            var head = this.tracks.getRandomConnection();
-
-            if (this.tracks.isStraight()) {
-                if (Math.random() < config.Track.probTram) {
-                    this.addVehicle(new Tram(this, head, tramImages, config.Tram.numTypes));
                 }
             }
         }
@@ -423,6 +411,10 @@ class Tile {
             this.vehicles.splice(index, 1);
             this.vehicleHashes.splice(index, 1);
         }
+    }
+
+    hasDrivingVehicles() {
+        return this.vehicles.filter(vehicle => !vehicle.isParking()).length > 0;
     }
 
     getVehicleIndex(vehicle) {

@@ -18,6 +18,7 @@ class TracksTest {
 
     testHasTracks() {
         this.tracks.track[60] = 240;
+        this.tracks.finalize();
         var res = this.tracks.hasTracks();
         console.assert(res);
     }
@@ -25,78 +26,98 @@ class TracksTest {
     testIsStraight() {
         this.tracks.track = {};
         this.tracks.track[240] = [60];
+        this.tracks.finalize();
         console.assert(this.tracks.isStraight());
         this.tracks.track = {};
         this.tracks.track[240] = [240];
+        this.tracks.finalize();
         console.assert(!this.tracks.isStraight());
         this.tracks.track = {};
         this.tracks.track[240] = [60,120];
+        this.tracks.finalize();
         console.assert(!this.tracks.isStraight());
         this.tracks.track = {};
         this.tracks.track[240] = [60];
         this.tracks.track[60] = [240];
+        this.tracks.finalize();
         console.assert(this.tracks.isStraight());
         this.tracks.track = {};
         this.tracks.track[240] = [60];
         this.tracks.track[60] = [300];
+        this.tracks.finalize();
         console.assert(!this.tracks.isStraight());
         this.tracks.track = {};
         this.tracks.track[240] = [60];
         this.tracks.track[300] = [60];
+        this.tracks.finalize();
         console.assert(!this.tracks.isStraight());
         this.tracks.track = {};
         this.tracks.track[240] = [60];
         this.tracks.track[300] = [120];
+        this.tracks.finalize();
         console.assert(!this.tracks.isStraight());
         this.tracks.track = {};
         this.tracks.track[240] = [60];
         this.tracks.track[300] = [120];
         this.tracks.track[120] = [300];
+        this.tracks.finalize();
         console.assert(!this.tracks.isStraight());
     }
 
     testIsCurve() {
         this.tracks.track = {};
         this.tracks.track[240] = [300];
+        this.tracks.finalize();
         console.assert(this.tracks.isCurve());
         this.tracks.track = {};
         this.tracks.track[240] = [300];
         this.tracks.track[300] = [240];
+        this.tracks.finalize();
         console.assert(this.tracks.isCurve());
         this.tracks.track = {};
         this.tracks.track[240] = [120];
+        this.tracks.finalize();
         console.assert(this.tracks.isCurve());
         this.tracks.track = {};
         this.tracks.track[240] = [120];
         this.tracks.track[120] = [240];
+        this.tracks.finalize();
         console.assert(this.tracks.isCurve());
         this.tracks.track = {};
         this.tracks.track[300] = [60];
+        this.tracks.finalize();
         console.assert(this.tracks.isCurve());
         this.tracks.track = {};
         this.tracks.track[60] = [300];
+        this.tracks.finalize();
         console.assert(this.tracks.isCurve());
         this.tracks.track = {};
         this.tracks.track[300] = [60];
         this.tracks.track[60] = [300];
+        this.tracks.finalize();
         console.assert(this.tracks.isCurve());
         this.tracks.track = {};
         this.tracks.track[60] = [60];
+        this.tracks.finalize();
         console.assert(!this.tracks.isCurve());
         this.tracks.track = {};
         this.tracks.track[300] = [60];
         this.tracks.track[60] = [120];
+        this.tracks.finalize();
         console.assert(!this.tracks.isCurve());
         this.tracks.track = {};
         this.tracks.track[300] = [60];
         this.tracks.track[60] = [240];
+        this.tracks.finalize();
         console.assert(!this.tracks.isCurve());
         this.tracks.track = {};
         this.tracks.track[300] = [60,120];
+        this.tracks.finalize();
         console.assert(!this.tracks.isCurve());
         this.tracks.track = {};
         this.tracks.track[300] = [60,120];
         this.tracks.track[60] = [300];
+        this.tracks.finalize();
         console.assert(!this.tracks.isCurve());
     }
 

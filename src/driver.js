@@ -1,6 +1,6 @@
 class Driver {
     constructor() {
-        this.waiting = 0;
+        this.waitingTime = 0;
     }
 
     leaveParkingLot() {
@@ -8,9 +8,9 @@ class Driver {
     }
 
     leaveStop() {
-        this.waiting += 1;
-        if (this.waiting > config.AI.waitAtStop) {
-            this.waiting = 0;
+        this.waitingTime += 1;
+        if (this.waitingTime > config.AI.waitAtStop) {
+            this.waitingTime = 0;
             return true;
         }
         return false;

@@ -22,12 +22,13 @@ class Car extends Vehicle {
 
         if (conn.length === 0) {
             error('Empty connection list', this, this.disable);
+            return null;
         }
 
         var carIndex = this.tile.getVehicleIndex(this);
         for (var i = 0; i < carIndex; i++) {
             var car = this.tile.vehicles[i];
-            if (car.waiting > config.Vehicle.waitBlocked && conn.length > 1) {
+            if (car.waitingTime > config.Vehicle.waitBlocked && conn.length > 1) {
                 if (conn.includes(car.getHead())) {
                     var index = conn.indexOf(car.getHead());
                     conn.splice(index, 1);

@@ -15,7 +15,7 @@ class Vehicle {
         this.cachedSpriteHead = null;
         this.cachedSpriteFrameIndex = null;
         this.start();
-        this.waiting = 0;
+        this.waitingTime = 0;
         this.turnPath = null;
         this.plannedHead = null;
         this.error = false;
@@ -24,7 +24,9 @@ class Vehicle {
     disable() {
         this.y = -100;
         this.error = true;
+        this.tile.removeVehicle(this);
         this.sprite.destroy();
+        this.queue = [];
     }
 
     equals(other) {
@@ -51,6 +53,7 @@ class Vehicle {
             var col = config.Vehicle.headingOrder.indexOf(head);
             if (col === -1) {
                 error('Heading not in vehicle sprite', this, this.disable);
+                return null;
             }
             this.cachedSpriteHead = head;
             this.cachedSpriteFrameIndex = this.typeId * config.Vehicle.headingOrder.length + col;
@@ -85,11 +88,11 @@ class Vehicle {
         }
 
         var dt = 1.0 / config.World.stepsPerSecond;
-        this.waiting += dt;
+        this.waitingTime += dt;
 
         if (convertInt(this.v) === 0) {
             if (this.isParking() || this.isAtStop()) {
-                this.waiting = 0;
+                this.waitingTime = 0;
             }
         } else {
             var intHead = this.getHead();
@@ -101,7 +104,7 @@ class Vehicle {
             if (this.collision()) {
                 this.queue.splice(0, 0, this.callbackWait);
             } else {
-                this.waiting = 0;
+                this.waitingTime = 0;
                 this.x += dx;
                 this.y += dy;
 
@@ -114,7 +117,7 @@ class Vehicle {
             this.updateSprite(this.x, this.y, intHead);
         }
 
-        if (this.waiting > config.Vehicle.waitForever) {
+        if (this.waitingTime > config.Vehicle.waitForever) {
             error('Vehicle is waiting forever', this, this.disable);
         }
     }
@@ -169,6 +172,7 @@ class Vehicle {
     getClosestHead(head, floor) {
         if (head < 0 || 360 <= head) {
             error('Heading out of range', this, this.disable);
+            return null;
         }
 
         var headingOrderCopy = config.Vehicle.headingOrder.slice(0);
@@ -304,6 +308,7 @@ class Vehicle {
     callbackDrive() {
         if (this.queue.length !== 1) {
             error('Callback queue corrupted', this, this.disable);
+            return true;
         }
 
         if (this.tile.isHighway() || this.tile.isGrass()) {
@@ -321,7 +326,7 @@ class Vehicle {
             if (!((this.isOnStraight() || this.isOnCurve()) && this.tile.onlySameVehicleType(this))) {
                 var index = this.tile.getVehicleIndex(this);
                 for (var i = 0; i < index; i++) {
-                    if (!this.tile.vehicles[i].isParking() && this.tile.vehicles[i].waiting <= config.Vehicle.waitBlocked) {
+                    if (!this.tile.vehicles[i].isParking() && this.tile.vehicles[i].waitingTime <= config.Vehicle.waitBlocked) {
                         this.v = 0;
                         return false;
                     }
@@ -332,6 +337,9 @@ class Vehicle {
         if (this.plannedHead === null) {
             if (!this.isOnStraight() && this.tile.nearCenter(this.x, this.y)) {
                 this.plannedHead = this.getNextTurn();
+                if (this.plannedHead === null) {
+                    return true;
+                }
                 if (this.plannedHead === this.getHead()) {
                     this.queue.push(this.callbackDrive);
                 } else {

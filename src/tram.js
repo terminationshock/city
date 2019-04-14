@@ -11,6 +11,7 @@ class Tram extends Vehicle {
         var heads = this.tile.getTrackHeadsFrom(head);
         if (heads === null) {
             error('Tram does not find a way', this, this.disable);
+            return null;
         }
         return this.driver.decideTurn(heads);
     }
