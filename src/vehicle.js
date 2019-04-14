@@ -317,7 +317,10 @@ class Vehicle {
             return true;
         }
 
-        if (this.tile.isDeadEnd() || this.tile.isJunctionOrCrossing()) {
+        if (this.tile.isDeadEndOrJunctionOrCrossing()) {
+            if (this.isOnStraight()) {
+               //check only same vehicle type                                                
+            }
             var index = this.tile.getVehicleIndex(this);
             for (var i = 0; i < index; i++) {
                 if (this.tile.vehicles[i].waiting <= config.Vehicle.waitBlocked) {

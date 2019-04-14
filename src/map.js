@@ -81,8 +81,8 @@ class Map {
     }
 
     drawVehicles() {
-        for (var i = 0; i < this.tiles.length; i++) {
-            this.tiles[i].drawVehicles(this.masterGroup);
+        for (var tile of this.tiles) {
+            tile.drawVehicles(this.masterGroup);
         }
     }
 
@@ -94,20 +94,17 @@ class Map {
     }
 
     newTrackClick(x, y, hover) {
-        for (var i = 0; i < this.tiles.length; i++) {
-            if (this.tiles[i].inside(x, y) && !this.tiles[i].isHouse()) {
-                if (this.newTrack.length === 0 || this.newTrack[this.newTrack.length-1].isTrackNeighbourOf(this.tiles[i])) {
-                    if (this.newTrack.length > 1 && this.newTrack[this.newTrack.length-2].equals(this.tiles[i])) {
-                        return false;
-                    }
+        for (var tile of this.tiles) {
+            if (tile.inside(x, y) && !tile.isHouse()) {
+                if (this.newTrack.length === 0 || this.newTrack[this.newTrack.length-1].isTrackNeighbourOf(tile)) {
                     if (hover) {
                         return true;
                     }
 
-                    this.newTrack.push(this.tiles[i]);
+                    this.newTrack.push(tile);
                     var newTrackHashes = this.newTrack.map(x => x.hash);
 
-                    this.tiles[i].generateTrack(newTrackHashes);
+                    tile.generateTrack(newTrackHashes);
                     if (this.newTrack.length > 1) {
                         this.newTrack[0].generateTrack(newTrackHashes);
                         this.newTrack[this.newTrack.length-2].generateTrack(newTrackHashes);
@@ -121,13 +118,13 @@ class Map {
     }
 
     newStopClick(x, y, hover) {
-        for (var i = 0; i < this.tiles.length; i++) {
-            if (this.tiles[i].inside(x, y) && this.tiles[i].hasTracks() && this.tiles[i].isStraight() && !this.tiles[i].hasStop()) {
+        for (var tile of this.tiles) {
+            if (tile.inside(x, y) && tile.hasTracks() && tile.isStraightTrack() && !tile.hasStop()) {
                 if (hover) {
                     return true;
                 }
 
-                this.tiles[i].addStop();
+                tile.addStop();
             }
         }
         return false;
@@ -135,13 +132,14 @@ class Map {
 
     trackClosed() {
         if (this.newTrack.length > 2 && this.newTrack[0].isTrackNeighbourOf(this.newTrack[this.newTrack.length-1])) {
-            if (!this.newTrack[0].equals(this.newTrack[this.newTrack.length-2]) && !this.newTrack[1].equals(this.newTrack[this.newTrack.length-1])) {
-                return true;
-            }
+            return true;
         }
         return false;
     }
 
+    // Also allow open tracks                                                                               
+    // Auto-close tracks                                                                                    
+    // Show abort button                                                                                    
     newTrackFinalize(tramImages) {
         if (this.newTrack.length > 0) {
             if (this.trackClosed()) {

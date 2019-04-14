@@ -97,18 +97,24 @@ class Tile {
         return this.isStraight() || this.isCurve();
     }
 
-    isJunctionOrCrossing() {
-        if (!this.isDeadEnd() && !this.isStraightOrCurve() && !this.isGrass()) {
+    isDeadEndOrJunctionOrCrossing() {
+        if (this.isDeadEnd()) {
             return true;
         }
-        var connections = this.getStreetConnections();
+        if (!this.isStraightOrCurve() && !this.isGrass()) {
+            return true;
+        }
         if (this.hasTracks()) {
             var keys = this.tracks.getKeys().map(x => convertInt(x));
             if (keys.length > 2) {
                 return true;
             }
+            var connections = this.getStreetConnections();
             for (var head of keys) {
                 if (this.getTrackHeadsFrom(head).length > 1) {
+                    return true;
+                }
+                if (this.getTrackHeadsFrom(head)[0] === head) {
                     return true;
                 }
                 if (connections.length > 0) {
