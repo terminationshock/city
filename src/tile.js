@@ -386,8 +386,17 @@ class Tile {
         return Math.sqrt((x - point.x)**2 + (y - point.y)**2);
     }
 
-    getTileBoundaryPoint(x, y, head) {
-        var ray = new Phaser.Line(this.x, this.y, x, y);
+    getTileBoundaryPoint(x, y, head, lane) {
+        var px = this.x;
+        var py = this.y;
+        if (convertInt(head) === 60 || convertInt(head) === 120) {
+            py += lane;
+            y += lane;
+        } else {
+            py -= lane;
+            y -= lane;
+        }
+        var ray = new Phaser.Line(px, py, x, y);
         var line = null;
         for (var head of [60, 120, 240, 300]) {
             switch (head) {
@@ -417,11 +426,7 @@ class Tile {
         var x = this.x + Math.sin(head * Math.PI/180) * dist;
         var y = this.y - Math.cos(head * Math.PI/180) * dist;
         if (factor >= 1) {
-            var p = this.getTileBoundaryPoint(x, y, head);
-            if (p !== null) {
-                x = p.x;
-                y = p.y;
-            }
+            return this.getTileBoundaryPoint(x, y, head, lane);
         }
         return this.getClosestPointInLane(x, y, head, lane);
     }
@@ -431,11 +436,7 @@ class Tile {
         var x = this.x - Math.sin(head * Math.PI/180) * dist;
         var y = this.y + Math.cos(head * Math.PI/180) * dist;
         if (factor >= 1) {
-            var p = this.getTileBoundaryPoint(x, y, head);
-            if (p !== null) {
-                x = p.x;
-                y = p.y;
-            }
+            return this.getTileBoundaryPoint(x, y, head, lane);
         }
         return this.getClosestPointInLane(x, y, head, lane);
     }
