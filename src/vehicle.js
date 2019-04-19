@@ -17,6 +17,7 @@ class Vehicle {
         this.cachedSpritePosition = new Point(null, null);
         this.start();
         this.waitingTime = 0;
+        this.collisionWith = null;
         this.turnPath = null;
         this.plannedHead = null;
         this.error = false;
@@ -150,8 +151,10 @@ class Vehicle {
             }
         }
 
-        if (this.waitingTime > config.Vehicle.waitForever) {
-            error('Vehicle is waiting forever', this, this.disable);
+        if (this.waitingTime > config.Vehicle.waitForever && this.collisionWith !== null) {
+            if (this.collisionWith.collidingWith(this)) {
+                error('Vehicle is in a collision loop', this, this.disable);
+            }
         }
     }
 
@@ -274,19 +277,29 @@ class Vehicle {
         return Math.ceil(this.v * dt);
     }
 
+    collidingWith(vehicle) {
+        if (this.collisionWith === null) {
+            return false;
+        }
+        return this.collisionWith.equals(vehicle);
+    }
+
     collision(x, y, head) {
         for (var vehicle of this.tile.vehicles) {
             if (this.collideWith(vehicle, x, y, head)) {
+                this.collisionWith = vehicle;
                 return true;
             }
         }
         for (var tile of this.tile.neighbours) {
             for (var vehicle of tile.vehicles) {
                 if (this.collideWith(vehicle, x, y, head)) {
+                    this.collisionWith = vehicle;
                     return true;
                 }
             }
         }
+        this.collisionWith = null;
         return false;
     }
 

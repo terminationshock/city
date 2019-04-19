@@ -40,7 +40,7 @@
         "velocityCity": 50,
         "velocityHighway": 80,
         "waitBlocked": 10,
-        "waitForever": 60,
+        "waitForever": 30,
         "collisionSampling": 15
     },
     "Car": {
