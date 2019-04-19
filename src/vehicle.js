@@ -59,11 +59,10 @@ class Vehicle {
 
     createBounds() {
         var size = this.sprite.width;
-        var size2 = convertInt(size / 2);
 
-        var bitmapSize = size * config.Vehicle.headingOrder.length;
         var canvas = document.getElementById('vehicle-canvas');
-        canvas.getContext('2d').drawImage(this.sprite.texture.baseTexture.source, 0, 0, bitmapSize, bitmapSize);
+        var image = this.sprite.texture.baseTexture.source;
+        canvas.getContext('2d').drawImage(image, 0, 0, image.width, image.height);
 
         var y0 = this.typeId * size;
         for (var headIndex = 0; headIndex < config.Vehicle.headingOrder.length; headIndex++) {
@@ -72,12 +71,12 @@ class Vehicle {
             for (var angle = 0; angle < 360; angle += config.Vehicle.collisionSampling) {
                 for (var i = 0; i < size; i++) {
                     var x = convertInt(i*Math.sin(angle * Math.PI/180));
-                    var y = convertInt(i*Math.cos(angle * Math.PI/180));
-                    var alpha = canvas.getContext('2d').getImageData(x + x0 + size2, y + y0 + size2, 1, 1).data[3];
-                    if (alpha === 0) {
+                    var y = -convertInt(i*Math.cos(angle * Math.PI/180));
+                    var alpha = canvas.getContext('2d').getImageData(x + x0 + convertInt(size/2), y + y0 + convertInt(size/2), 1, 1).data[3];
+                    if (alpha < 255) {
                         points.push(x);
-                        points.push(y)
-                        break;;
+                        points.push(y);
+                        break;
                     }
                 }
             }

@@ -20,9 +20,6 @@ class SpriteMock {
     constructor() {
         this.height = 32;
     }
-    getBounds() {
-        return new Phaser.Rectangle(0, 0, 32, 32);
-    }
 }
 
 class VehicleTest {
@@ -34,7 +31,6 @@ class VehicleTest {
         this.otherCar = new Car(this.tile, 60, ['colorId'], 1);
 
         this.testInit();
-        this.testGetFrameIndex();
         this.testGetNextHead();
         this.testGetClosestHead();
         this.testGetNextTurn();
@@ -57,10 +53,6 @@ class VehicleTest {
     testInit() {
         console.assert(this.car.colorId === 'colorId');
         console.assert(this.car.head === 60);
-    }
-
-    testGetFrameIndex() {
-        console.assert(this.car.getFrameIndex(60) === 24);
     }
 
     testGetNextHead() {
@@ -130,24 +122,26 @@ class VehicleTest {
     }
 
     testCollideWith() {
+        this.car.sprite = new SpriteMock();
+        this.otherCar.sprite = new SpriteMock();
         this.otherCar.error = true;
-        console.assert(!this.car.collideWith(this.otherCar));
-        console.assert(!this.car.collideWith(this.car));
+        console.assert(!this.car.collideWith(this.otherCar, this.car.x, this.car.y, 60));
+        console.assert(!this.car.collideWith(this.car, this.car.x, this.car.y, 60));
         this.otherCar.error = false;
         this.otherCar.v = 0;
         this.otherCar.queue = [this.otherCar.callbackPark];
-        this.car.sprite = new SpriteMock();
-        this.otherCar.sprite = new SpriteMock();
-        console.assert(!this.car.collideWith(this.otherCar));
+        console.assert(!this.car.collideWith(this.otherCar, this.car.x, this.car.y, 60));
         this.otherCar.v = 10;
         this.otherCar.queue = [this.otherCar.callbackDrive];
         this.car.head = 60;
+        this.car.bounds[60] = new Phaser.Polygon(20, 0, 0, 20, -20, 0, 0, -20);
         this.otherCar.x = this.car.x + 10;
         this.otherCar.y = this.car.y - 10;
         var check = [false, false, false, false, false, true, true, true, true, true, true, true, false, false, false, false];
         for (var i = 0; i < config.Vehicle.headingOrder.length; i++) {
             this.otherCar.head = config.Vehicle.headingOrder[i];
-            console.assert(this.car.collideWith(this.otherCar) === check[i]);
+            this.otherCar.bounds[this.otherCar.head] = new Phaser.Polygon(20, 0, 0, 20, -20, 0, 0, -20);
+            console.assert(this.car.collideWith(this.otherCar, this.car.x, this.car.y, 60) === check[i]);
         }
     }
 
