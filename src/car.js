@@ -60,10 +60,6 @@ class Car extends Vehicle {
         return convertInt(this.v) === 0 && [this.callbackPark, this.callbackLeaveParkingLot].includes(this.queue[0]);
     }
 
-    isAtStop() {
-        return false;
-    }
-
     callbackEnterParkingLot() {
         this.queue.push(function () {
             return this.callbackChangeLane(1);
@@ -78,6 +74,7 @@ class Car extends Vehicle {
 
     callbackPark() {
         this.v = 0;
+        this.waitingTime = 0;
 
         if (this.driver.leaveParkingLot()) {
             this.queue.push(this.callbackLeaveParkingLot);

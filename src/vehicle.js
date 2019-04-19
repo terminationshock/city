@@ -129,11 +129,7 @@ class Vehicle {
         var dt = 1.0 / config.World.stepsPerSecond;
         this.waitingTime += dt;
 
-        if (convertInt(this.v) === 0) {
-            if (this.isParking() || this.isAtStop()) {
-                this.waitingTime = 0;
-            }
-        } else {
+        if (this.v > 0) {
             var intHead = this.getHead();
             var dx = Math.sin(intHead * Math.PI/180) * this.v * dt;
             var dy = -Math.cos(intHead * Math.PI/180) * this.v * dt;
@@ -372,6 +368,7 @@ class Vehicle {
                 for (var i = 0; i < index; i++) {
                     if (!this.tile.vehicles[i].isParking() && this.tile.vehicles[i].waitingTime <= config.Vehicle.waitBlocked) {
                         this.v = 0;
+                        this.waitingTime = 0;
                         return false;
                     }
                 }
@@ -405,7 +402,7 @@ class Vehicle {
     }
 
     callbackTurn() {
-        this.v = -1;
+        this.v = 0.01;
 
         var distanceToLane = this.tile.getDistanceToLane(this.x, this.y, this.plannedHead, config.Street.laneDrive);
         if (distanceToLane < this.getMaxDistancePerStep()) {

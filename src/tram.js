@@ -28,12 +28,9 @@ class Tram extends Vehicle {
         return false;
     }
 
-    isAtStop() {
-        return convertInt(this.v) === 0 && this.queue[0] === this.callbackAtStop;
-    }
-
     callbackAtStop() {
         this.v = 0;
+        this.waitingTime = 0;
 
         if (this.driver.leaveStop()) {
             this.queue.push(this.callbackDrive);
