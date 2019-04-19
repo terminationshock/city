@@ -386,10 +386,43 @@ class Tile {
         return Math.sqrt((x - point.x)**2 + (y - point.y)**2);
     }
 
+    getTileBoundaryPoint(x, y, head) {
+        var ray = new Phaser.Line(this.x, this.y, x, y);
+        var line = null;
+        for (var head of [60, 120, 240, 300]) {
+            switch (head) {
+                case 60:
+                    line = new Phaser.Line(this.x, this.y-config.Tile.height/2, this.x+config.Tile.width/2, this.y);
+                    break;
+                case 120:
+                    line = new Phaser.Line(this.x, this.y+config.Tile.height/2, this.x+config.Tile.width/2, this.y);
+                    break;
+                case 240:
+                    line = new Phaser.Line(this.x, this.y+config.Tile.height/2, this.x-config.Tile.width/2, this.y);
+                    break;
+                case 300:
+                    line = new Phaser.Line(this.x, this.y-config.Tile.height/2, this.x-config.Tile.width/2, this.y);
+                    break;
+            }
+            var point = Phaser.Line.intersects(ray, line)
+            if (point !== null) {
+                return point;
+            }
+        }
+        return null;
+    }
+
     getLaneTargetPoint(head, lane, factor) {
         var dist = factor * config.Tile.width;
         var x = this.x + Math.sin(head * Math.PI/180) * dist;
         var y = this.y - Math.cos(head * Math.PI/180) * dist;
+        if (factor >= 1) {
+            var p = this.getTileBoundaryPoint(x, y, head);
+            if (p !== null) {
+                x = p.x;
+                y = p.y;
+            }
+        }
         return this.getClosestPointInLane(x, y, head, lane);
     }
 
@@ -397,6 +430,13 @@ class Tile {
         var dist = factor * config.Tile.width;
         var x = this.x - Math.sin(head * Math.PI/180) * dist;
         var y = this.y + Math.cos(head * Math.PI/180) * dist;
+        if (factor >= 1) {
+            var p = this.getTileBoundaryPoint(x, y, head);
+            if (p !== null) {
+                x = p.x;
+                y = p.y;
+            }
+        }
         return this.getClosestPointInLane(x, y, head, lane);
     }
 

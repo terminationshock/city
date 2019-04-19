@@ -100,14 +100,16 @@ class Tracks {
          }
 
          for (var j = -1; j <= 1; j += 2) {
-             var p1 = this.tile.getLaneStartPoint(headFrom, config.Street.laneDrive + j*config.Track.width/2, config.Track.lanePointFactor);
-             var p2 = this.tile.getLaneTargetPoint(headTo, config.Street.laneDrive + j*config.Track.width/2, config.Track.lanePointFactor);
+             var p1 = this.tile.getLaneStartPoint(headFrom, config.Street.laneDrive + j*config.Track.width/2, 1);
+             var pc1 = this.tile.getLaneStartPoint(headFrom, config.Street.laneDrive + j*config.Track.width/2, config.Track.lanePointFactor);
+             var pc2 = this.tile.getLaneTargetPoint(headTo, config.Street.laneDrive + j*config.Track.width/2, config.Track.lanePointFactor);
+             var p2 = this.tile.getLaneTargetPoint(headTo, config.Street.laneDrive + j*config.Track.width/2, 1);
 
              if (headFrom === headTo) {
                  this.trackPoints.moveTo(p1.x, p1.y);
                  this.trackPoints.lineTo(p2.x, p2.y);
              } else {
-                 var curve = this.tile.getCurve(p1, p2, headFrom, headTo, config.Track.bezierFactor);
+                 var curve = this.tile.getCurve(pc1, pc2, headFrom, headTo, config.Track.bezierFactor);
                  var path = curve.getPath(config.Track.curveFactor);
 
                  this.trackPoints.moveTo(p1.x, p1.y);
