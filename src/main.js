@@ -43,6 +43,8 @@ function create() {
     document.getElementById('button-tram').addEventListener('click', onButtonTram);
     document.getElementById('button-abort').addEventListener('click', onButtonAbort);
     document.getElementById('button-finish').addEventListener('click', onButtonFinish);
+    ui.enableButtons();
+    ui.disableSpinner();
 }
 
 function update() {

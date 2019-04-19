@@ -12,10 +12,12 @@ class BezierCurve {
         for (var i = 0; i < n; i++) {
             point[i][0] = this.anchorPoints[i];
         }
+        var x = 0;
+        var y = 0;
         for (var j = 1; j < n; j++) {
             for (var i = 0; i < n-j; i++) {
-                var x = (1.-t) * point[i][j-1].x + t * point[i+1][j-1].x;
-                var y = (1.-t) * point[i][j-1].y + t * point[i+1][j-1].y;
+                x = (1.-t) * point[i][j-1].x + t * point[i+1][j-1].x;
+                y = (1.-t) * point[i][j-1].y + t * point[i+1][j-1].y;
                 point[i][j] = new Point(x, y);
             }
         }

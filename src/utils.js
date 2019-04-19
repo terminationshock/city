@@ -19,4 +19,7 @@ class Point {
         this.x = x;
         this.y = y;
     }
+    equals(x, y) {
+        return this.x === x && this.y === y;
+    }
 }

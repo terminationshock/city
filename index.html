@@ -16,6 +16,21 @@
             height: 100vh;
             width: 100vw;
         }
+        #spinner {
+            position: absolute;
+            left: calc(50vw - 60px);
+            top: calc(50vh - 60px);
+            border: 16px solid #F0F0F0;
+            border-top: 16px solid #666666;
+            border-radius: 50%;
+            width: 120px;
+            height: 120px;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
         .ok {
             cursor: s-resize;
         }
@@ -71,12 +86,13 @@
     </style>
 </head>
 <body style="margin: 0;">
+    <div id="spinner"></div>
     <div id="canvas"></div>
     <div id="button-abort" class="button button-disabled"><div class="button-icon">&#10062;</div></div>
     <div id="button-finish" class="button button-disabled"><div class="button-icon">&#9989;</div></div>
-    <div id="button-track" class="button"><div class="button-icon">&#128740;</div></div>
-    <div id="button-stop" class="button"><div class="button-icon">&#128655;</div></div>
-    <div id="button-tram" class="button"><div class="button-icon">&#128651;</div></div>
+    <div id="button-track" class="button button-disabled"><div class="button-icon">&#128740;</div></div>
+    <div id="button-stop" class="button button-disabled"><div class="button-icon">&#128655;</div></div>
+    <div id="button-tram" class="button button-disabled"><div class="button-icon">&#128651;</div></div>
     <div id="copyright">Tram 3D model from cadnav.com</div>
     <canvas id="vehicle-canvas" style="display: none;" width="512", height="512"></canvas>
 </body>

@@ -45,3 +45,7 @@ ui.setCursorDefault = function () {
     document.getElementById('canvas').classList.remove('ok');
     document.getElementById('canvas').classList.remove('nok');
 }
+
+ui.disableSpinner = function () {
+    document.getElementById('spinner').style.display = 'none';
+}

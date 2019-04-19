@@ -14,7 +14,7 @@ class Vehicle {
         this.cachedHead = null;
         this.cachedClosestHead = null;
         this.cachedSpriteHead = null;
-        this.cachedSpriteFrameIndex = null;
+        this.cachedSpritePosition = new Point(null, null);
         this.start();
         this.waitingTime = 0;
         this.turnPath = null;
@@ -34,8 +34,8 @@ class Vehicle {
         return this.hash === other.hash;
     }
 
-    closeTo(other) {
-        return (this.x-other.x)**2 + (this.y-other.y)**2 < 0.5 * (this.sprite.height + other.sprite.height)**2;
+    closeTo(other, x, y) {
+        return (x-other.x)**2 + (y-other.y)**2 < 0.5 * (this.sprite.height + other.sprite.height)**2;
     }
 
     startXY(head, lane) {
@@ -46,20 +46,6 @@ class Vehicle {
             this.x -= config.Tile.width / 4;
         }
         this.y = (lane.nx * (lane.px-this.x) + lane.ny * lane.py) / lane.ny;
-    }
-
-    getFrameIndex(head) {
-        head = convertInt(head);
-        if (this.cachedSpriteHead !== head) {
-            var col = config.Vehicle.headingOrder.indexOf(head);
-            if (col === -1) {
-                error('Heading not in vehicle sprite', this, this.disable);
-                return null;
-            }
-            this.cachedSpriteHead = head;
-            this.cachedSpriteFrameIndex = this.typeId * config.Vehicle.headingOrder.length + col;
-        }
-        return this.cachedSpriteFrameIndex;
     }
 
     draw(group) {
@@ -105,10 +91,30 @@ class Vehicle {
 
     updateSprite(x, y, head) {
         if (this.sprite !== null) {
+            this.updateSpritePosition(x, y);
+            this.updateSpriteFrame(head);
+        }
+    }
+
+    updateSpritePosition(x, y) {
+        if (!this.cachedSpritePosition.equals(x, y)) {
             this.sprite.x = x - this.sprite.width/2;
             this.sprite.y = y - this.sprite.height/2;
             this.sprite.yz = y + this.sprite.height/2;
-            this.sprite.frame = this.getFrameIndex(head);
+            this.cachedSpritePosition = new Point(x, y);
+        }
+    }
+
+    updateSpriteFrame(head) {
+        head = convertInt(head);
+        if (this.cachedSpriteHead !== head) {
+            var col = config.Vehicle.headingOrder.indexOf(head);
+            if (col === -1) {
+                error('Heading not in vehicle sprite', this, this.disable);
+                return null;
+            }
+            this.sprite.frame = this.typeId * config.Vehicle.headingOrder.length + col;
+            this.cachedSpriteHead = head;
         }
     }
 
@@ -133,9 +139,7 @@ class Vehicle {
             var dx = Math.sin(intHead * Math.PI/180) * this.v * dt;
             var dy = -Math.cos(intHead * Math.PI/180) * this.v * dt;
 
-            this.updateSprite(this.x+dx, this.y+dy, intHead);
-
-            if (this.collision()) {
+            if (this.collision(this.x + dx, this.y + dy, intHead)) {
                 this.queue.splice(0, 0, this.callbackWait);
             } else {
                 this.waitingTime = 0;
@@ -146,9 +150,9 @@ class Vehicle {
                 if (!this.tile.inside(this.x, this.y)) {
                     error('Vehicle has left its tile', this, this.disable);
                 }
-            }
 
-            this.updateSprite(this.x, this.y, intHead);
+                this.updateSprite(this.x, this.y, intHead);
+            }
         }
 
         if (this.waitingTime > config.Vehicle.waitForever) {
@@ -171,7 +175,7 @@ class Vehicle {
                     }
                 }
 
-                if (this.isInFront(tile, this.x, this.y, this.getHead())) {
+                if (this.isInFront(tile, this.x, this.y, this.head)) {
                     this.oldTile = this.tile.hash;
                     this.tile.removeVehicle(this);
                     this.tile = tile;
@@ -275,15 +279,15 @@ class Vehicle {
         return Math.ceil(this.v * dt);
     }
 
-    collision() {
+    collision(x, y, head) {
         for (var vehicle of this.tile.vehicles) {
-            if (this.collideWith(vehicle)) {
+            if (this.collideWith(vehicle, x, y, head)) {
                 return true;
             }
         }
         for (var tile of this.tile.neighbours) {
             for (var vehicle of tile.vehicles) {
-                if (this.collideWith(vehicle)) {
+                if (this.collideWith(vehicle, x, y, head)) {
                     return true;
                 }
             }
@@ -291,21 +295,20 @@ class Vehicle {
         return false;
     }
 
-    collideWith(other) {
+    collideWith(other, x, y, head) {
         if (this.equals(other)) {
             return false;
         }
         if (other.error) {
             return false;
         }
-        if (!this.closeTo(other)) {
+        if (!this.closeTo(other, x, y)) {
             return false;
         }
         if (other.isParking()) {
             return false;
         }
-        var head = this.getHead();
-        if (!this.isInFront(other, this.x, this.y, head)) {
+        if (!this.isInFront(other, x, y, head)) {
             return false;
         }
         for (var turn = 4; turn < 13; turn++) {
@@ -314,9 +317,9 @@ class Vehicle {
             }
         }
 
-        var bounds = this.getBounds();
-        var xoff = other.x - this.x;
-        var yoff = other.y - this.y;
+        var bounds = this.bounds[head];
+        var xoff = other.x - x;
+        var yoff = other.y - y;
         for (var point of other.getBounds().points) {
             if (bounds.contains(point.x + xoff, point.y + yoff)) {
                 return true;
@@ -336,8 +339,7 @@ class Vehicle {
 
         var distanceToLane = this.tile.getDistanceToLane(this.x, this.y, targetHead, targetLane);
         if (distanceToLane < this.getMaxDistancePerStep()) {
-            this.updateSprite(this.x, this.y, targetHead);
-            if (this.collision()) {
+            if (this.collision(this.x, this.y, targetHead)) {
                 this.v = 0;
                 return false;
             }
@@ -421,8 +423,7 @@ class Vehicle {
         var y = this.turnPath[0].y;
 
         var closestHead = this.getClosestHead(head, true);
-        this.updateSprite(x, y, closestHead);
-        if (this.collision()) {
+        if (this.collision(x, y, closestHead)) {
             this.v = 0;
             return false;
         }
