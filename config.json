@@ -41,7 +41,7 @@
         "velocityHighway": 80,
         "waitBlocked": 10,
         "waitForever": 30,
-        "collisionScale": 0.8
+        "collisionSampling": 10
     },
     "Car": {
         "imgSize": 32,

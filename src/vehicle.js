@@ -5,6 +5,7 @@ class Vehicle {
         this.colorId = vehicleImages[Math.floor(Math.random() * vehicleImages.length)];
         this.typeId = Math.floor(Math.random() * numTypes);
         this.sprite = null;
+        this.bounds = {};
         this.tile = tile;
         this.oldTile = 'null';
         this.v = 0;
@@ -34,7 +35,7 @@ class Vehicle {
     }
 
     closeTo(other) {
-        return (this.x-other.x)**2 + (this.y-other.y)**2 < (this.sprite.height + other.sprite.height)**2;
+        return (this.x-other.x)**2 + (this.y-other.y)**2 < 0.5 * (this.sprite.height + other.sprite.height)**2;
     }
 
     startXY(head, lane) {
@@ -66,7 +67,40 @@ class Vehicle {
             this.sprite = game.add.sprite(0, 0, this.colorId);
             this.updateSprite(this.x, this.y, this.getHead());
             group.add(this.sprite);
+            this.createBounds();
         }
+    }
+
+    createBounds() {
+        var size = this.sprite.width;
+        var size2 = convertInt(size / 2);
+
+        var bitmapSize = size * config.Vehicle.headingOrder.length;
+        var canvas = document.getElementById('vehicle-canvas');
+        canvas.getContext('2d').drawImage(this.sprite.texture.baseTexture.source, 0, 0, bitmapSize, bitmapSize);
+
+        var y0 = this.typeId * size;
+        for (var headIndex = 0; headIndex < config.Vehicle.headingOrder.length; headIndex++) {
+            var points = [];
+            var x0 = headIndex * size;
+            for (var angle = 0; angle < 360; angle += config.Vehicle.collisionSampling) {
+                for (var i = 0; i < size; i++) {
+                    var x = convertInt(i*Math.sin(angle * Math.PI/180));
+                    var y = convertInt(i*Math.cos(angle * Math.PI/180));
+                    var alpha = canvas.getContext('2d').getImageData(x + x0 + size2, y + y0 + size2, 1, 1).data[3];
+                    if (alpha === 0) {
+                        points.push(x);
+                        points.push(y)
+                        break;;
+                    }
+                }
+            }
+            this.bounds[config.Vehicle.headingOrder[headIndex]] = new Phaser.Polygon(points);
+        }
+    }
+
+    getBounds() {
+        return this.bounds[this.getHead()];
     }
 
     updateSprite(x, y, head) {
@@ -279,7 +313,16 @@ class Vehicle {
                 return false;
             }
         }
-        return Phaser.Rectangle.intersects(this.sprite.getBounds().scale(config.Vehicle.collisionScale), other.sprite.getBounds().scale(config.Vehicle.collisionScale));
+
+        var bounds = this.getBounds();
+        var xoff = other.x - this.x;
+        var yoff = other.y - this.y;
+        for (var point of other.getBounds().points) {
+            if (bounds.contains(point.x + xoff, point.y + yoff)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     parkNow() {
