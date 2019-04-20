@@ -27,9 +27,9 @@
         "color": "#585b58"
     },
     "Track": {
-        "lanePointFactor": 0.29,
+        "lanePointFactor": 0.25,
         "curveFactor": 7,
-        "bezierFactor": 0.25,
+        "bezierFactor": 0.2,
         "color": "#333333",
         "activeColor": "#FFFF00",
         "width": 6
