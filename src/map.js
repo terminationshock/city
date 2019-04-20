@@ -23,8 +23,8 @@ class Map {
 
                 var groupGround = game.add.group();
                 var groupHouses = game.add.group();
-                groupGround.yz = (y-1)*config.Tile.dy;
-                groupHouses.yz = (y-1)*config.Tile.dy + config.Tile.height;
+                groupGround.yz = (y - 1) * config.Tile.dy;
+                groupHouses.yz = (y - 1) * config.Tile.dy + config.Tile.height;
                 this.rowGroupsGround.push(groupGround);
                 this.rowGroupsHouses.push(groupHouses);
                 this.masterGroup.add(groupGround);
@@ -37,10 +37,10 @@ class Map {
                     if (tileCode.length > 0) {
                         var counter = tileCode.substring(0, 4);
                         var fileId = tileCode.substring(4);
-                        var tile = new Tile(fileId, xoff + 2*x*config.Tile.dx, (y-1)*config.Tile.dy);
+                        var tile = new Tile(fileId, xoff + 2 * x * config.Tile.dx, (y - 1) * config.Tile.dy);
                         this.counterHashMap[counter] = tile.hash;
                         this.tiles.push(tile);
-                        this.tileRowId.push(this.nRows-1);
+                        this.tileRowId.push(this.nRows - 1);
                     }
                 }
             }
@@ -48,18 +48,18 @@ class Map {
     }
 
     getWidth() {
-        return 2*this.nCols*config.Tile.dx - Math.floor(config.Tile.width/2);
+        return 2 * this.nCols * config.Tile.dx - Math.floor(config.Tile.width / 2);
     }
 
     getHeight(fileContent) {
-        return this.nRows*config.Tile.dy - Math.floor(config.Tile.height/2);
+        return this.nRows * config.Tile.dy - Math.floor(config.Tile.height / 2);
     }
 
     initTiles(houseImages, treeImages, carImages) {
-        this.tiles.forEach(function (tile, index, tiles) {
+        this.tiles.forEach(function(tile, index, tiles) {
             tile.computeAllNeighbours(tiles);
         });
-        this.tiles.forEach(function (tile) {
+        this.tiles.forEach(function(tile) {
             tile.computeStreetNeighboursAndConnections();
             tile.generateHouse(houseImages);
             tile.generateTrees(treeImages);
@@ -86,8 +86,14 @@ class Map {
         }
     }
 
+    drawStops() {
+        for (var i = 0; i < this.tiles.length; i++) {
+            this.tiles[i].drawStop(this.rowGroupsGround[this.tileRowId[i]]);
+        }
+    }
+
     update() {
-        this.tiles.forEach(function (tile) {
+        this.tiles.forEach(function(tile) {
             tile.update();
         });
         this.masterGroup.sort('yz');
@@ -96,7 +102,7 @@ class Map {
     newTrackClick(x, y, hover) {
         for (var tile of this.tiles) {
             if (tile.inside(x, y) && !tile.isHouse()) {
-                if (this.newTrack.length === 0 || this.newTrack[this.newTrack.length-1].isTrackNeighbourOf(tile)) {
+                if (this.newTrack.length === 0 || this.newTrack[this.newTrack.length - 1].isTrackNeighbourOf(tile)) {
                     if (hover) {
                         return true;
                     }
@@ -107,7 +113,7 @@ class Map {
                     tile.generateTrack(newTrackHashes);
                     if (this.newTrack.length > 1) {
                         this.newTrack[0].generateTrack(newTrackHashes);
-                        this.newTrack[this.newTrack.length-2].generateTrack(newTrackHashes);
+                        this.newTrack[this.newTrack.length - 2].generateTrack(newTrackHashes);
                     }
                     this.drawTracks();
                     return true;
@@ -125,6 +131,7 @@ class Map {
                 }
 
                 tile.addStop();
+                tile.drawStops();
             }
         }
         return false;
@@ -147,7 +154,7 @@ class Map {
 
     newTrackAbort() {
         if (this.newTrack.length > 0) {
-            this.newTrack.forEach(function (tile) {
+            this.newTrack.forEach(function(tile) {
                 tile.generateTrack([]);
             });
             this.drawTracks();
@@ -162,13 +169,11 @@ class Map {
         }
 
         if (this.newTrack.length > 0) {
-            this.newTrack.forEach(function (tile) {
+            this.newTrack.forEach(function(tile) {
                 tile.finalizeTrack();
             });
             this.drawTracks();
             this.newTrack = [];
         }
     }
-}
-
-
+};

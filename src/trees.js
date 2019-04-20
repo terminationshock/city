@@ -13,7 +13,7 @@ class Trees {
                 this.trees.push(tree);
             }
         }
-        this.trees.sort(function (a,b) {
+        this.trees.sort(function(a, b) {
             return a.y - b.y;
         });
     }
@@ -24,7 +24,7 @@ class Trees {
         var imgX = this.tile.imgX + Math.floor(Math.random() * (config.Tile.width - image.width));
         var imgY = this.tile.imgY + Math.floor(Math.random() * config.Tile.height) - image.height;
 
-        var x = imgX + Math.floor(image.width/2);
+        var x = imgX + Math.floor(image.width / 2);
         var y = imgY + image.height;
 
         if (this.tile.inside(x, y, config.Tree.insideFactor)) {
@@ -37,14 +37,14 @@ class Trees {
         for (var tree of this.trees) {
             this.sprites.push(game.add.image(tree.imgX, tree.imgY, tree.tree));
         }
-        this.sprites.forEach(function (sprite) {
+        this.sprites.forEach(function(sprite) {
             group.add(sprite);
         });
     }
 
     remove() {
-        this.sprites.forEach(function (sprite) {
+        this.sprites.forEach(function(sprite) {
             sprite.destroy();
         });
     }
-}
+};

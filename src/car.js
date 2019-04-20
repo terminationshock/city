@@ -61,10 +61,10 @@ class Car extends Vehicle {
     }
 
     callbackEnterParkingLot() {
-        this.queue.push(function () {
+        this.queue.push(function() {
             return this.callbackChangeLane(1);
         });
-        this.queue.push(function () {
+        this.queue.push(function() {
             var head = this.getNextHead(-2);
             return this.callbackProceedToTargetLane(head, config.Street.lanePark);
         });
@@ -90,10 +90,10 @@ class Car extends Vehicle {
             }
         }
 
-        this.queue.push(function () {
+        this.queue.push(function() {
             return this.callbackChangeLane(-1);
         });
-        this.queue.push(function () {
+        this.queue.push(function() {
             var head = this.getNextHead(2);
             return this.callbackProceedToTargetLane(head, config.Street.laneDrive);
         });
@@ -102,7 +102,7 @@ class Car extends Vehicle {
     }
 
     callbackChangeLane(turn) {
-        this.head = this.getNextHead(2*turn);
+        this.head = this.getNextHead(2 * turn);
         return true;
     }
 
@@ -110,4 +110,4 @@ class Car extends Vehicle {
         this.queue.push(this.callbackDrive);
         return true;
     }
-}
+};

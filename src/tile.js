@@ -4,13 +4,13 @@ class Tile {
         this.fileId = fileId;
         this.imgX = x;
         this.imgY = y;
-        this.x = this.imgX + Math.floor(config.Tile.width/2);
-        this.y = this.imgY + Math.floor(config.Tile.height/2);
+        this.x = this.imgX + Math.floor(config.Tile.width / 2);
+        this.y = this.imgY + Math.floor(config.Tile.height / 2);
         this.neighbours = [];
         this.streetNeighbours = [];
         this.neighbourConnections = {};
         this.tracks = new Tracks(this);
-        this.stop = false;
+        this.tramstop = null;
         this.hover = null;
         this.trees = null;
         this.vehicles = [];
@@ -43,13 +43,19 @@ class Tile {
     }
 
     drawVehicles(group) {
-        this.vehicles.forEach(function (vehicle) {
+        this.vehicles.forEach(function(vehicle) {
             vehicle.draw(group);
         });
     }
 
+    drawStop(group) {
+        if (this.hasStop()) {
+            this.tramstop.draw(group);
+        }
+    }
+
     addStop() {
-        this.stop = true;
+        this.tramstop = new TramStop(this);
     }
 
     equals(other) {
@@ -57,7 +63,7 @@ class Tile {
     }
 
     update() {
-        this.vehicles.forEach(function (vehicle) {
+        this.vehicles.forEach(function(vehicle) {
             vehicle.update();
         });
     }
@@ -146,7 +152,7 @@ class Tile {
     }
 
     hasStop() {
-        return this.stop;
+        return this.tramstop !== null;
     }
 
     hasTracks() {
@@ -208,17 +214,13 @@ class Tile {
         var buf = 10;
         for (var tile of tiles) {
             if (!this.equals(tile)) {
-                if (this.x + buf < tile.x && tile.x < this.x + config.Tile.width - buf
-                    && this.y - config.Tile.height + buf < tile.y && tile.y < this.y - buf) {
+                if (this.x + buf < tile.x && tile.x < this.x + config.Tile.width - buf && this.y - config.Tile.height + buf < tile.y && tile.y < this.y - buf) {
                     this.neighbours.push(tile);
-                } else if (this.x + buf < tile.x && tile.x < this.x + config.Tile.width - buf
-                    && this.y + buf < tile.y && tile.y < this.y + config.Tile.height - buf) {
+                } else if (this.x + buf < tile.x && tile.x < this.x + config.Tile.width - buf && this.y + buf < tile.y && tile.y < this.y + config.Tile.height - buf) {
                     this.neighbours.push(tile);
-                } else if (this.x - config.Tile.width + buf < tile.x && tile.x < this.x - buf
-                    && this.y + buf < tile.y && tile.y < this.y + config.Tile.height - buf) {
+                } else if (this.x - config.Tile.width + buf < tile.x && tile.x < this.x - buf && this.y + buf < tile.y && tile.y < this.y + config.Tile.height - buf) {
                     this.neighbours.push(tile);
-                } else if (this.x - config.Tile.width + buf < tile.x && tile.x < this.x - buf
-                    && this.y - config.Tile.height + buf < tile.y && tile.y < this.y - buf) {
+                } else if (this.x - config.Tile.width + buf < tile.x && tile.x < this.x - buf && this.y - config.Tile.height + buf < tile.y && tile.y < this.y - buf) {
                     this.neighbours.push(tile);
                 }
             }
@@ -260,7 +262,7 @@ class Tile {
     }
 
     isConnectedTo(head) {
-        var id = parseInt(this.fileId.substring(1,5));
+        var id = parseInt(this.fileId.substring(1, 5));
         if ([1, 5, 9, 21, 45, 49, 53, 77, 85].includes(id)) {
             if (convertInt(head) === 300) {
                 return true;
@@ -290,11 +292,11 @@ class Tile {
     }
 
     getCurve(p1, p2, head1, head2, bezierFactor) {
-        var dx1 = Math.sin(head1 * Math.PI/180);
-        var dy1 = -Math.cos(head1 * Math.PI/180);
+        var dx1 = Math.sin(head1 * Math.PI / 180);
+        var dy1 = -Math.cos(head1 * Math.PI / 180);
 
-        var dx2 = Math.sin(head2 * Math.PI/180);
-        var dy2 = -Math.cos(head2 * Math.PI/180);
+        var dx2 = Math.sin(head2 * Math.PI / 180);
+        var dy2 = -Math.cos(head2 * Math.PI / 180);
 
         var deltaHead = this.getDeltaHead(head1, head2);
 
@@ -303,8 +305,8 @@ class Tile {
             return new BezierCurve([p1, p2]);
         }
         return new BezierCurve([p1,
-                                new Point(p1.x + bezierFactor*dx1, p1.y + bezierFactor*dy1),
-                                new Point(p2.x - bezierFactor*dx2, p2.y - bezierFactor*dy2),
+                                new Point(p1.x + bezierFactor * dx1, p1.y + bezierFactor * dy1),
+                                new Point(p2.x - bezierFactor * dx2, p2.y - bezierFactor * dy2),
                                 p2]);
     }
 
@@ -329,13 +331,13 @@ class Tile {
     }
 
     getTurnDirection(fromHead, toHead) {
-        if (0 < toHead-fromHead && toHead-fromHead < 180) {
+        if (0 < toHead - fromHead && toHead - fromHead < 180) {
             return 1;
-        } else if (-180 <= toHead-fromHead && toHead-fromHead < 0) {
+        } else if (-180 <= toHead - fromHead && toHead - fromHead < 0) {
             return -1;
-        } else if (toHead-fromHead >= 180) {
+        } else if (toHead - fromHead >= 180) {
             return -1;
-        } else if (-180 > toHead-fromHead) {
+        } else if (-180 > toHead - fromHead) {
             return 1;
         }
         return 0;
@@ -346,7 +348,7 @@ class Tile {
         var xx = this.x - x;
         var yy = this.y - y;
         var ratio = config.Tile.width / config.Tile.height;
-        return Math.abs(xx + ratio*yy) < factor * config.Tile.width * 0.5 && Math.abs(xx - ratio*yy) < factor * config.Tile.width * 0.5;
+        return Math.abs(xx + ratio * yy) < factor * config.Tile.width * 0.5 && Math.abs(xx - ratio * yy) < factor * config.Tile.width * 0.5;
     }
 
     nearCenter(x, y) {
@@ -361,8 +363,8 @@ class Tile {
     }
 
     getLane(head, lane) {
-        var nx = Math.cos(head * Math.PI/180);
-        var ny = Math.sin(head * Math.PI/180);
+        var nx = Math.cos(head * Math.PI / 180);
+        var ny = Math.sin(head * Math.PI / 180);
         var px = this.x;
         var py = this.y;
 
@@ -494,4 +496,4 @@ class Tile {
         }
         return true;
     }
-}
+};

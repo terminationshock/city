@@ -15,13 +15,13 @@ class BezierCurve {
         var x = 0;
         var y = 0;
         for (var j = 1; j < n; j++) {
-            for (var i = 0; i < n-j; i++) {
-                x = (1.-t) * point[i][j-1].x + t * point[i+1][j-1].x;
-                y = (1.-t) * point[i][j-1].y + t * point[i+1][j-1].y;
+            for (var i = 0; i < n - j; i++) {
+                x = (1. - t) * point[i][j - 1].x + t * point[i + 1][j - 1].x;
+                y = (1. - t) * point[i][j - 1].y + t * point[i + 1][j - 1].y;
                 point[i][j] = new Point(x, y);
             }
         }
-        return point[0][n-1];
+        return point[0][n - 1];
     }
 
     getPath(wayPerStep) {
@@ -42,15 +42,15 @@ class BezierCurve {
                 point2 = this.get(t);
                 dx = point2.x - point1.x;
                 dy = point2.y - point1.y;
-                dxy = Math.sqrt(dx**2 + dy**2);
+                dxy = Math.sqrt(dx * dx + dy * dy);
             }
 
-            var angle = Math.atan2(dx, -dy) * 180/Math.PI;
+            var angle = Math.atan2(dx, -dy) * 180 / Math.PI;
             if (angle < 0) {
                 angle += 360;
             }
 
-            var p = new Point((point1.x + point2.x)/2, (point1.y + point2.y)/2);
+            var p = new Point((point1.x + point2.x) / 2, (point1.y + point2.y) / 2);
             p.head = angle;
             path.push(p);
 
@@ -58,6 +58,6 @@ class BezierCurve {
             t0 = t;
         }
 
-        return path.slice(0, path.length-1);
+        return path.slice(0, path.length - 1);
     }
-}
+};

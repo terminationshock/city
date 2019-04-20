@@ -100,10 +100,10 @@ class Tracks {
          }
 
          for (var j = -1; j <= 1; j += 2) {
-             var p1 = this.tile.getLaneStartPoint(headFrom, config.Street.laneDrive + j*config.Track.width/2, 1);
-             var pc1 = this.tile.getLaneStartPoint(headFrom, config.Street.laneDrive + j*config.Track.width/2, config.Track.lanePointFactor);
-             var pc2 = this.tile.getLaneTargetPoint(headTo, config.Street.laneDrive + j*config.Track.width/2, config.Track.lanePointFactor);
-             var p2 = this.tile.getLaneTargetPoint(headTo, config.Street.laneDrive + j*config.Track.width/2, 1);
+             var p1 = this.tile.getLaneStartPoint(headFrom, config.Street.laneDrive + j * config.Track.width / 2, 1);
+             var pc1 = this.tile.getLaneStartPoint(headFrom, config.Street.laneDrive + j * config.Track.width / 2, config.Track.lanePointFactor);
+             var pc2 = this.tile.getLaneTargetPoint(headTo, config.Street.laneDrive + j * config.Track.width / 2, config.Track.lanePointFactor);
+             var p2 = this.tile.getLaneTargetPoint(headTo, config.Street.laneDrive + j * config.Track.width / 2, 1);
 
              if (headFrom === headTo) {
                  this.trackPoints.moveTo(p1.x, p1.y);
@@ -210,4 +210,4 @@ class Tracks {
             group.add(this.trackPoints);
         }
     }
-}
+};

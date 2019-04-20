@@ -23,4 +23,4 @@ class Driver {
     parkNow() {
         return Math.random() < config.AI.probTilePark;
     }
-}
+};

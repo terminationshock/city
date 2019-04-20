@@ -119,24 +119,24 @@ class Loader {
 
         this.trams = ['v00'];
 
-        this.streets.forEach(function (street) {
-            game.load.image(street, 'img/'+street+'.png');
+        this.streets.forEach(function(street) {
+            game.load.image(street, 'img/' + street + '.png');
         });
 
-        this.houses.forEach(function (house) {
-            game.load.image(house, 'img/'+house+'.png');
+        this.houses.forEach(function(house) {
+            game.load.image(house, 'img/' + house + '.png');
         });
 
-        this.trees.forEach(function (tree) {
-            game.load.image(tree, 'img/'+tree+'.png');
+        this.trees.forEach(function(tree) {
+            game.load.image(tree, 'img/' + tree + '.png');
         });
 
-        this.cars.forEach(function (car) {
-            game.load.spritesheet(car, 'img/'+car+'.png', config.Car.imgSize, config.Car.imgSize, config.Vehicle.headingOrder.length*config.Car.numTypes);
+        this.cars.forEach(function(car) {
+            game.load.spritesheet(car, 'img/' + car + '.png', config.Car.imgSize, config.Car.imgSize, config.Vehicle.headingOrder.length * config.Car.numTypes);
         });
 
-        this.trams.forEach(function (tram) {
-            game.load.spritesheet(tram, 'img/'+tram+'.png', config.Tram.imgSize, config.Tram.imgSize, config.Vehicle.headingOrder.length*config.Tram.numTypes);
+        this.trams.forEach(function(tram) {
+            game.load.spritesheet(tram, 'img/' + tram + '.png', config.Tram.imgSize, config.Tram.imgSize, config.Vehicle.headingOrder.length * config.Tram.numTypes);
         });
     }
-}
+};

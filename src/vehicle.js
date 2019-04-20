@@ -36,7 +36,7 @@ class Vehicle {
     }
 
     closeTo(other, x, y) {
-        return (x-other.x)**2 + (y-other.y)**2 < 0.5 * (this.sprite.height + other.sprite.height)**2;
+        return (x - other.x)**2 + (y - other.y)**2 < 0.5 * (this.sprite.height + other.sprite.height)**2;
     }
 
     startXY(head, lane) {
@@ -46,7 +46,7 @@ class Vehicle {
         } else {
             this.x -= config.Tile.width / 4;
         }
-        this.y = (lane.nx * (lane.px-this.x) + lane.ny * lane.py) / lane.ny;
+        this.y = (lane.nx * (lane.px - this.x) + lane.ny * lane.py) / lane.ny;
     }
 
     draw(group) {
@@ -71,9 +71,9 @@ class Vehicle {
             var x0 = headIndex * size;
             for (var angle = 0; angle < 360; angle += config.Vehicle.collisionSampling) {
                 for (var i = 0; i < size; i++) {
-                    var x = convertInt(i*Math.sin(angle * Math.PI/180));
-                    var y = -convertInt(i*Math.cos(angle * Math.PI/180));
-                    var alpha = canvas.getContext('2d').getImageData(x + x0 + convertInt(size/2), y + y0 + convertInt(size/2), 1, 1).data[3];
+                    var x = convertInt(i * Math.sin(angle * Math.PI / 180));
+                    var y = -convertInt(i * Math.cos(angle * Math.PI / 180));
+                    var alpha = canvas.getContext('2d').getImageData(x + x0 + convertInt(size / 2), y + y0 + convertInt(size / 2), 1, 1).data[3];
                     if (alpha < 255) {
                         points.push(x);
                         points.push(y);
@@ -98,9 +98,9 @@ class Vehicle {
 
     updateSpritePosition(x, y) {
         if (!this.cachedSpritePosition.equals(x, y)) {
-            this.sprite.x = x - this.sprite.width/2;
-            this.sprite.y = y - this.sprite.height/2;
-            this.sprite.yz = y + this.sprite.height/2;
+            this.sprite.x = x - this.sprite.width / 2;
+            this.sprite.y = y - this.sprite.height / 2;
+            this.sprite.yz = y + this.sprite.height / 2;
             this.cachedSpritePosition = new Point(x, y);
         }
     }
@@ -132,8 +132,8 @@ class Vehicle {
 
         if (this.v > 0) {
             var intHead = this.getHead();
-            var dx = Math.sin(intHead * Math.PI/180) * this.v * dt;
-            var dy = -Math.cos(intHead * Math.PI/180) * this.v * dt;
+            var dx = Math.sin(intHead * Math.PI / 180) * this.v * dt;
+            var dy = -Math.cos(intHead * Math.PI / 180) * this.v * dt;
 
             if (this.collision(this.x + dx, this.y + dy, intHead)) {
                 this.queue.splice(0, 0, this.callbackWait);
@@ -213,11 +213,11 @@ class Vehicle {
 
         var headingOrderCopy = config.Vehicle.headingOrder.slice(0);
         if (floor) {
-            headingOrderCopy.sort(function (a, b) {
-                return a-b;
+            headingOrderCopy.sort(function(a, b) {
+                return a - b;
             });
-            for (var i = 0; i < headingOrderCopy.length-1; i++) {
-                if (headingOrderCopy[i] <= head && head < headingOrderCopy[i+1]) {
+            for (var i = 0; i < headingOrderCopy.length - 1; i++) {
+                if (headingOrderCopy[i] <= head && head < headingOrderCopy[i + 1]) {
                     return headingOrderCopy[i];
                 }
             }
@@ -226,8 +226,8 @@ class Vehicle {
             if (head > 300) {
                 headingOrderCopy[config.Vehicle.headingOrder.indexOf(0)] = 360;
             }
-            var closestHead = headingOrderCopy.reduce(function (a, b) {
-                if (Math.abs(a-head) < Math.abs(b-head)) {
+            var closestHead = headingOrderCopy.reduce(function(a, b) {
+                if (Math.abs(a - head) < Math.abs(b - head)) {
                     return a;
                 }
                 return b;
@@ -258,14 +258,14 @@ class Vehicle {
         var dx = other.x - x;
         var dy = other.y - y;
         var direction = this.getHeadFromDxDy(dx, dy);
-        if ((head + 60 < direction && direction < head + 300) || (head + 60 < direction+360 && direction+360 < head + 300)) {
+        if ((head + 60 < direction && direction < head + 300) || (head + 60 < direction + 360 && direction + 360 < head + 300)) {
             return false;
         }
         return true;
     }
 
     getHeadFromDxDy(dx, dy) {
-        var head = Math.atan2(dx, -dy) * 180/Math.PI;
+        var head = Math.atan2(dx, -dy) * 180 / Math.PI;
         if (head < 0) {
             head += 360;
         }
@@ -398,7 +398,7 @@ class Vehicle {
                     this.queue.push(this.callbackDrive);
                 } else {
                     this.queue.push(this.callbackTurn);
-                    this.queue.push(function () {
+                    this.queue.push(function() {
                         return this.callbackProceedToTargetLane(null, config.Street.laneDrive);
                     });
                     this.queue.push(this.callbackDrive);
@@ -448,4 +448,4 @@ class Vehicle {
         }
         return false;
     }
-}
+};

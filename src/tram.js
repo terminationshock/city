@@ -38,4 +38,4 @@ class Tram extends Vehicle {
         }
         return false;
     }
-}
+};
