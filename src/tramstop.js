@@ -12,7 +12,8 @@ class TramStop {
         if (group !== null) {
             this.canvas = new Phaser.Graphics(game, this.tile.imgX, this.tile.imgY);
 
-            for (var head of this.tile.getStraightTracks()) {
+            var heads = this.tile.getStraightTracks();
+            for (var head of heads) {
                 var p = this.tile.getClosestPointInLane(this.tile.x, this.tile.y, head, config.Stop.lane);
                 p.x -= this.tile.imgX;
                 p.y -= this.tile.imgY;

@@ -329,7 +329,8 @@ class Vehicle {
         var bounds = this.bounds[head];
         var xoff = other.x - x;
         var yoff = other.y - y;
-        for (var point of other.getBounds().points) {
+        var points = other.getBounds().points;
+        for (var point of points) {
             if (bounds.contains(point.x + xoff, point.y + yoff)) {
                 return true;
             }
