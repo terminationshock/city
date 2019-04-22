@@ -100,7 +100,7 @@ class Tracks {
                  this.trackPoints.moveTo(p1.x, p1.y);
                  this.trackPoints.lineTo(p2.x, p2.y);
              } else {
-                 var curve = this.tile.getCurve(pc1, pc2, headFrom, headTo, config.Track.bezierFactor);
+                 var curve = getCurve(pc1, pc2, headFrom, headTo, config.Track.bezierFactor);
                  var path = curve.getPath(config.Track.curveFactor);
 
                  this.trackPoints.moveTo(p1.x, p1.y);
@@ -129,7 +129,7 @@ class Tracks {
                 var p1 = this.tile.getLaneStartPoint(headFrom, config.Street.laneDrive, 1);
                 var p2 = this.tile.getLaneTargetPoint(headTo, config.Street.laneDrive, 0.24);
                 var segments = [];
-                if (this.tile.getTurnDirection(headFrom, headTo) === -1) {
+                if (getTurnDirection(headFrom, headTo) === -1) {
                     segments.push(new Phaser.Line(Math.round(p1.x), Math.round(p1.y), Math.round(this.tile.x), Math.round(this.tile.y)));
                     segments.push(new Phaser.Line(Math.round(this.tile.x), Math.round(this.tile.y), Math.round(p2.x), Math.round(p2.y)));
                 } else {
@@ -139,6 +139,13 @@ class Tracks {
             }
         }
         return lines;
+    }
+
+    isNotIntersecting() {
+        if (linesIntersectInside(this.getLines(), this.tile)) {
+            return false;
+        }
+        return true;
     }
 
     isDeadEnd() {
@@ -163,27 +170,6 @@ class Tracks {
             }
             var headFrom = normalizeAngle(convertInt(negativeHeadFrom) + 180);
             if (headFrom !== convertInt(this.track[negativeHeadFrom])) {
-                return false;
-            }
-            if (keys.length === 2 && !keys.includes(this.track[negativeHeadFrom][0])) {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    isCurve() {
-        var keys = this.headsFrom.map(x => convertInt(x));
-        if (keys.length > 2) {
-            return false;
-        }
-        for (var negativeHeadFrom in this.track) {
-            if (this.track[negativeHeadFrom].length > 1) {
-                return false;
-            }
-            var headFrom = normalizeAngle(convertInt(negativeHeadFrom) + 180);
-            var deltaHead = this.tile.getDeltaHead(headFrom, this.track[negativeHeadFrom]);
-            if (deltaHead === 0 || deltaHead === 180) {
                 return false;
             }
             if (keys.length === 2 && !keys.includes(this.track[negativeHeadFrom][0])) {

@@ -419,27 +419,27 @@ class TileTest {
     }
 
     testGetDeltaHead() {
-        console.assert(this.tile_road[45].getDeltaHead(0, 90) === 90);
-        console.assert(this.tile_road[45].getDeltaHead(90, 0) === 90);
-        console.assert(this.tile_road[45].getDeltaHead(0, 180) === 180);
-        console.assert(this.tile_road[45].getDeltaHead(180, 0) === 180);
-        console.assert(this.tile_road[45].getDeltaHead(0, 270) === 90);
-        console.assert(this.tile_road[45].getDeltaHead(270, 0) === 90);
-        console.assert(this.tile_road[45].getDeltaHead(359, 1) === 2);
-        console.assert(this.tile_road[45].getDeltaHead(1, 359) === 2);
-        console.assert(this.tile_road[45].getDeltaHead(1, 0) === 1);
-        console.assert(this.tile_road[45].getDeltaHead(359, 0) === 1);
+        console.assert(getDeltaHead(0, 90) === 90);
+        console.assert(getDeltaHead(90, 0) === 90);
+        console.assert(getDeltaHead(0, 180) === 180);
+        console.assert(getDeltaHead(180, 0) === 180);
+        console.assert(getDeltaHead(0, 270) === 90);
+        console.assert(getDeltaHead(270, 0) === 90);
+        console.assert(getDeltaHead(359, 1) === 2);
+        console.assert(getDeltaHead(1, 359) === 2);
+        console.assert(getDeltaHead(1, 0) === 1);
+        console.assert(getDeltaHead(359, 0) === 1);
     }
 
     testGetTurnDirection() {
-        console.assert(this.tile_road[45].getTurnDirection(0, 90) === 1);
-        console.assert(this.tile_road[45].getTurnDirection(0, 270) === -1);
-        console.assert(this.tile_road[45].getTurnDirection(90, 180) === 1);
-        console.assert(this.tile_road[45].getTurnDirection(90, 0) === -1);
-        console.assert(this.tile_road[45].getTurnDirection(180, 270) === 1);
-        console.assert(this.tile_road[45].getTurnDirection(180, 90) === -1);
-        console.assert(this.tile_road[45].getTurnDirection(270, 0) === 1);
-        console.assert(this.tile_road[45].getTurnDirection(270, 180) === -1);
+        console.assert(getTurnDirection(0, 90) === 1);
+        console.assert(getTurnDirection(0, 270) === -1);
+        console.assert(getTurnDirection(90, 180) === 1);
+        console.assert(getTurnDirection(90, 0) === -1);
+        console.assert(getTurnDirection(180, 270) === 1);
+        console.assert(getTurnDirection(180, 90) === -1);
+        console.assert(getTurnDirection(270, 0) === 1);
+        console.assert(getTurnDirection(270, 180) === -1);
     }
 
     testInside() {

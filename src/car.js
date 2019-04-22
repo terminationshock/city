@@ -52,8 +52,8 @@ class Car extends Vehicle {
         return this.tile.isStraight();
     }
 
-    isOnCurve() {
-        return this.tile.isCurve();
+    isOnNonIntersectingWay() {
+        return this.tile.isStraight() || this.tile.isCurve();
     }
 
     isParking() {

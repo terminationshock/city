@@ -244,7 +244,7 @@ class Vehicle {
         var p2 = this.tile.getLaneTargetPoint(targetHead, config.Street.laneDrive, config.Street.lanePointFactor);
         var dt = 1.0 / config.World.stepsPerSecond;
 
-        var curve = this.tile.getCurve(p1, p2, this.getHead(), targetHead, config.Street.bezierFactor);
+        var curve = getCurve(p1, p2, this.getHead(), targetHead, config.Street.bezierFactor);
         return curve.getPath(config.Vehicle.velocityTurn * dt);
     }
 
@@ -376,7 +376,7 @@ class Vehicle {
         }
 
         if (this.tile.isDeadEndOrJunctionOrCrossing()) {
-            if (!((this.isOnStraight() || this.isOnCurve()) && this.tile.onlySameVehicleType(this))) {
+            if (!(this.isOnNonIntersectingWay() && this.tile.onlySameVehicleType(this))) {
                 var index = this.tile.getVehicleIndex(this);
                 for (var i = 0; i < index; i++) {
                     if (!this.tile.vehicles[i].isParking() && this.tile.vehicles[i].waitingTime <= config.Vehicle.waitBlocked) {

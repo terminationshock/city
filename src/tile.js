@@ -84,20 +84,6 @@ class Tile {
         return config.Street.straights.includes(this.fileId);
     }
 
-    isStraightTrack() {
-        if (this.hasTracks()) {
-            return this.tracks.isStraight();
-        }
-        return false;
-    }
-
-    isCurveTrack() {
-        if (this.hasTracks()) {
-            return this.tracks.isCurve();
-        }
-        return false;
-    }
-
     isHighway() {
         return config.Street.highways.includes(this.fileId);
     }
@@ -108,6 +94,24 @@ class Tile {
 
     isStraightOrCurve() {
         return this.isStraight() || this.isCurve();
+    }
+
+    isDeadEnd() {
+        return config.Street.deadEnds.includes(this.fileId);
+    }
+
+    isStraightTrack() {
+        if (this.hasTracks()) {
+            return this.tracks.isStraight();
+        }
+        return false;
+    }
+
+    isNonIntersectingTrack() {
+        if (this.hasTracks()) {
+            return this.tracks.isNotIntersecting();
+        }
+        return true;
     }
 
     isDeadEndOrJunctionOrCrossing() {
@@ -130,7 +134,7 @@ class Tile {
                 var p1 = this.getLaneStartPoint(headFrom, config.Street.laneDrive, 1);
                 var p2 = this.getLaneTargetPoint(headTo, config.Street.laneDrive, 0.24);
                 var segments = [];
-                if (this.getTurnDirection(headFrom, headTo) === -1) {
+                if (getTurnDirection(headFrom, headTo) === -1) {
                     segments.push(new Phaser.Line(Math.round(p1.x), Math.round(p1.y), Math.round(this.x), Math.round(this.y)));
                     segments.push(new Phaser.Line(Math.round(this.x), Math.round(this.y), Math.round(p2.x), Math.round(p2.y)));
                 } else {
@@ -143,41 +147,11 @@ class Tile {
                 lines.push(line);
             }
 
-            for (var i = 0; i < lines.length; i++) {
-                for (var j = i+1; j < lines.length; j++) {
-                    if (!this.linesEqual(lines[i], lines[j])) {
-                        for (var line1 of lines[i]) {
-                            for (var line2 of lines[j]) {
-                                var point = Phaser.Line.intersects(line1, line2);
-                                if (point !== null && this.inside(point.x, point.y, 0.99)) {
-                                    return true;
-                                }
-                            }
-                        }
-                    }
-                }
+            if (linesIntersectInside(lines, this)) {
+                return true;
             }
         }
         return false;
-    }
-
-    linesEqual(line1, line2) {
-        if (line1.length !== line2.length) {
-            return false;
-        }
-        for (var i = 0; i < line1.length; i++) {
-            if (line1[i].start.x !== line2[i].start.x || line1[i].start.y !== line2[i].start.y) {
-                return false;
-            }
-            if (line1[i].end.x !== line2[i].end.x || line1[i].end.y !== line2[i].end.y) {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    isDeadEnd() {
-        return config.Street.deadEnds.includes(this.fileId);
     }
 
     hasStop() {
@@ -318,58 +292,6 @@ class Tile {
     getStreetConnections() {
         var heads = [60, 120, 240, 300];
         return heads.filter(head => this.isConnectedTo(head));
-    }
-
-    getCurve(p1, p2, head1, head2, bezierFactor) {
-        var dx1 = Math.sin(head1 * Math.PI / 180);
-        var dy1 = -Math.cos(head1 * Math.PI / 180);
-
-        var dx2 = Math.sin(head2 * Math.PI / 180);
-        var dy2 = -Math.cos(head2 * Math.PI / 180);
-
-        var deltaHead = this.getDeltaHead(head1, head2);
-
-        var bezierFactor = bezierFactor * deltaHead;
-        if (deltaHead === 0) {
-            return new BezierCurve([p1, p2]);
-        }
-        return new BezierCurve([p1,
-                                new Point(p1.x + bezierFactor * dx1, p1.y + bezierFactor * dy1),
-                                new Point(p2.x - bezierFactor * dx2, p2.y - bezierFactor * dy2),
-                                p2]);
-    }
-
-    getDeltaHead(fromHead, toHead) {
-        var turn = this.getTurnDirection(fromHead, toHead);
-
-        var deltaHead = 0;
-        if (turn < 0) {
-            if (toHead > fromHead) {
-                deltaHead = fromHead - (toHead - 360);
-            } else {
-                deltaHead = fromHead - toHead;
-            }
-        } else if (turn > 0) {
-            if (toHead < fromHead) {
-                deltaHead = (toHead + 360) - fromHead;
-            } else {
-                deltaHead = toHead - fromHead;
-            }
-        }
-        return deltaHead;
-    }
-
-    getTurnDirection(fromHead, toHead) {
-        if (0 < toHead - fromHead && toHead - fromHead < 180) {
-            return 1;
-        } else if (-180 <= toHead - fromHead && toHead - fromHead < 0) {
-            return -1;
-        } else if (toHead - fromHead >= 180) {
-            return -1;
-        } else if (-180 > toHead - fromHead) {
-            return 1;
-        }
-        return 0;
     }
 
     inside(x, y, factor) {

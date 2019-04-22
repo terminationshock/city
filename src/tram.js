@@ -20,8 +20,8 @@ class Tram extends Vehicle {
         return this.tile.isStraightTrack();
     }
 
-    isOnCurve() {
-        return this.tile.isCurveTrack();
+    isOnNonIntersectingWay() {
+        return this.tile.isNonIntersectingTrack();
     }
 
     isParking() {
