@@ -147,7 +147,7 @@ class Tracks {
         if (this.isDeadEnd()) {
             return false;
         }
-        if (linesIntersectInside(this.lineSegments, this.tile)) {
+        if (this.tile.linesIntersectInside(this.lineSegments)) {
             return false;
         }
         return true;
@@ -182,6 +182,13 @@ class Tracks {
             }
         }
         return true;
+    }
+
+    getStraights() {
+        if (this.isStraight()) {
+            return Object.keys(this.track).map(x => normalizeAngle(convertInt(x) + 180));
+        }
+        return null;
     }
 
     getHeadsFrom(head) {

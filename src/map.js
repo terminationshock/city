@@ -79,6 +79,7 @@ class Map {
         for (var i = 0; i < this.tiles.length; i++) {
             this.tiles[i].drawTracks(this.rowGroupsGround[this.tileRowId[i]]);
         }
+        this.drawStops();
     }
 
     drawVehicles() {
@@ -132,7 +133,7 @@ class Map {
                 }
 
                 tile.addStop();
-                tile.drawStops();
+                this.drawStops();
             }
         }
         return false;

@@ -1,18 +1,19 @@
 {
-    "Tile": {
-        "dx": 63,
-        "dy": 37,
-        "width": 128,
-        "height": 74,
-        "probHouse": 0.9,
-        "probCar": 0.5,
-        "grass": "g0000",
-        "streetPrefix": "r"
+    "AI": {
+        "probStepDrive": 0.001,
+        "probTilePark": 0.05,
+        "waitAtStop": 100
     },
-    "Tree": {
-        "numTrees": 6,
-        "maxHeight": 79,
-        "insideFactor": 0.8
+    "Car": {
+        "imgSize": 32,
+        "numTypes": 12
+    },
+    "Stop": {
+        "lane": 22,
+        "width": 4,
+        "length": 20,
+        "color1": "#888888",
+        "color2": "#CCCCCC"
     },
     "Street": {
         "highways": ["r0081", "r0085"],
@@ -24,7 +25,17 @@
         "centerSizeFactor": 0.7,
         "lanePointFactor": 0.2,
         "bezierFactor": 0.09,
-        "color": "#585b58"
+        "color": "#585B58"
+    },
+    "Tile": {
+        "dx": 63,
+        "dy": 37,
+        "width": 128,
+        "height": 74,
+        "probHouse": 0.9,
+        "probCar": 0.5,
+        "grass": "g0000",
+        "streetPrefix": "r"
     },
     "Track": {
         "lanePointFactor": 0.25,
@@ -33,6 +44,15 @@
         "color": "#333333",
         "activeColor": "#FFFF00",
         "width": 6
+    },
+    "Tram": {
+        "imgSize": 80,
+        "numTypes": 1
+    },
+    "Tree": {
+        "numTrees": 6,
+        "maxHeight": 79,
+        "insideFactor": 0.8
     },
     "Vehicle": {
         "headingOrder": [240, 255, 270, 285, 300, 315, 0, 45, 60, 75, 90, 105, 120, 135, 180, 225],
@@ -43,20 +63,7 @@
         "waitForever": 30,
         "collisionSampling": 15
     },
-    "Car": {
-        "imgSize": 32,
-        "numTypes": 12
-    },
-    "Tram": {
-        "imgSize": 80,
-        "numTypes": 1
-    },
     "World": {
         "stepsPerSecond": 30
-    },
-    "AI": {
-        "probStepDrive": 0.001,
-        "probTilePark": 0.05,
-        "waitAtStop": 100
     }
 }

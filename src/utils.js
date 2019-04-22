@@ -88,24 +88,6 @@ function linesAreEqual(line1, line2) {
     return true;
 }
 
-function linesIntersectInside(lines, tile) {
-    for (var i = 0; i < lines.length; i++) {
-        for (var j = i+1; j < lines.length; j++) {
-            if (!linesAreEqual(lines[i], lines[j])) {
-                for (var line1 of lines[i]) {
-                    for (var line2 of lines[j]) {
-                        var point = Phaser.Line.intersects(line1, line2);
-                        if (point !== null && tile.inside(point.x, point.y, 0.99)) {
-                            return true;
-                        }
-                    }
-                }
-            }
-        }
-    }
-    return false;
-}
-
 class Point {
     constructor(x, y) {
         this.x = x;

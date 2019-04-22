@@ -108,6 +108,13 @@ class Tile {
         return false;
     }
 
+    getStraightTracks() {
+        if (this.hasTracks()) {
+            return this.tracks.getStraights();
+        }
+        return null;
+    }
+
     isNonIntersectingTrack() {
         if (this.hasTracks()) {
             return this.tracks.isNotIntersecting();
@@ -128,8 +135,26 @@ class Tile {
             }
 
             var lines = this.lineSegments.concat(this.tracks.getLineSegments());
-            if (linesIntersectInside(lines, this)) {
+            if (this.linesIntersectInside(lines)) {
                 return true;
+            }
+        }
+        return false;
+    }
+
+    linesIntersectInside(lines) {
+        for (var i = 0; i < lines.length; i++) {
+            for (var j = i+1; j < lines.length; j++) {
+                if (!linesAreEqual(lines[i], lines[j])) {
+                    for (var line1 of lines[i]) {
+                        for (var line2 of lines[j]) {
+                            var point = Phaser.Line.intersects(line1, line2);
+                            if (point !== null && this.inside(point.x, point.y, 0.99)) {
+                                return true;
+                            }
+                        }
+                    }
+                }
             }
         }
         return false;
@@ -188,6 +213,10 @@ class Tile {
 
     finalizeTrack() {
         this.tracks.finalize();
+        if (this.hasStop() && !this.isStraightTrack()) {
+            this.tramstop.draw(null);
+            this.tramstop = null;
+        }
     }
 
     getTrackHeadsFrom(head) {
@@ -436,6 +465,9 @@ class Tile {
             return false;
         }
         if (this.isDeadEndOrJunctionOrCrossing()) {
+            return false;
+        }
+        if (this.hasStop()) {
             return false;
         }
         if (!this.isConnectedTo(head)) {

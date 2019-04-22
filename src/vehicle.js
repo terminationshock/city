@@ -370,7 +370,7 @@ class Vehicle {
             this.v = config.Vehicle.velocityCity;
         }
 
-        if (this.tile.hasStop() && this.tile.nearCenter(this.x, this.y)) {
+        if (this.tile.hasStop() && this.isOnStraight() && this.tile.nearCenter(this.x, this.y)) {
             this.queue.push(this.callbackAtStop);                                       
             return true;
         }
