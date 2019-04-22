@@ -17,8 +17,15 @@ class TramStop {
                 p.x -= this.tile.imgX;
                 p.y -= this.tile.imgY;
 
-                var dx = Math.sin(head * Math.PI / 180) * config.Stop.length;
-                var dy = -Math.cos(head * Math.PI / 180) * config.Stop.length;
+                var dx = Math.sin(head * Math.PI / 180) * 20;
+                var dy = -Math.cos(head * Math.PI / 180) * 20;
+                if (head === 120 || head === 300) {
+                    p.x -= dx;
+                    p.y -= dy;
+                }
+
+                dx = Math.sin(head * Math.PI / 180) * config.Stop.length;
+                dy = -Math.cos(head * Math.PI / 180) * config.Stop.length;
                 var ex = Math.sin((180 - head) * Math.PI / 180) * config.Stop.width;
                 var ey = -Math.cos((180 - head) * Math.PI / 180) * config.Stop.width;
 

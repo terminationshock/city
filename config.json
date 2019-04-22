@@ -11,7 +11,7 @@
     "Stop": {
         "lane": 22,
         "width": 4,
-        "length": 20,
+        "length": 25,
         "color1": "#888888",
         "color2": "#CCCCCC"
     },
@@ -61,6 +61,7 @@
         "velocityHighway": 80,
         "waitBlocked": 10,
         "waitForever": 30,
+        "centerSizeFactor": 0.4,
         "collisionSampling": 15
     },
     "World": {
