@@ -150,6 +150,71 @@ class TileTest {
         console.assert(this.tile_road[85].isStraightOrCurve());
     }
 
+    dictsEqual(x, y) {
+        for (var key in x) {
+            if (!(key in y)) return false;
+            if (x[key].sort().toString() !== y[key].sort().toString()) return false;
+        }
+        for (var key in y) {
+            if (!(key in x)) return false;
+            if (x[key].sort().toString() !== y[key].sort().toString()) return false;
+        }
+        return true;
+    }
+
+    helperIsDeadEndOrJunctionOrCrossing(tile, falses, force_60) {
+        var heads = [[60], [120], [240], [300], [60, 120], [60, 240], [60, 300], [120, 240], [120, 300], [240, 300], [60, 120, 240], [60, 120, 300], [60, 240, 300], [120, 240, 300], [60, 120, 240, 300]];
+
+        var list1 = [];
+        var list2 = [];
+        var list3 = [];
+        var list4 = [];
+        for (var a of heads) {
+            list1.push([a]);
+            for (var b of heads) {
+                list2.push([a,b]);
+                for (var c of heads) {
+                    list3.push([a,b,c]);
+                    for (var d of heads) {
+                        list4.push([a,b,c,d]);
+                    }
+                }
+            }
+        }
+
+        for (var keylist of heads) {
+            if (force_60 && !keylist.includes(60)) continue;
+
+            var list = list1;
+            if (keylist.length === 2) list = list2;
+            if (keylist.length === 3) list = list3;
+            if (keylist.length === 4) list = list4;
+            for (var combination of list) {
+                tile.tracks.track = {};
+                for (var i = 0; i < keylist.length; i++) {
+                    tile.tracks.track[keylist[i]] = combination[i];
+                }
+                tile.tracks.finalize();
+                var found = false;
+                for (var f of falses) {
+                    if (this.dictsEqual(tile.tracks.track, f)) {
+                        if (tile.isDeadEndOrJunctionOrCrossing()) {
+                            console.log(tile.tracks.track);
+                            console.assert(false);
+                        }
+                        found = true;
+                    }
+                }
+                if (!found) {
+                    if (!tile.isDeadEndOrJunctionOrCrossing()) {
+                        console.log(tile.tracks.track);
+                        console.assert(false);
+                    }
+                }
+            }
+        }
+    }
+
     testIsDeadEndOrJunctionOrCrossing() {
         console.assert(this.tile_road[1].isDeadEndOrJunctionOrCrossing());
         console.assert(this.tile_road[5].isDeadEndOrJunctionOrCrossing());
@@ -169,107 +234,108 @@ class TileTest {
         console.assert(!this.tile_road[81].isDeadEndOrJunctionOrCrossing());
         console.assert(!this.tile_road[85].isDeadEndOrJunctionOrCrossing());
 
-        this.tile_road[17].tracks.track = {};
-        this.tile_road[17].tracks.track[240] = [60];
-        this.tile_road[17].tracks.finalize();
-        console.assert(!this.tile_road[17].isDeadEndOrJunctionOrCrossing());
-        this.tile_road[17].tracks.track = {};
-        this.tile_road[17].tracks.track[60] = [240];
-        this.tile_road[17].tracks.finalize();
-        console.assert(!this.tile_road[17].isDeadEndOrJunctionOrCrossing());
-        this.tile_road[17].tracks.track = {};
-        this.tile_road[17].tracks.track[60] = [60];
-        this.tile_road[17].tracks.finalize();
-        console.assert(this.tile_road[17].isDeadEndOrJunctionOrCrossing());
-        this.tile_road[17].tracks.track = {};
-        this.tile_road[17].tracks.track[300] = [300];
-        this.tile_road[17].tracks.finalize();
-        console.assert(this.tile_road[17].isDeadEndOrJunctionOrCrossing());
-        this.tile_road[17].tracks.track = {};
-        this.tile_road[17].tracks.track[60] = [240];
-        this.tile_road[17].tracks.track[240] = [60];
-        this.tile_road[17].tracks.finalize();
-        console.assert(!this.tile_road[17].isDeadEndOrJunctionOrCrossing());
-        this.tile_road[17].tracks.track = {};
-        this.tile_road[17].tracks.track[240] = [120];
-        this.tile_road[17].tracks.finalize();
-        console.assert(this.tile_road[17].isDeadEndOrJunctionOrCrossing());
-        this.tile_road[17].tracks.track = {};
-        this.tile_road[17].tracks.track[240] = [60,120];
-        this.tile_road[17].tracks.finalize();
-        console.assert(this.tile_road[17].isDeadEndOrJunctionOrCrossing());
-        this.tile_road[17].tracks.track = {};
-        this.tile_road[17].tracks.track[60] = [240];
-        this.tile_road[17].tracks.track[240] = [60,120];
-        this.tile_road[17].tracks.finalize();
-        console.assert(this.tile_road[17].isDeadEndOrJunctionOrCrossing());
-        this.tile_road[17].tracks.track = {};
-        this.tile_road[17].tracks.track[300] = [120];
-        this.tile_road[17].tracks.track[240] = [60];
-        this.tile_road[17].tracks.finalize();
-        console.assert(this.tile_road[17].isDeadEndOrJunctionOrCrossing());
-        this.tile_road[17].tracks.track = {};
-        this.tile_road[17].tracks.track[60] = [240];
-        this.tile_road[17].tracks.track[240] = [60];
-        this.tile_road[17].tracks.track[300] = [60];
-        this.tile_road[17].tracks.finalize();
-        console.assert(this.tile_road[17].isDeadEndOrJunctionOrCrossing());
-        this.tile_road[17].tracks.track = {};
-        this.tile_road[17].tracks.track[60] = [240];
-        this.tile_road[17].tracks.track[240] = [60];
-        this.tile_road[17].tracks.track[60] = [300];
-        this.tile_road[17].tracks.finalize();
-        console.assert(this.tile_road[17].isDeadEndOrJunctionOrCrossing());
+        this.helperIsDeadEndOrJunctionOrCrossing(this.tile_road[17], [
+            {240: [60]},
+            {240: [120]},
+            {240: [60, 120]},
+            {60: [240]},
+            {60: [300]},
+            {60: [240, 300]},
+            {240: [60], 60: [240]},
+            {240: [60], 60: [300]},
+            {240: [60], 60: [240, 300]},
+            {240: [120], 60: [240]},
+            {240: [120], 60: [300]},
+            {240: [120], 60: [240, 300]},
+            {240: [60, 120], 60: [240]},
+            {240: [60, 120], 60: [300]},
+            {240: [60, 120], 60: [240, 300]}
+        ], false);
         this.tile_road[17].tracks.track = {};
         this.tile_road[17].tracks.finalize();
 
+        this.helperIsDeadEndOrJunctionOrCrossing(this.tile_road[61], [
+            {60: [300]},
+            {240: [120]},
+            {240: [120], 60: [300]},
+            {120: [240]},
+            {120: [240], 60: [300]},
+            {120: [300]},
+            {120: [60]},
+            {120: [60], 60: [300]},
+            {120: [240,300]},
+            {120: [240,60]},
+            {120: [240,60], 60: [300]},
+            {120: [300,60]},
+            {120: [240,300,60]},
+            {240: [120], 120: [240]},
+            {240: [120], 120: [240], 60: [300]},
+            {240: [120], 120: [300]},
+            {240: [120], 120: [60]},
+            {240: [120], 120: [60], 60: [300]},
+            {240: [120], 120: [240,300]},
+            {240: [120], 120: [240,60]},
+            {240: [120], 120: [240,60], 60: [300]},
+            {240: [120], 120: [300,60]},
+            {240: [120], 120: [240,300,60]}
+        ], false);
+        this.tile_road[61].tracks.track = {};
+        this.tile_road[61].tracks.finalize();
+
+        this.helperIsDeadEndOrJunctionOrCrossing(this.tile_grass, [
+            {60: [120]},
+            {60: [120], 120: [60]},
+            {60: [120], 120: [60], 300: [240]},
+            {60: [120], 300: [240]},
+            {60: [240]},
+            {60: [240], 240: [60]},
+            {60: [240], 240: [120]},
+            {60: [240], 240: [60,120]},
+            {60: [240], 120: [60]},
+            {60: [240], 120: [60], 240: [120]},
+            {60: [300]},
+            {60: [300], 120: [240]},
+            {60: [300], 120: [240], 240: [120]},
+            {60: [300], 120: [60,240]},
+            {60: [300], 120: [60,240], 240: [120]},
+            {60: [300], 300: [60]},
+            {60: [300], 300: [120]},
+            {60: [300], 300: [240]},
+            {60: [300], 300: [60,120]},
+            {60: [300], 300: [60,240]},
+            {60: [300], 300: [120,240]},
+            {60: [300], 240: [60]},
+            {60: [300], 240: [120]},
+            {60: [300], 240: [60,120]},
+            {60: [300], 120: [60]},
+            {60: [300], 300: [60], 240: [120]},
+            {60: [300], 300: [240], 240: [60]},
+            {60: [300], 300: [240], 240: [120]},
+            {60: [300], 300: [240], 240: [60,120]},
+            {60: [300], 300: [240], 240: [120], 120: [60]},
+            {60: [300], 300: [60,240], 240: [120]},
+            {60: [300], 300: [60,120,240]},
+            {60: [300], 120: [60], 240: [120]},
+            {60: [300], 120: [60], 300: [120]},
+            {60: [300], 120: [60], 300: [240]},
+            {60: [300], 120: [60], 300: [120,240]},
+            {60: [120,240]},
+            {60: [120,240], 120: [60]},
+            {60: [120,300]},
+            {60: [120,300], 120: [60]},
+            {60: [120,300], 300: [240]},
+            {60: [120,300], 120: [60], 300: [240]},
+            {60: [240,300]},
+            {60: [240,300], 120: [60]},
+            {60: [240,300], 240: [60]},
+            {60: [240,300], 240: [120]},
+            {60: [240,300], 240: [60,120]},
+            {60: [240,300], 240: [120], 120: [60]},
+            {60: [120,240,300]},
+            {60: [120,240,300], 120: [60]}
+        ], true);
         this.tile_grass.tracks.track = {};
-        console.assert(!this.tile_grass.isDeadEndOrJunctionOrCrossing());
-        this.tile_grass.tracks.track[60] = [120];
         this.tile_grass.tracks.finalize();
-        console.assert(!this.tile_grass.isDeadEndOrJunctionOrCrossing());
-        this.tile_grass.tracks.track = {};
-        this.tile_grass.tracks.track[60] = [60];
-        this.tile_grass.tracks.finalize();
-        console.assert(this.tile_grass.isDeadEndOrJunctionOrCrossing());
-        this.tile_grass.tracks.track = {};
-        this.tile_grass.tracks.track[60] = [60];
-        this.tile_grass.tracks.track[240] = [240];
-        this.tile_grass.tracks.finalize();
-        console.assert(this.tile_grass.isDeadEndOrJunctionOrCrossing());
-        this.tile_grass.tracks.track = {};
-        this.tile_grass.tracks.track[60] = [120];
-        this.tile_grass.tracks.track[120] = [60];
-        this.tile_grass.tracks.finalize();
-        console.assert(!this.tile_grass.isDeadEndOrJunctionOrCrossing());
-        this.tile_grass.tracks.track = {};
-        this.tile_grass.tracks.track[60] = [120,300];
-        this.tile_grass.tracks.track[120] = [60];
-        this.tile_grass.tracks.finalize();
-        console.assert(this.tile_grass.isDeadEndOrJunctionOrCrossing());
-        this.tile_grass.tracks.track = {};
-        this.tile_grass.tracks.track[60] = [120];
-        this.tile_grass.tracks.track[120] = [60];
-        this.tile_grass.tracks.track[300] = [60];
-        this.tile_grass.tracks.finalize();
-        console.assert(this.tile_grass.isDeadEndOrJunctionOrCrossing());
-        this.tile_grass.tracks.track = {};
-        this.tile_grass.tracks.track[60] = [120];
-        this.tile_grass.tracks.track[120] = [60];
-        this.tile_grass.tracks.track[240] = [300];
-        this.tile_grass.tracks.finalize();
-        console.assert(this.tile_grass.isDeadEndOrJunctionOrCrossing());
-        this.tile_grass.tracks.track = {};
-        this.tile_grass.tracks.track[60] = [240];
-        this.tile_grass.tracks.track[240] = [60];
-        this.tile_grass.tracks.track[120] = [300];
-        this.tile_grass.tracks.finalize();
-        console.assert(this.tile_grass.isDeadEndOrJunctionOrCrossing());
-        this.tile_grass.tracks.track = {};
-        this.tile_grass.tracks.track[60] = [120];
-        this.tile_grass.tracks.track[240] = [300];
-        this.tile_grass.tracks.finalize();
-        console.assert(this.tile_grass.isDeadEndOrJunctionOrCrossing());
     }
 
     testIsDeadEnd() {

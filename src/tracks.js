@@ -47,16 +47,10 @@ class Tracks {
                 headTo = this.tile.neighbourConnections[track[indexNext]];
             } else if (track[indexPrev] in this.tile.neighbourConnections) {
                 negativeHeadFrom = this.tile.neighbourConnections[track[indexPrev]];
-                headTo = negativeHeadFrom + 180;
-                if (headTo >= 360) {
-                    headTo -= 360;
-                }
+                headTo = normalizeAngle(negativeHeadFrom + 180);
             } else if (track[indexNext] in this.tile.neighbourConnections) {
                 headTo = this.tile.neighbourConnections[track[indexNext]];
-                negativeHeadFrom = headTo + 180;
-                if (negativeHeadFrom >= 360) {
-                    negativeHeadFrom -= 360;
-                }
+                negativeHeadFrom = normalizeAngle(headTo + 180);
             }
 
             if (headTo !== null) {
@@ -94,10 +88,7 @@ class Tracks {
     }
 
     addSingleTrack(negativeHeadFrom, headTo) {
-         var headFrom = convertInt(negativeHeadFrom) + 180;
-         if (headFrom >= 360) {
-             headFrom -= 360;
-         }
+         var headFrom = normalizeAngle(convertInt(negativeHeadFrom) + 180);
 
          for (var j = -1; j <= 1; j += 2) {
              var p1 = this.tile.getLaneStartPoint(headFrom, config.Street.laneDrive + j * config.Track.width / 2, 1);
@@ -130,6 +121,37 @@ class Tracks {
         return this.headsFrom.length > 0;
     }
 
+    getLines() {
+        var lines = [];
+        for (var negativeHeadFrom in this.track) {
+            var headFrom = normalizeAngle(convertInt(negativeHeadFrom) + 180);
+            for (var headTo of this.track[negativeHeadFrom]) {
+                var p1 = this.tile.getLaneStartPoint(headFrom, config.Street.laneDrive, 1);
+                var p2 = this.tile.getLaneTargetPoint(headTo, config.Street.laneDrive, 0.24);
+                var segments = [];
+                if (this.tile.getTurnDirection(headFrom, headTo) === -1) {
+                    segments.push(new Phaser.Line(Math.round(p1.x), Math.round(p1.y), Math.round(this.tile.x), Math.round(this.tile.y)));
+                    segments.push(new Phaser.Line(Math.round(this.tile.x), Math.round(this.tile.y), Math.round(p2.x), Math.round(p2.y)));
+                } else {
+                    segments.push(new Phaser.Line(Math.round(p1.x), Math.round(p1.y), Math.round(p2.x), Math.round(p2.y)));
+                }
+                lines.push(segments);
+            }
+        }
+        return lines;
+    }
+
+    isDeadEnd() {
+        for (var negativeHeadFrom in this.track) {
+            for (var headTo of this.track[negativeHeadFrom]) {
+                if (headTo === convertInt(negativeHeadFrom)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
     isStraight() {
         var keys = this.headsFrom.map(x => convertInt(x));
         if (keys.length > 2) {
@@ -139,10 +161,7 @@ class Tracks {
             if (this.track[negativeHeadFrom].length > 1) {
                 return false;
             }
-            var headFrom = convertInt(negativeHeadFrom) + 180;
-            if (headFrom >= 360) {
-                headFrom -= 360;
-            }
+            var headFrom = normalizeAngle(convertInt(negativeHeadFrom) + 180);
             if (headFrom !== convertInt(this.track[negativeHeadFrom])) {
                 return false;
             }
@@ -162,10 +181,7 @@ class Tracks {
             if (this.track[negativeHeadFrom].length > 1) {
                 return false;
             }
-            var headFrom = convertInt(negativeHeadFrom) + 180;
-            if (headFrom >= 360) {
-                headFrom -= 360;
-            }
+            var headFrom = normalizeAngle(convertInt(negativeHeadFrom) + 180);
             var deltaHead = this.tile.getDeltaHead(headFrom, this.track[negativeHeadFrom]);
             if (deltaHead === 0 || deltaHead === 180) {
                 return false;

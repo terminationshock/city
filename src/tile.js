@@ -118,33 +118,62 @@ class Tile {
             return true;
         }
         if (this.hasTracks()) {
-            var keys = this.tracks.headsFrom.map(x => convertInt(x));
-            if (keys.length > 2) {
+            if (this.tracks.isDeadEnd()) {
                 return true;
             }
+
+            var lines = [];
             var connections = this.getStreetConnections();
-            for (var head of keys) {
-                if (this.getTrackHeadsFrom(head).length > 1) {
-                    return true;
-                }
-                if (this.getTrackHeadsFrom(head)[0] === head) {
-                    return true;
-                }
-                if (connections.length > 0) {
-                    if (!connections.includes(head)) {
-                        return true;
-                    }
-                    if (!connections.includes(this.getTrackHeadsFrom(head)[0])) {
-                        return true;
-                    }
+            for (var i = 0; i < 2; i++) {
+                var headFrom = normalizeAngle(connections[i] + 180);
+                var headTo = connections[1-i];
+                var p1 = this.getLaneStartPoint(headFrom, config.Street.laneDrive, 1);
+                var p2 = this.getLaneTargetPoint(headTo, config.Street.laneDrive, 0.24);
+                var segments = [];
+                if (this.getTurnDirection(headFrom, headTo) === -1) {
+                    segments.push(new Phaser.Line(Math.round(p1.x), Math.round(p1.y), Math.round(this.x), Math.round(this.y)));
+                    segments.push(new Phaser.Line(Math.round(this.x), Math.round(this.y), Math.round(p2.x), Math.round(p2.y)));
                 } else {
-                    if (keys.length === 2 && !keys.includes(this.getTrackHeadsFrom(head)[0])) {
-                        return true;
+                    segments.push(new Phaser.Line(Math.round(p1.x), Math.round(p1.y), Math.round(p2.x), Math.round(p2.y)));
+                }
+                lines.push(segments);
+            }
+
+            for (var line of this.tracks.getLines()) {
+                lines.push(line);
+            }
+
+            for (var i = 0; i < lines.length; i++) {
+                for (var j = i+1; j < lines.length; j++) {
+                    if (!this.linesEqual(lines[i], lines[j])) {
+                        for (var line1 of lines[i]) {
+                            for (var line2 of lines[j]) {
+                                var point = Phaser.Line.intersects(line1, line2);
+                                if (point !== null && this.inside(point.x, point.y, 0.99)) {
+                                    return true;
+                                }
+                            }
+                        }
                     }
                 }
             }
         }
         return false;
+    }
+
+    linesEqual(line1, line2) {
+        if (line1.length !== line2.length) {
+            return false;
+        }
+        for (var i = 0; i < line1.length; i++) {
+            if (line1[i].start.x !== line2[i].start.x || line1[i].start.y !== line2[i].start.y) {
+                return false;
+            }
+            if (line1[i].end.x !== line2[i].end.x || line1[i].end.y !== line2[i].end.y) {
+                return false;
+            }
+        }
+        return true;
     }
 
     isDeadEnd() {
