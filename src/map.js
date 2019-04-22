@@ -61,6 +61,7 @@ class Map {
         });
         this.tiles.forEach(function(tile) {
             tile.computeStreetNeighboursAndConnections();
+            tile.computeLineSegments();
             tile.generateHouse(houseImages);
             tile.generateTrees(treeImages);
             tile.generateCars(carImages);

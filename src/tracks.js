@@ -6,6 +6,7 @@ class Tracks {
         this.trackPoints = null;
         this.headsFrom = [];
         this.headsTo = [];
+        this.lineSegments = [];
     }
 
     generate(track) {
@@ -85,6 +86,23 @@ class Tracks {
         this.headsFrom = Object.keys(this.track);
         this.headsTo = Object.values(this.track);
         this.newTrack = {};
+
+        this.lineSegments = [];
+        for (var negativeHeadFrom in this.track) {
+            var headFrom = normalizeAngle(convertInt(negativeHeadFrom) + 180);
+            for (var headTo of this.track[negativeHeadFrom]) {
+                var p1 = this.tile.getLaneStartPoint(headFrom, config.Street.laneDrive, 1);
+                var p2 = this.tile.getLaneTargetPoint(headTo, config.Street.laneDrive, 0.24);
+                var segments = [];
+                if (getTurnDirection(headFrom, headTo) === -1) {
+                    segments.push(new Phaser.Line(Math.round(p1.x), Math.round(p1.y), Math.round(this.tile.x), Math.round(this.tile.y)));
+                    segments.push(new Phaser.Line(Math.round(this.tile.x), Math.round(this.tile.y), Math.round(p2.x), Math.round(p2.y)));
+                } else {
+                    segments.push(new Phaser.Line(Math.round(p1.x), Math.round(p1.y), Math.round(p2.x), Math.round(p2.y)));
+                }
+                this.lineSegments.push(segments);
+            }
+        }
     }
 
     addSingleTrack(negativeHeadFrom, headTo) {
@@ -121,28 +139,15 @@ class Tracks {
         return this.headsFrom.length > 0;
     }
 
-    getLines() {
-        var lines = [];
-        for (var negativeHeadFrom in this.track) {
-            var headFrom = normalizeAngle(convertInt(negativeHeadFrom) + 180);
-            for (var headTo of this.track[negativeHeadFrom]) {
-                var p1 = this.tile.getLaneStartPoint(headFrom, config.Street.laneDrive, 1);
-                var p2 = this.tile.getLaneTargetPoint(headTo, config.Street.laneDrive, 0.24);
-                var segments = [];
-                if (getTurnDirection(headFrom, headTo) === -1) {
-                    segments.push(new Phaser.Line(Math.round(p1.x), Math.round(p1.y), Math.round(this.tile.x), Math.round(this.tile.y)));
-                    segments.push(new Phaser.Line(Math.round(this.tile.x), Math.round(this.tile.y), Math.round(p2.x), Math.round(p2.y)));
-                } else {
-                    segments.push(new Phaser.Line(Math.round(p1.x), Math.round(p1.y), Math.round(p2.x), Math.round(p2.y)));
-                }
-                lines.push(segments);
-            }
-        }
-        return lines;
+    getLineSegments() {
+        return this.lineSegments;
     }
 
     isNotIntersecting() {
-        if (linesIntersectInside(this.getLines(), this.tile)) {
+        if (this.isDeadEnd()) {
+            return false;
+        }
+        if (linesIntersectInside(this.lineSegments, this.tile)) {
             return false;
         }
         return true;

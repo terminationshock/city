@@ -234,6 +234,7 @@ class TileTest {
         console.assert(!this.tile_road[81].isDeadEndOrJunctionOrCrossing());
         console.assert(!this.tile_road[85].isDeadEndOrJunctionOrCrossing());
 
+        this.tile_road[17].computeLineSegments();
         this.helperIsDeadEndOrJunctionOrCrossing(this.tile_road[17], [
             {240: [60]},
             {240: [120]},
@@ -254,6 +255,7 @@ class TileTest {
         this.tile_road[17].tracks.track = {};
         this.tile_road[17].tracks.finalize();
 
+        this.tile_road[61].computeLineSegments();
         this.helperIsDeadEndOrJunctionOrCrossing(this.tile_road[61], [
             {60: [300]},
             {240: [120]},
@@ -282,6 +284,7 @@ class TileTest {
         this.tile_road[61].tracks.track = {};
         this.tile_road[61].tracks.finalize();
 
+        this.tile_grass.computeLineSegments();
         this.helperIsDeadEndOrJunctionOrCrossing(this.tile_grass, [
             {60: [120]},
             {60: [120], 120: [60]},

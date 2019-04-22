@@ -9,6 +9,7 @@ class Tile {
         this.neighbours = [];
         this.streetNeighbours = [];
         this.neighbourConnections = {};
+        this.lineSegments = [];
         this.tracks = new Tracks(this);
         this.tramstop = null;
         this.hover = null;
@@ -126,27 +127,7 @@ class Tile {
                 return true;
             }
 
-            var lines = [];
-            var connections = this.getStreetConnections();
-            for (var i = 0; i < 2; i++) {
-                var headFrom = normalizeAngle(connections[i] + 180);
-                var headTo = connections[1-i];
-                var p1 = this.getLaneStartPoint(headFrom, config.Street.laneDrive, 1);
-                var p2 = this.getLaneTargetPoint(headTo, config.Street.laneDrive, 0.24);
-                var segments = [];
-                if (getTurnDirection(headFrom, headTo) === -1) {
-                    segments.push(new Phaser.Line(Math.round(p1.x), Math.round(p1.y), Math.round(this.x), Math.round(this.y)));
-                    segments.push(new Phaser.Line(Math.round(this.x), Math.round(this.y), Math.round(p2.x), Math.round(p2.y)));
-                } else {
-                    segments.push(new Phaser.Line(Math.round(p1.x), Math.round(p1.y), Math.round(p2.x), Math.round(p2.y)));
-                }
-                lines.push(segments);
-            }
-
-            for (var line of this.tracks.getLines()) {
-                lines.push(line);
-            }
-
+            var lines = this.lineSegments.concat(this.tracks.getLineSegments());
             if (linesIntersectInside(lines, this)) {
                 return true;
             }
@@ -252,6 +233,26 @@ class Tile {
                     }
                     this.streetNeighbours.push(tile);
                 }
+            }
+        }
+    }
+
+    computeLineSegments() {
+        var connections = this.getStreetConnections();
+        if (connections.length === 2) {
+            for (var i = 0; i < 2; i++) {
+                var headFrom = normalizeAngle(connections[i] + 180);
+                var headTo = connections[1-i];
+                var p1 = this.getLaneStartPoint(headFrom, config.Street.laneDrive, 1);
+                var p2 = this.getLaneTargetPoint(headTo, config.Street.laneDrive, 0.24);
+                var segments = [];
+                if (getTurnDirection(headFrom, headTo) === -1) {
+                    segments.push(new Phaser.Line(Math.round(p1.x), Math.round(p1.y), Math.round(this.x), Math.round(this.y)));
+                    segments.push(new Phaser.Line(Math.round(this.x), Math.round(this.y), Math.round(p2.x), Math.round(p2.y)));
+                } else {
+                    segments.push(new Phaser.Line(Math.round(p1.x), Math.round(p1.y), Math.round(p2.x), Math.round(p2.y)));
+                }
+                this.lineSegments.push(segments);
             }
         }
     }
