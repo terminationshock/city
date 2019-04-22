@@ -21,6 +21,7 @@ class Vehicle {
         this.turnPath = null;
         this.plannedHead = null;
         this.error = false;
+        this.lastStop = null;
     }
 
     disable() {
@@ -371,7 +372,7 @@ class Vehicle {
         }
 
         if (this.tile.hasStop() && this.isOnStraight() && this.tile.nearCenter(this.x, this.y)) {
-            this.queue.push(this.callbackAtStop);                                       
+            this.queue.push(this.callbackAtStop);
             return true;
         }
 

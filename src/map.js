@@ -103,8 +103,8 @@ class Map {
 
     newTrackClick(x, y, hover) {
         for (var tile of this.tiles) {
-            if (tile.inside(x, y) && !tile.isHouse()) {
-                if (this.newTrack.length === 0 || this.newTrack[this.newTrack.length - 1].isTrackNeighbourOf(tile)) {
+            if (tile.inside(x, y)) {
+                if (!tile.isHouse() && (this.newTrack.length === 0 || this.newTrack[this.newTrack.length - 1].isTrackNeighbourOf(tile))) {
                     if (hover) {
                         return true;
                     }
@@ -120,6 +120,7 @@ class Map {
                     this.drawTracks();
                     return true;
                 }
+                return false;
             }
         }
         return false;
@@ -127,13 +128,17 @@ class Map {
 
     newStopClick(x, y, hover) {
         for (var tile of this.tiles) {
-            if (tile.inside(x, y) && tile.hasTracks() && tile.isStraightTrack() && (tile.isStraight() || tile.isGrass()) && !tile.hasStop()) {
-                if (hover) {
+            if (tile.inside(x, y)) {
+                if (tile.hasTracks() && tile.isStraightTrack() && (tile.isStraight() || tile.isGrass()) && !tile.hasStop()) {
+                    if (hover) {
+                        return true;
+                    }
+
+                    tile.addStop();
+                    this.drawStops();
                     return true;
                 }
-
-                tile.addStop();
-                this.drawStops();
+                return false;
             }
         }
         return false;
@@ -141,14 +146,18 @@ class Map {
 
     newTramClick(x, y, hover, tramImages) {
         for (var tile of this.tiles) {
-            if (tile.inside(x, y) && tile.hasTracks() && tile.isStraightTrack() && !tile.hasDrivingVehicles()) {
-                if (hover) {
+            if (tile.inside(x, y)) {
+                if (tile.hasTracks() && tile.isStraightTrack() && !tile.hasDrivingVehicles()) {
+                    if (hover) {
+                        return true;
+                    }
+
+                    var head = tile.tracks.getRandomConnection();
+                    tile.addVehicle(new Tram(tile, head, tramImages, config.Tram.numTypes));
+                    this.drawVehicles();
                     return true;
                 }
-
-                var head = tile.tracks.getRandomConnection();
-                tile.addVehicle(new Tram(tile, head, tramImages, config.Tram.numTypes));
-                this.drawVehicles();
+                return false;
             }
         }
         return false;

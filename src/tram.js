@@ -29,10 +29,16 @@ class Tram extends Vehicle {
     }
 
     callbackAtStop() {
+        if (this.tile.equals(this.lastStop)) {
+            this.queue.push(this.callbackDrive);
+            return true;
+        }
+
         this.v = 0;
         this.waitingTime = 0;
 
         if (this.driver.leaveStop()) {
+            this.lastStop = this.tile;
             this.queue.push(this.callbackDrive);
             return true;
         }

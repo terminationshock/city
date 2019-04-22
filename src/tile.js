@@ -60,6 +60,9 @@ class Tile {
     }
 
     equals(other) {
+        if (other === null) {
+            return false;
+        }
         return this.hash === other.hash;
     }
 

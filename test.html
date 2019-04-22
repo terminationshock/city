@@ -16,8 +16,29 @@
     <script src="test/vehicle_test.js"></script>
     <script src="test/tile_test.js"></script>
     <script src="test/tracks_test.js"></script>
+    <style type="text/css">
+        #spinner {
+            position: absolute;
+            left: calc(50vw - 76px);
+            top: calc(50vh - 76px);
+            border: 16px dashed #000000;
+            border-radius: 50%;
+            width: 120px;
+            height: 120px;
+            animation: spin 3s linear infinite;
+        }
+        #result {
+            font: 40px Arial;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
 </head>
 <body>
+    <div id="spinner"></div>
+    <div id="result"></div>
     <script>
         var game = new Phaser.Game(1, 1, Phaser.CANVAS, '', { preload: preload, create: create });
         var config;
@@ -26,13 +47,25 @@
             game.load.json('config', 'config.json');
         }
 
+        function displayError(error) {
+            var file = error.stack.split('\n')[1].split('\/');
+            document.getElementById('spinner').style.display = 'none';
+            document.getElementById('result').innerHTML = file[file.length-1];
+        }
+
         function create() {
             config = game.cache.getJSON('config');
-            new TracksTest();
-            new TileTest();
-            new BezierCurveTest();
-            new VehicleTest();
-            console.log('Tests finished')
+            try {
+                new TracksTest();
+                new TileTest();
+                new BezierCurveTest();
+                new VehicleTest();
+            } catch (e) {
+                displayError(e);
+                throw e;
+            }
+            document.getElementById('spinner').style.display = 'none';
+            document.getElementById('result').innerHTML = 'Tests successful';
         }
     </script>
 </body>

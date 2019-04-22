@@ -31,7 +31,10 @@ class TileTest {
         this.testIsHighway();
         this.testIsCurve();
         this.testIsStraightOrCurve();
-        this.testIsDeadEndOrJunctionOrCrossing();
+        this.testIsDeadEndOrJunctionOrCrossingStreet();
+        this.testIsDeadEndOrJunctionOrCrossingStraight();
+        this.testIsDeadEndOrJunctionOrCrossingCurve();
+        this.testIsDeadEndOrJunctionOrCrossingGrass();
         this.testIsDeadEnd();
         this.testComputeAllNeighbours();
         this.testComputeStreetNeighboursAndConnections();
@@ -53,101 +56,101 @@ class TileTest {
     }
 
     testIsGrass() {
-        console.assert(this.tile_grass.isGrass());
-        console.assert(!this.tile_house.isGrass());
-        console.assert(!this.tile_road[1].isGrass());
+        assertTrue(this.tile_grass.isGrass());
+        assertTrue(!this.tile_house.isGrass());
+        assertTrue(!this.tile_road[1].isGrass());
     }
 
     testIsStreet() {
-        console.assert(!this.tile_grass.isStreet());
-        console.assert(!this.tile_house.isStreet());
-        console.assert(this.tile_road[1].isStreet());
+        assertTrue(!this.tile_grass.isStreet());
+        assertTrue(!this.tile_house.isStreet());
+        assertTrue(this.tile_road[1].isStreet());
     }
 
     testIsStraight() {
-        console.assert(!this.tile_grass.isStraight());
-        console.assert(!this.tile_house.isStraight());
-        console.assert(!this.tile_road[1].isStraight());
-        console.assert(!this.tile_road[5].isStraight());
-        console.assert(!this.tile_road[9].isStraight());
-        console.assert(!this.tile_road[13].isStraight());
-        console.assert(this.tile_road[17].isStraight());
-        console.assert(this.tile_road[21].isStraight());
-        console.assert(!this.tile_road[45].isStraight());
-        console.assert(!this.tile_road[49].isStraight());
-        console.assert(!this.tile_road[53].isStraight());
-        console.assert(!this.tile_road[57].isStraight());
-        console.assert(!this.tile_road[61].isStraight());
-        console.assert(!this.tile_road[65].isStraight());
-        console.assert(!this.tile_road[69].isStraight());
-        console.assert(!this.tile_road[73].isStraight());
-        console.assert(!this.tile_road[77].isStraight());
-        console.assert(this.tile_road[81].isStraight());
-        console.assert(this.tile_road[85].isStraight());
+        assertTrue(!this.tile_grass.isStraight());
+        assertTrue(!this.tile_house.isStraight());
+        assertTrue(!this.tile_road[1].isStraight());
+        assertTrue(!this.tile_road[5].isStraight());
+        assertTrue(!this.tile_road[9].isStraight());
+        assertTrue(!this.tile_road[13].isStraight());
+        assertTrue(this.tile_road[17].isStraight());
+        assertTrue(this.tile_road[21].isStraight());
+        assertTrue(!this.tile_road[45].isStraight());
+        assertTrue(!this.tile_road[49].isStraight());
+        assertTrue(!this.tile_road[53].isStraight());
+        assertTrue(!this.tile_road[57].isStraight());
+        assertTrue(!this.tile_road[61].isStraight());
+        assertTrue(!this.tile_road[65].isStraight());
+        assertTrue(!this.tile_road[69].isStraight());
+        assertTrue(!this.tile_road[73].isStraight());
+        assertTrue(!this.tile_road[77].isStraight());
+        assertTrue(this.tile_road[81].isStraight());
+        assertTrue(this.tile_road[85].isStraight());
     }
 
     testIsHighway() {
-        console.assert(!this.tile_grass.isHighway());
-        console.assert(!this.tile_house.isHighway());
-        console.assert(!this.tile_road[1].isHighway());
-        console.assert(!this.tile_road[5].isHighway());
-        console.assert(!this.tile_road[9].isHighway());
-        console.assert(!this.tile_road[13].isHighway());
-        console.assert(!this.tile_road[17].isHighway());
-        console.assert(!this.tile_road[21].isHighway());
-        console.assert(!this.tile_road[45].isHighway());
-        console.assert(!this.tile_road[49].isHighway());
-        console.assert(!this.tile_road[53].isHighway());
-        console.assert(!this.tile_road[57].isHighway());
-        console.assert(!this.tile_road[61].isHighway());
-        console.assert(!this.tile_road[65].isHighway());
-        console.assert(!this.tile_road[69].isHighway());
-        console.assert(!this.tile_road[73].isHighway());
-        console.assert(!this.tile_road[77].isHighway());
-        console.assert(this.tile_road[81].isHighway());
-        console.assert(this.tile_road[85].isHighway());
+        assertTrue(!this.tile_grass.isHighway());
+        assertTrue(!this.tile_house.isHighway());
+        assertTrue(!this.tile_road[1].isHighway());
+        assertTrue(!this.tile_road[5].isHighway());
+        assertTrue(!this.tile_road[9].isHighway());
+        assertTrue(!this.tile_road[13].isHighway());
+        assertTrue(!this.tile_road[17].isHighway());
+        assertTrue(!this.tile_road[21].isHighway());
+        assertTrue(!this.tile_road[45].isHighway());
+        assertTrue(!this.tile_road[49].isHighway());
+        assertTrue(!this.tile_road[53].isHighway());
+        assertTrue(!this.tile_road[57].isHighway());
+        assertTrue(!this.tile_road[61].isHighway());
+        assertTrue(!this.tile_road[65].isHighway());
+        assertTrue(!this.tile_road[69].isHighway());
+        assertTrue(!this.tile_road[73].isHighway());
+        assertTrue(!this.tile_road[77].isHighway());
+        assertTrue(this.tile_road[81].isHighway());
+        assertTrue(this.tile_road[85].isHighway());
     }
 
     testIsCurve() {
-        console.assert(!this.tile_grass.isCurve());
-        console.assert(!this.tile_house.isCurve());
-        console.assert(!this.tile_road[1].isCurve());
-        console.assert(!this.tile_road[5].isCurve());
-        console.assert(!this.tile_road[9].isCurve());
-        console.assert(!this.tile_road[13].isCurve());
-        console.assert(!this.tile_road[17].isCurve());
-        console.assert(!this.tile_road[21].isCurve());
-        console.assert(!this.tile_road[45].isCurve());
-        console.assert(this.tile_road[49].isCurve());
-        console.assert(this.tile_road[53].isCurve());
-        console.assert(this.tile_road[57].isCurve());
-        console.assert(this.tile_road[61].isCurve());
-        console.assert(!this.tile_road[65].isCurve());
-        console.assert(!this.tile_road[69].isCurve());
-        console.assert(!this.tile_road[73].isCurve());
-        console.assert(!this.tile_road[77].isCurve());
-        console.assert(!this.tile_road[81].isCurve());
-        console.assert(!this.tile_road[85].isCurve());
+        assertTrue(!this.tile_grass.isCurve());
+        assertTrue(!this.tile_house.isCurve());
+        assertTrue(!this.tile_road[1].isCurve());
+        assertTrue(!this.tile_road[5].isCurve());
+        assertTrue(!this.tile_road[9].isCurve());
+        assertTrue(!this.tile_road[13].isCurve());
+        assertTrue(!this.tile_road[17].isCurve());
+        assertTrue(!this.tile_road[21].isCurve());
+        assertTrue(!this.tile_road[45].isCurve());
+        assertTrue(this.tile_road[49].isCurve());
+        assertTrue(this.tile_road[53].isCurve());
+        assertTrue(this.tile_road[57].isCurve());
+        assertTrue(this.tile_road[61].isCurve());
+        assertTrue(!this.tile_road[65].isCurve());
+        assertTrue(!this.tile_road[69].isCurve());
+        assertTrue(!this.tile_road[73].isCurve());
+        assertTrue(!this.tile_road[77].isCurve());
+        assertTrue(!this.tile_road[81].isCurve());
+        assertTrue(!this.tile_road[85].isCurve());
     }
 
     testIsStraightOrCurve() {
-        console.assert(!this.tile_road[1].isStraightOrCurve());
-        console.assert(!this.tile_road[5].isStraightOrCurve());
-        console.assert(!this.tile_road[9].isStraightOrCurve());
-        console.assert(!this.tile_road[13].isStraightOrCurve());
-        console.assert(this.tile_road[17].isStraightOrCurve());
-        console.assert(this.tile_road[21].isStraightOrCurve());
-        console.assert(!this.tile_road[45].isStraightOrCurve());
-        console.assert(this.tile_road[49].isStraightOrCurve());
-        console.assert(this.tile_road[53].isStraightOrCurve());
-        console.assert(this.tile_road[57].isStraightOrCurve());
-        console.assert(this.tile_road[61].isStraightOrCurve());
-        console.assert(!this.tile_road[65].isStraightOrCurve());
-        console.assert(!this.tile_road[69].isStraightOrCurve());
-        console.assert(!this.tile_road[73].isStraightOrCurve());
-        console.assert(!this.tile_road[77].isStraightOrCurve());
-        console.assert(this.tile_road[81].isStraightOrCurve());
-        console.assert(this.tile_road[85].isStraightOrCurve());
+        assertTrue(!this.tile_road[1].isStraightOrCurve());
+        assertTrue(!this.tile_road[5].isStraightOrCurve());
+        assertTrue(!this.tile_road[9].isStraightOrCurve());
+        assertTrue(!this.tile_road[13].isStraightOrCurve());
+        assertTrue(this.tile_road[17].isStraightOrCurve());
+        assertTrue(this.tile_road[21].isStraightOrCurve());
+        assertTrue(!this.tile_road[45].isStraightOrCurve());
+        assertTrue(this.tile_road[49].isStraightOrCurve());
+        assertTrue(this.tile_road[53].isStraightOrCurve());
+        assertTrue(this.tile_road[57].isStraightOrCurve());
+        assertTrue(this.tile_road[61].isStraightOrCurve());
+        assertTrue(!this.tile_road[65].isStraightOrCurve());
+        assertTrue(!this.tile_road[69].isStraightOrCurve());
+        assertTrue(!this.tile_road[73].isStraightOrCurve());
+        assertTrue(!this.tile_road[77].isStraightOrCurve());
+        assertTrue(this.tile_road[81].isStraightOrCurve());
+        assertTrue(this.tile_road[85].isStraightOrCurve());
     }
 
     dictsEqual(x, y) {
@@ -200,7 +203,7 @@ class TileTest {
                     if (this.dictsEqual(tile.tracks.track, f)) {
                         if (tile.isDeadEndOrJunctionOrCrossing()) {
                             console.log(tile.tracks.track);
-                            console.assert(false);
+                            assertTrue(false);
                         }
                         found = true;
                     }
@@ -208,32 +211,34 @@ class TileTest {
                 if (!found) {
                     if (!tile.isDeadEndOrJunctionOrCrossing()) {
                         console.log(tile.tracks.track);
-                        console.assert(false);
+                        assertTrue(false);
                     }
                 }
             }
         }
     }
 
-    testIsDeadEndOrJunctionOrCrossing() {
-        console.assert(this.tile_road[1].isDeadEndOrJunctionOrCrossing());
-        console.assert(this.tile_road[5].isDeadEndOrJunctionOrCrossing());
-        console.assert(this.tile_road[9].isDeadEndOrJunctionOrCrossing());
-        console.assert(this.tile_road[13].isDeadEndOrJunctionOrCrossing());
-        console.assert(!this.tile_road[17].isDeadEndOrJunctionOrCrossing());
-        console.assert(!this.tile_road[21].isDeadEndOrJunctionOrCrossing());
-        console.assert(this.tile_road[45].isDeadEndOrJunctionOrCrossing());
-        console.assert(!this.tile_road[49].isDeadEndOrJunctionOrCrossing());
-        console.assert(!this.tile_road[53].isDeadEndOrJunctionOrCrossing());
-        console.assert(!this.tile_road[57].isDeadEndOrJunctionOrCrossing());
-        console.assert(!this.tile_road[61].isDeadEndOrJunctionOrCrossing());
-        console.assert(this.tile_road[65].isDeadEndOrJunctionOrCrossing());
-        console.assert(this.tile_road[69].isDeadEndOrJunctionOrCrossing());
-        console.assert(this.tile_road[73].isDeadEndOrJunctionOrCrossing());
-        console.assert(this.tile_road[77].isDeadEndOrJunctionOrCrossing());
-        console.assert(!this.tile_road[81].isDeadEndOrJunctionOrCrossing());
-        console.assert(!this.tile_road[85].isDeadEndOrJunctionOrCrossing());
+    testIsDeadEndOrJunctionOrCrossingStreet() {
+        assertTrue(this.tile_road[1].isDeadEndOrJunctionOrCrossing());
+        assertTrue(this.tile_road[5].isDeadEndOrJunctionOrCrossing());
+        assertTrue(this.tile_road[9].isDeadEndOrJunctionOrCrossing());
+        assertTrue(this.tile_road[13].isDeadEndOrJunctionOrCrossing());
+        assertTrue(!this.tile_road[17].isDeadEndOrJunctionOrCrossing());
+        assertTrue(!this.tile_road[21].isDeadEndOrJunctionOrCrossing());
+        assertTrue(this.tile_road[45].isDeadEndOrJunctionOrCrossing());
+        assertTrue(!this.tile_road[49].isDeadEndOrJunctionOrCrossing());
+        assertTrue(!this.tile_road[53].isDeadEndOrJunctionOrCrossing());
+        assertTrue(!this.tile_road[57].isDeadEndOrJunctionOrCrossing());
+        assertTrue(!this.tile_road[61].isDeadEndOrJunctionOrCrossing());
+        assertTrue(this.tile_road[65].isDeadEndOrJunctionOrCrossing());
+        assertTrue(this.tile_road[69].isDeadEndOrJunctionOrCrossing());
+        assertTrue(this.tile_road[73].isDeadEndOrJunctionOrCrossing());
+        assertTrue(this.tile_road[77].isDeadEndOrJunctionOrCrossing());
+        assertTrue(!this.tile_road[81].isDeadEndOrJunctionOrCrossing());
+        assertTrue(!this.tile_road[85].isDeadEndOrJunctionOrCrossing());
+    }
 
+    testIsDeadEndOrJunctionOrCrossingStraight() {
         this.tile_road[17].computeLineSegments();
         this.helperIsDeadEndOrJunctionOrCrossing(this.tile_road[17], [
             {240: [60]},
@@ -254,7 +259,9 @@ class TileTest {
         ], false);
         this.tile_road[17].tracks.track = {};
         this.tile_road[17].tracks.finalize();
+    }
 
+    testIsDeadEndOrJunctionOrCrossingCurve() {
         this.tile_road[61].computeLineSegments();
         this.helperIsDeadEndOrJunctionOrCrossing(this.tile_road[61], [
             {60: [300]},
@@ -283,7 +290,9 @@ class TileTest {
         ], false);
         this.tile_road[61].tracks.track = {};
         this.tile_road[61].tracks.finalize();
+    }
 
+    testIsDeadEndOrJunctionOrCrossingGrass() {
         this.tile_grass.computeLineSegments();
         this.helperIsDeadEndOrJunctionOrCrossing(this.tile_grass, [
             {60: [120]},
@@ -342,23 +351,23 @@ class TileTest {
     }
 
     testIsDeadEnd() {
-        console.assert(!this.tile_road[1].isDeadEnd());
-        console.assert(!this.tile_road[5].isDeadEnd());
-        console.assert(!this.tile_road[9].isDeadEnd());
-        console.assert(!this.tile_road[13].isDeadEnd());
-        console.assert(!this.tile_road[17].isDeadEnd());
-        console.assert(!this.tile_road[21].isDeadEnd());
-        console.assert(!this.tile_road[45].isDeadEnd());
-        console.assert(!this.tile_road[49].isDeadEnd());
-        console.assert(!this.tile_road[53].isDeadEnd());
-        console.assert(!this.tile_road[57].isDeadEnd());
-        console.assert(!this.tile_road[61].isDeadEnd());
-        console.assert(this.tile_road[65].isDeadEnd());
-        console.assert(this.tile_road[69].isDeadEnd());
-        console.assert(this.tile_road[73].isDeadEnd());
-        console.assert(this.tile_road[77].isDeadEnd());
-        console.assert(!this.tile_road[81].isDeadEnd());
-        console.assert(!this.tile_road[85].isDeadEnd());
+        assertTrue(!this.tile_road[1].isDeadEnd());
+        assertTrue(!this.tile_road[5].isDeadEnd());
+        assertTrue(!this.tile_road[9].isDeadEnd());
+        assertTrue(!this.tile_road[13].isDeadEnd());
+        assertTrue(!this.tile_road[17].isDeadEnd());
+        assertTrue(!this.tile_road[21].isDeadEnd());
+        assertTrue(!this.tile_road[45].isDeadEnd());
+        assertTrue(!this.tile_road[49].isDeadEnd());
+        assertTrue(!this.tile_road[53].isDeadEnd());
+        assertTrue(!this.tile_road[57].isDeadEnd());
+        assertTrue(!this.tile_road[61].isDeadEnd());
+        assertTrue(this.tile_road[65].isDeadEnd());
+        assertTrue(this.tile_road[69].isDeadEnd());
+        assertTrue(this.tile_road[73].isDeadEnd());
+        assertTrue(this.tile_road[77].isDeadEnd());
+        assertTrue(!this.tile_road[81].isDeadEnd());
+        assertTrue(!this.tile_road[85].isDeadEnd());
     }
 
     testComputeAllNeighbours() {
@@ -370,8 +379,8 @@ class TileTest {
         var tiles = [tile, tile1, tile2, tile3, tile4];
 
         tile.computeAllNeighbours(tiles);
-        console.assert(tile.neighbours.length === 4);
-        console.assert(!tile.neighbours.includes(tile));
+        assertTrue(tile.neighbours.length === 4);
+        assertTrue(!tile.neighbours.includes(tile));
     }
 
     testComputeStreetNeighboursAndConnections() {
@@ -384,120 +393,120 @@ class TileTest {
         tile.computeAllNeighbours(tiles);
         tile.computeStreetNeighboursAndConnections();
 
-        console.assert(tile.streetNeighbours.includes(tile1));
-        console.assert(tile.streetNeighbours.includes(tile2));
-        console.assert(tile.streetNeighbours.includes(tile3));
-        console.assert(tile.streetNeighbours.includes(tile4));
-        console.assert(tile.getNeighbourConnection(tile1) === 300);
-        console.assert(tile.getNeighbourConnection(tile2) === 240);
-        console.assert(tile.getNeighbourConnection(tile3) === 120);
-        console.assert(tile.getNeighbourConnection(tile4) === 60);
+        assertTrue(tile.streetNeighbours.includes(tile1));
+        assertTrue(tile.streetNeighbours.includes(tile2));
+        assertTrue(tile.streetNeighbours.includes(tile3));
+        assertTrue(tile.streetNeighbours.includes(tile4));
+        assertTrue(tile.getNeighbourConnection(tile1) === 300);
+        assertTrue(tile.getNeighbourConnection(tile2) === 240);
+        assertTrue(tile.getNeighbourConnection(tile3) === 120);
+        assertTrue(tile.getNeighbourConnection(tile4) === 60);
     }
 
     testIsConnectedTo() {
-        console.assert(this.tile_road[45].isConnectedTo(60));
-        console.assert(this.tile_road[45].isConnectedTo(120));
-        console.assert(this.tile_road[45].isConnectedTo(240));
-        console.assert(this.tile_road[45].isConnectedTo(300));
+        assertTrue(this.tile_road[45].isConnectedTo(60));
+        assertTrue(this.tile_road[45].isConnectedTo(120));
+        assertTrue(this.tile_road[45].isConnectedTo(240));
+        assertTrue(this.tile_road[45].isConnectedTo(300));
     }
 
     testGetStreetConnections() {
-        console.assert(this.tile_road[1].getStreetConnections().length === 3);
-        console.assert(this.tile_road[5].getStreetConnections().length === 3);
-        console.assert(this.tile_road[9].getStreetConnections().length === 3);
-        console.assert(this.tile_road[13].getStreetConnections().length === 3);
-        console.assert(this.tile_road[17].getStreetConnections().length === 2);
-        console.assert(this.tile_road[21].getStreetConnections().length === 2);
-        console.assert(this.tile_road[45].getStreetConnections().length === 4);
-        console.assert(this.tile_road[49].getStreetConnections().length === 2);
-        console.assert(this.tile_road[53].getStreetConnections().length === 2);
-        console.assert(this.tile_road[57].getStreetConnections().length === 2);
-        console.assert(this.tile_road[61].getStreetConnections().length === 2);
-        console.assert(this.tile_road[65].getStreetConnections().length === 1);
-        console.assert(this.tile_road[69].getStreetConnections().length === 1);
-        console.assert(this.tile_road[73].getStreetConnections().length === 1);
-        console.assert(this.tile_road[77].getStreetConnections().length === 1);
-        console.assert(this.tile_road[81].getStreetConnections().length === 2);
-        console.assert(this.tile_road[85].getStreetConnections().length === 2);
+        assertTrue(this.tile_road[1].getStreetConnections().length === 3);
+        assertTrue(this.tile_road[5].getStreetConnections().length === 3);
+        assertTrue(this.tile_road[9].getStreetConnections().length === 3);
+        assertTrue(this.tile_road[13].getStreetConnections().length === 3);
+        assertTrue(this.tile_road[17].getStreetConnections().length === 2);
+        assertTrue(this.tile_road[21].getStreetConnections().length === 2);
+        assertTrue(this.tile_road[45].getStreetConnections().length === 4);
+        assertTrue(this.tile_road[49].getStreetConnections().length === 2);
+        assertTrue(this.tile_road[53].getStreetConnections().length === 2);
+        assertTrue(this.tile_road[57].getStreetConnections().length === 2);
+        assertTrue(this.tile_road[61].getStreetConnections().length === 2);
+        assertTrue(this.tile_road[65].getStreetConnections().length === 1);
+        assertTrue(this.tile_road[69].getStreetConnections().length === 1);
+        assertTrue(this.tile_road[73].getStreetConnections().length === 1);
+        assertTrue(this.tile_road[77].getStreetConnections().length === 1);
+        assertTrue(this.tile_road[81].getStreetConnections().length === 2);
+        assertTrue(this.tile_road[85].getStreetConnections().length === 2);
     }
 
     testGetDeltaHead() {
-        console.assert(getDeltaHead(0, 90) === 90);
-        console.assert(getDeltaHead(90, 0) === 90);
-        console.assert(getDeltaHead(0, 180) === 180);
-        console.assert(getDeltaHead(180, 0) === 180);
-        console.assert(getDeltaHead(0, 270) === 90);
-        console.assert(getDeltaHead(270, 0) === 90);
-        console.assert(getDeltaHead(359, 1) === 2);
-        console.assert(getDeltaHead(1, 359) === 2);
-        console.assert(getDeltaHead(1, 0) === 1);
-        console.assert(getDeltaHead(359, 0) === 1);
+        assertTrue(getDeltaHead(0, 90) === 90);
+        assertTrue(getDeltaHead(90, 0) === 90);
+        assertTrue(getDeltaHead(0, 180) === 180);
+        assertTrue(getDeltaHead(180, 0) === 180);
+        assertTrue(getDeltaHead(0, 270) === 90);
+        assertTrue(getDeltaHead(270, 0) === 90);
+        assertTrue(getDeltaHead(359, 1) === 2);
+        assertTrue(getDeltaHead(1, 359) === 2);
+        assertTrue(getDeltaHead(1, 0) === 1);
+        assertTrue(getDeltaHead(359, 0) === 1);
     }
 
     testGetTurnDirection() {
-        console.assert(getTurnDirection(0, 90) === 1);
-        console.assert(getTurnDirection(0, 270) === -1);
-        console.assert(getTurnDirection(90, 180) === 1);
-        console.assert(getTurnDirection(90, 0) === -1);
-        console.assert(getTurnDirection(180, 270) === 1);
-        console.assert(getTurnDirection(180, 90) === -1);
-        console.assert(getTurnDirection(270, 0) === 1);
-        console.assert(getTurnDirection(270, 180) === -1);
+        assertTrue(getTurnDirection(0, 90) === 1);
+        assertTrue(getTurnDirection(0, 270) === -1);
+        assertTrue(getTurnDirection(90, 180) === 1);
+        assertTrue(getTurnDirection(90, 0) === -1);
+        assertTrue(getTurnDirection(180, 270) === 1);
+        assertTrue(getTurnDirection(180, 90) === -1);
+        assertTrue(getTurnDirection(270, 0) === 1);
+        assertTrue(getTurnDirection(270, 180) === -1);
     }
 
     testInside() {
         var x = this.tile_grass.x;
         var y = this.tile_grass.y;
-        console.assert(this.tile_grass.inside(x, y));
-        console.assert(this.tile_grass.inside(x+20, y+20, 1));
-        console.assert(!this.tile_grass.inside(x+20, y+20, 0.1));
-        console.assert(!this.tile_grass.inside(x+100, y+100, 1));
+        assertTrue(this.tile_grass.inside(x, y));
+        assertTrue(this.tile_grass.inside(x+20, y+20, 1));
+        assertTrue(!this.tile_grass.inside(x+20, y+20, 0.1));
+        assertTrue(!this.tile_grass.inside(x+100, y+100, 1));
     }
 
     testCenterAhead() {
         var x = this.tile_road[45].x;
-        console.assert(this.tile_road[45].centerAhead(x-10, 90));
-        console.assert(!this.tile_road[45].centerAhead(x+10, 90));
-        console.assert(!this.tile_road[45].centerAhead(x-10, 270));
-        console.assert(this.tile_road[45].centerAhead(x+10, 270));
+        assertTrue(this.tile_road[45].centerAhead(x-10, 90));
+        assertTrue(!this.tile_road[45].centerAhead(x+10, 90));
+        assertTrue(!this.tile_road[45].centerAhead(x-10, 270));
+        assertTrue(this.tile_road[45].centerAhead(x+10, 270));
     }
 
     testGetLane() {
         var lane = this.tile_road[17].getLane(60, 8);
-        console.assert(lane.px === this.tile_road[17].x);
-        console.assert(lane.py === this.tile_road[17].y + 8);
-        console.assert(Math.abs(lane.nx - 0.5) < 0.001);
-        console.assert(Math.abs(lane.ny - 0.866) < 0.001);
+        assertTrue(lane.px === this.tile_road[17].x);
+        assertTrue(lane.py === this.tile_road[17].y + 8);
+        assertTrue(Math.abs(lane.nx - 0.5) < 0.001);
+        assertTrue(Math.abs(lane.ny - 0.866) < 0.001);
     }
 
     testGetClosestPointInLane() {
         var x = this.tile_road[45].x;
         var y = this.tile_road[45].y;
         var point = this.tile_road[45].getClosestPointInLane(x, y, 60, 0);
-        console.assert(point.x === x);
-        console.assert(point.y === y);
+        assertTrue(point.x === x);
+        assertTrue(point.y === y);
         var point = this.tile_road[45].getClosestPointInLane(x+5, y+3, 45, 0);
-        console.assert(point.x === x+1);
-        console.assert(point.y === y-1);
+        assertTrue(point.x === x+1);
+        assertTrue(point.y === y-1);
         var point = this.tile_road[45].getClosestPointInLane(x-3, y-5, 45, 0);
-        console.assert(point.x === x+1);
-        console.assert(point.y === y-1);
+        assertTrue(point.x === x+1);
+        assertTrue(point.y === y-1);
         var point = this.tile_road[45].getClosestPointInLane(x+3, y-3, 45, 0);
-        console.assert(point.x === x+3);
-        console.assert(point.y === y-3);
+        assertTrue(point.x === x+3);
+        assertTrue(point.y === y-3);
     }
 
     testGetDistanceToLane() {
         var x = this.tile_road[45].x;
         var y = this.tile_road[45].y;
         var distance = this.tile_road[45].getDistanceToLane(x, y, 60, 0);
-        console.assert(distance === 0);
+        assertTrue(distance === 0);
         var distance = this.tile_road[45].getDistanceToLane(x+5, y+3, 45, 0);
-        console.assert(distance == Math.sqrt(32));
+        assertTrue(distance == Math.sqrt(32));
         var distance = this.tile_road[45].getDistanceToLane(x-3, y-5, 45, 0);
-        console.assert(distance == Math.sqrt(32));
+        assertTrue(distance == Math.sqrt(32));
         var distance = this.tile_road[45].getDistanceToLane(x+3, y-3, 45, 0);
-        console.assert(distance === 0);
+        assertTrue(distance === 0);
     }
 
     testGetLaneTargetPoint() {
@@ -507,77 +516,77 @@ class TileTest {
         var y1 = 5 * (point1.y-this.tile_road[45].y) / Math.sqrt(2);
         var x2 = 5 * (point2.x-this.tile_road[45].x) / Math.sqrt(2);
         var y2 = 5 * (point2.y-this.tile_road[45].y) / Math.sqrt(2);
-        console.assert(x1 > 0);
-        console.assert(y1 < 0);
-        console.assert(x2 < 0);
-        console.assert(y2 > 0);
-        console.assert(Math.abs(x1 - config.Tile.width/2) < 0.01);
-        console.assert(Math.abs(-y1 - config.Tile.width/2) < 0.01);
-        console.assert(Math.abs(-x2 - config.Tile.width/2) < 0.01);
-        console.assert(Math.abs(y2 - config.Tile.width/2) < 0.01);
+        assertTrue(x1 > 0);
+        assertTrue(y1 < 0);
+        assertTrue(x2 < 0);
+        assertTrue(y2 > 0);
+        assertTrue(Math.abs(x1 - config.Tile.width/2) < 0.01);
+        assertTrue(Math.abs(-y1 - config.Tile.width/2) < 0.01);
+        assertTrue(Math.abs(-x2 - config.Tile.width/2) < 0.01);
+        assertTrue(Math.abs(y2 - config.Tile.width/2) < 0.01);
     }
 
     testAddVehicle() {
         this.tile_road[1].addVehicle(this.car1);
         this.tile_road[1].addVehicle(this.car2);
-        console.assert(this.tile_road[1].vehicles.length === 2);
-        console.assert(this.tile_road[1].vehicleHashes.length === 2);
-        console.assert(this.tile_road[1].vehicleHashes[0] === this.car1.hash);
-        console.assert(this.tile_road[1].vehicleHashes[1] === this.car2.hash);
+        assertTrue(this.tile_road[1].vehicles.length === 2);
+        assertTrue(this.tile_road[1].vehicleHashes.length === 2);
+        assertTrue(this.tile_road[1].vehicleHashes[0] === this.car1.hash);
+        assertTrue(this.tile_road[1].vehicleHashes[1] === this.car2.hash);
     }
 
     testGetVehicleIndex() {
         var index = this.tile_road[1].getVehicleIndex(this.car2);
-        console.assert(index === 1);
+        assertTrue(index === 1);
     }
 
     testRemoveVehicle() {
         this.tile_road[1].removeVehicle(this.car1);
-        console.assert(this.tile_road[1].vehicles.length === 1);
-        console.assert(this.tile_road[1].vehicleHashes.length === 1);
-        console.assert(this.tile_road[1].vehicleHashes[0] === this.car2.hash);
+        assertTrue(this.tile_road[1].vehicles.length === 1);
+        assertTrue(this.tile_road[1].vehicleHashes.length === 1);
+        assertTrue(this.tile_road[1].vehicleHashes[0] === this.car2.hash);
     }
 
     testOnlySameVehicleType() {
         this.tile_road[21].vehicles = [this.car1, this.car2];
-        console.assert(this.tile_road[21].onlySameVehicleType());
+        assertTrue(this.tile_road[21].onlySameVehicleType());
         this.tile_road[21].vehicles = [this.car1];
-        console.assert(this.tile_road[21].onlySameVehicleType());
+        assertTrue(this.tile_road[21].onlySameVehicleType());
         this.tile_road[21].vehicles = [this.tram];
-        console.assert(this.tile_road[21].onlySameVehicleType());
+        assertTrue(this.tile_road[21].onlySameVehicleType());
         this.tile_road[21].vehicles = [];
-        console.assert(this.tile_road[21].onlySameVehicleType());
+        assertTrue(this.tile_road[21].onlySameVehicleType());
         this.tile_road[21].vehicles = [this.car1, this.tram];
-        console.assert(!this.tile_road[21].onlySameVehicleType());
+        assertTrue(!this.tile_road[21].onlySameVehicleType());
         this.tile_road[21].vehicles = [this.car1, this.car2, this.tram];
-        console.assert(!this.tile_road[21].onlySameVehicleType());
+        assertTrue(!this.tile_road[21].onlySameVehicleType());
         this.tile_road[21].vehicles = [];
     }
 
     testHasFreeParkingLot() {
-        console.assert(!this.tile_road[1].hasFreeParkingLot(0));
-        console.assert(!this.tile_road[5].hasFreeParkingLot(0));
-        console.assert(!this.tile_road[9].hasFreeParkingLot(0));
-        console.assert(!this.tile_road[13].hasFreeParkingLot(0));
-        console.assert(!this.tile_road[17].hasFreeParkingLot(0));
-        console.assert(!this.tile_road[21].hasFreeParkingLot(0));
-        console.assert(!this.tile_road[45].hasFreeParkingLot(0));
-        console.assert(!this.tile_road[49].hasFreeParkingLot(0));
-        console.assert(!this.tile_road[53].hasFreeParkingLot(0));
-        console.assert(!this.tile_road[57].hasFreeParkingLot(0));
-        console.assert(!this.tile_road[61].hasFreeParkingLot(0));
-        console.assert(!this.tile_road[65].hasFreeParkingLot(0));
-        console.assert(!this.tile_road[69].hasFreeParkingLot(0));
-        console.assert(!this.tile_road[73].hasFreeParkingLot(0));
-        console.assert(!this.tile_road[77].hasFreeParkingLot(0));
-        console.assert(!this.tile_road[81].hasFreeParkingLot(0));
-        console.assert(!this.tile_road[85].hasFreeParkingLot(0));
+        assertTrue(!this.tile_road[1].hasFreeParkingLot(0));
+        assertTrue(!this.tile_road[5].hasFreeParkingLot(0));
+        assertTrue(!this.tile_road[9].hasFreeParkingLot(0));
+        assertTrue(!this.tile_road[13].hasFreeParkingLot(0));
+        assertTrue(!this.tile_road[17].hasFreeParkingLot(0));
+        assertTrue(!this.tile_road[21].hasFreeParkingLot(0));
+        assertTrue(!this.tile_road[45].hasFreeParkingLot(0));
+        assertTrue(!this.tile_road[49].hasFreeParkingLot(0));
+        assertTrue(!this.tile_road[53].hasFreeParkingLot(0));
+        assertTrue(!this.tile_road[57].hasFreeParkingLot(0));
+        assertTrue(!this.tile_road[61].hasFreeParkingLot(0));
+        assertTrue(!this.tile_road[65].hasFreeParkingLot(0));
+        assertTrue(!this.tile_road[69].hasFreeParkingLot(0));
+        assertTrue(!this.tile_road[73].hasFreeParkingLot(0));
+        assertTrue(!this.tile_road[77].hasFreeParkingLot(0));
+        assertTrue(!this.tile_road[81].hasFreeParkingLot(0));
+        assertTrue(!this.tile_road[85].hasFreeParkingLot(0));
 
-        console.assert(this.tile_road[17].hasFreeParkingLot(60));
-        console.assert(this.tile_road[21].hasFreeParkingLot(120));
+        assertTrue(this.tile_road[17].hasFreeParkingLot(60));
+        assertTrue(this.tile_road[21].hasFreeParkingLot(120));
         this.car1.queue = [this.car1.callbackPark];
         this.car1.head = 60;
         this.tile_road[17].vehicles.push(this.car1);
-        console.assert(!this.tile_road[17].hasFreeParkingLot(60));
+        assertTrue(!this.tile_road[17].hasFreeParkingLot(60));
     }
 }

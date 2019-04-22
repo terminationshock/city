@@ -1,3 +1,9 @@
+function assertTrue(expression) {
+    if (!expression) {
+        throw new Error('Assertion Error');
+    }
+}
+
 function convertInt(input) {
     return parseInt(input, 10);
 }
