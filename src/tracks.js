@@ -31,7 +31,7 @@ class Tracks {
             index = track.indexOf(this.tile.hash, index + 1);
         }
 
-        for (var index of indices) {
+        for (index of indices) {
             var indexNext = index + 1;
             var indexPrev = index - 1;
             if (indexNext === track.length) {
@@ -65,9 +65,10 @@ class Tracks {
     }
 
     finalize() {
+        var i = null;
         for (var head in this.newTrack) {
             if (head in this.track) {
-                for (var i = 0; i < this.newTrack[head].length; i++) {
+                for (i = 0; i < this.newTrack[head].length; i++) {
                     this.track[head].push(this.newTrack[head][i]);
                 }
             } else {
@@ -76,7 +77,7 @@ class Tracks {
         }
         for (var headFrom in this.track) {
             var headsTo = [];
-            for (var i = 0; i < this.track[headFrom].length; i++) {
+            for (i = 0; i < this.track[headFrom].length; i++) {
                 if (!headsTo.includes(this.track[headFrom][i])) {
                     headsTo.push(this.track[headFrom][i]);
                 }
@@ -118,8 +119,7 @@ class Tracks {
                  this.trackPoints.moveTo(p1.x, p1.y);
                  this.trackPoints.lineTo(p2.x, p2.y);
              } else {
-                 var curve = getCurve(pc1, pc2, headFrom, headTo, config.Track.bezierFactor);
-                 var path = curve.getPath(config.Track.curveFactor);
+                 var path = getCurve(pc1, pc2, headFrom, headTo, config.Track.bezierFactor).getPath(config.Track.curveFactor);
 
                  this.trackPoints.moveTo(p1.x, p1.y);
                  this.trackPoints.lineTo(path[0].x, path[0].y);
@@ -173,8 +173,7 @@ class Tracks {
             if (this.track[negativeHeadFrom].length > 1) {
                 return false;
             }
-            var headFrom = normalizeAngle(convertInt(negativeHeadFrom) + 180);
-            if (headFrom !== convertInt(this.track[negativeHeadFrom])) {
+            if (normalizeAngle(convertInt(negativeHeadFrom) + 180) !== convertInt(this.track[negativeHeadFrom])) {
                 return false;
             }
             if (keys.length === 2 && !keys.includes(this.track[negativeHeadFrom][0])) {
@@ -206,17 +205,20 @@ class Tracks {
         if (this.hasTracks() || Object.keys(this.newTrack).length > 0) {
             this.trackPoints = new Phaser.Graphics(game, 0, 0);
 
+            var headFrom = null;
+            var headTo = null;
+            var headsTo = null;
             this.trackPoints.lineStyle(1, Phaser.Color.hexToRGB(config.Track.color), 1);
-            for (var headFrom in this.track) {
-                var headsTo = this.track[headFrom];
-                for (var headTo of headsTo) {
+            for (headFrom in this.track) {
+                headsTo = this.track[headFrom];
+                for (headTo of headsTo) {
                     this.addSingleTrack(headFrom, headTo);
                 }
             }
             this.trackPoints.lineStyle(1, Phaser.Color.hexToRGB(config.Track.activeColor), 1);
-            for (var headFrom in this.newTrack) {
-                var headsTo = this.newTrack[headFrom];
-                for (var headTo of headsTo) {
+            for (headFrom in this.newTrack) {
+                headsTo = this.newTrack[headFrom];
+                for (headTo of headsTo) {
                     this.addSingleTrack(headFrom, headTo);
                 }
             }

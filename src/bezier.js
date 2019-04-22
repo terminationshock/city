@@ -6,16 +6,18 @@ class BezierCurve {
     get(t) {
         var n = this.anchorPoints.length;
         var point = Array(n);
-        for (var i = 0; i < n; i++) {
+        var i = null;
+        var j = null;
+        for (i = 0; i < n; i++) {
             point[i] = Array(n);
         }
-        for (var i = 0; i < n; i++) {
+        for (i = 0; i < n; i++) {
             point[i][0] = this.anchorPoints[i];
         }
         var x = 0;
         var y = 0;
-        for (var j = 1; j < n; j++) {
-            for (var i = 0; i < n - j; i++) {
+        for (j = 1; j < n; j++) {
+            for (i = 0; i < n - j; i++) {
                 x = (1. - t) * point[i][j - 1].x + t * point[i + 1][j - 1].x;
                 y = (1. - t) * point[i][j - 1].y + t * point[i + 1][j - 1].y;
                 point[i][j] = new Point(x, y);
@@ -31,11 +33,17 @@ class BezierCurve {
         var point1 = this.anchorPoints[0];
         var point2 = null;
 
+        var t = null;
+        var dxy = null;
+        var dx = null;
+        var dy = null;
+        var angle = null;
+        var p = null;
         while (t0 < 1) {
-            var t = t0;
-            var dxy = 0;
-            var dx = 0;
-            var dy = 0;
+            t = t0;
+            dxy = 0;
+            dx = 0;
+            dy = 0;
             while (dxy < wayPerStep) {
                 t += 0.005;
 
@@ -45,12 +53,12 @@ class BezierCurve {
                 dxy = Math.sqrt(dx * dx + dy * dy);
             }
 
-            var angle = Math.atan2(dx, -dy) * 180 / Math.PI;
+            angle = Math.atan2(dx, -dy) * 180 / Math.PI;
             if (angle < 0) {
                 angle += 360;
             }
 
-            var p = new Point((point1.x + point2.x) / 2, (point1.y + point2.y) / 2);
+            p = new Point((point1.x + point2.x) / 2, (point1.y + point2.y) / 2);
             p.head = angle;
             path.push(p);
 

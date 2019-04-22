@@ -72,9 +72,9 @@ class Vehicle {
             var x0 = headIndex * size;
             for (var angle = 0; angle < 360; angle += config.Vehicle.collisionSampling) {
                 for (var i = 0; i < size; i++) {
-                    var x = convertInt(i * Math.sin(angle * Math.PI / 180));
-                    var y = -convertInt(i * Math.cos(angle * Math.PI / 180));
-                    var alpha = canvas.getContext('2d').getImageData(x + x0 + convertInt(size / 2), y + y0 + convertInt(size / 2), 1, 1).data[3];
+                    var x = Math.round(i * Math.sin(angle * Math.PI / 180));
+                    var y = -Math.round(i * Math.cos(angle * Math.PI / 180));
+                    var alpha = canvas.getContext('2d').getImageData(x + x0 + Math.round(size / 2), y + y0 + Math.round(size / 2), 1, 1).data[3];
                     if (alpha < 255) {
                         points.push(x);
                         points.push(y);
@@ -166,8 +166,7 @@ class Vehicle {
 
         for (var tile of this.tile.neighbours) {
             if (tile.inside(this.x, this.y)) {
-                var head = this.tile.getNeighbourConnection(tile);
-                if (this.getHead() === convertInt(head)) {
+                if (this.getHead() === convertInt(this.tile.getNeighbourConnection(tile))) {
                     this.laneAssist();
                     if (this.tile.inside(this.x, this.y)) {
                         return;
@@ -243,10 +242,9 @@ class Vehicle {
     getTurnPath(targetHead) {
         var p1 = new Point(this.x, this.y);
         var p2 = this.tile.getLaneTargetPoint(targetHead, config.Street.laneDrive, config.Street.lanePointFactor);
-        var dt = 1.0 / config.World.stepsPerSecond;
 
         var curve = getCurve(p1, p2, this.getHead(), targetHead, config.Street.bezierFactor);
-        return curve.getPath(config.Vehicle.velocityTurn * dt);
+        return curve.getPath(config.Vehicle.velocityTurn / config.World.stepsPerSecond);
     }
 
     laneAssist() {
@@ -274,8 +272,7 @@ class Vehicle {
     }
 
     getMaxDistancePerStep() {
-        var dt = 1.0 / config.World.stepsPerSecond;
-        return Math.ceil(this.v * dt);
+        return Math.ceil(this.v / config.World.stepsPerSecond);
     }
 
     collidingWith(vehicle) {
@@ -286,14 +283,15 @@ class Vehicle {
     }
 
     collision(x, y, head) {
-        for (var vehicle of this.tile.vehicles) {
+        var vehicle = null;
+        for (vehicle of this.tile.vehicles) {
             if (this.collideWith(vehicle, x, y, head)) {
                 this.collisionWith = vehicle;
                 return true;
             }
         }
         for (var tile of this.tile.neighbours) {
-            for (var vehicle of tile.vehicles) {
+            for (vehicle of tile.vehicles) {
                 if (this.collideWith(vehicle, x, y, head)) {
                     this.collisionWith = vehicle;
                     return true;
@@ -326,12 +324,11 @@ class Vehicle {
             }
         }
 
-        var bounds = this.bounds[head];
         var xoff = other.x - x;
         var yoff = other.y - y;
         var points = other.getBounds().points;
         for (var point of points) {
-            if (bounds.contains(point.x + xoff, point.y + yoff)) {
+            if (this.bounds[head].contains(point.x + xoff, point.y + yoff)) {
                 return true;
             }
         }

@@ -3,6 +3,7 @@
 js=game.js
 
 rm $js
+echo "'use strict';" > $js
 cat src/error.js >> $js
 cat src/utils.js >> $js
 cat src/loader.js >> $js

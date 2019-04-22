@@ -14,8 +14,7 @@ class Car extends Vehicle {
             if (neighbourHashes.includes(this.oldTile)) {
                 var head = this.tile.neighbourConnections[this.oldTile];
                 if (conn.includes(head)) {
-                    var index = conn.indexOf(head);
-                    conn.splice(index, 1);
+                    conn.splice(conn.indexOf(head), 1);
                 }
             }
         }
@@ -30,11 +29,9 @@ class Car extends Vehicle {
             var car = this.tile.vehicles[i];
             if (car.waitingTime > config.Vehicle.waitBlocked && conn.length > 1) {
                 if (conn.includes(car.getHead())) {
-                    var index = conn.indexOf(car.getHead());
-                    conn.splice(index, 1);
+                    conn.splice(conn.indexOf(car.getHead()), 1);
                 } else if (conn.includes(car.plannedHead)) {
-                    var index = conn.indexOf(car.plannedHead);
-                    conn.splice(index, 1);
+                    conn.splice(conn.indexOf(car.plannedHead), 1);
                 }
             }
         }
