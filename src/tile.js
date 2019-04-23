@@ -34,6 +34,17 @@ class Tile {
         if (this.trees !== null) {
             this.trees.draw(rowGroupHouses);
         }
+
+        this.hover = new Phaser.Graphics(game, this.imgX, this.imgY);
+        this.hover.beginFill(Phaser.Color.hexToRGB(config.Tile.hoverColor));
+        this.hover.fillAlpha = 0.5;
+        this.hover.drawPolygon(new Point(config.Tile.width / 2, 0),
+                               new Point(config.Tile.width, config.Tile.height / 2),
+                               new Point(config.Tile.width / 2, config.Tile.height),
+                               new Point(0, config.Tile.height / 2));
+        this.hover.endFill();
+        this.hover.visible = false;
+        rowGroupGround.add(this.hover);
     }
 
     drawTracks(group) {
@@ -53,6 +64,10 @@ class Tile {
         if (this.hasStop()) {
             this.tramstop.draw(group);
         }
+    }
+
+    setHover(hover) {
+        this.hover.visible = hover;
     }
 
     addStop() {

@@ -35,6 +35,7 @@
         "probHouse": 0.9,
         "probCar": 0.5,
         "grass": "g0000",
+        "hoverColor": "#FFFF00",
         "streetPrefix": "r"
     },
     "Track": {

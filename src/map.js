@@ -9,6 +9,7 @@ class Map {
         this.nRows = 0;
         this.newTrack = [];
         this.counterHashMap = {};
+        this.tileHover = null;
     }
 
     loadMap(fileContent) {
@@ -104,8 +105,13 @@ class Map {
     newTrackClick(x, y, hover) {
         for (var tile of this.tiles) {
             if (tile.inside(x, y)) {
+                if (this.tileHover !== null) {
+                    this.tileHover.setHover(false);
+                }
                 if (!tile.isHouse() && (this.newTrack.length === 0 || this.newTrack[this.newTrack.length - 1].isTrackNeighbourOf(tile))) {
                     if (hover) {
+                        this.tileHover = tile;
+                        this.tileHover.setHover(true);
                         return true;
                     }
 
@@ -129,8 +135,13 @@ class Map {
     newStopClick(x, y, hover) {
         for (var tile of this.tiles) {
             if (tile.inside(x, y)) {
+                if (this.tileHover !== null) {
+                    this.tileHover.setHover(false);
+                }
                 if (tile.hasTracks() && tile.isStraightTrack() && (tile.isStraight() || tile.isGrass()) && !tile.hasStop()) {
                     if (hover) {
+                        this.tileHover = tile;
+                        this.tileHover.setHover(true);
                         return true;
                     }
 
