@@ -230,6 +230,10 @@ class Tile {
         this.tracks.generate(track);
     }
 
+    abortTrack() {
+        this.tracks.abort();
+    }
+
     finalizeTrack() {
         this.tracks.finalize();
         if (this.hasStop() && !this.isStraightTrack()) {
@@ -307,6 +311,14 @@ class Tile {
 
     getNeighbourConnection(tile) {
         return this.neighbourConnections[tile.hash];
+    }
+
+    getNeighbourAtHead(head) {
+        var list = this.neighbours.filter(x => this.neighbourConnections[x.hash] === head);
+        if (list.length !== 1) {
+            return null;
+        }
+        return list[0];
     }
 
     isTrackNeighbourOf(tile) {
@@ -454,10 +466,6 @@ class Tile {
             this.vehicles.splice(index, 1);
             this.vehicleHashes.splice(index, 1);
         }
-    }
-
-    hasDrivingVehicles() {
-        return this.vehicles.filter(vehicle => !vehicle.isParking()).length > 0;
     }
 
     getVehicleIndex(vehicle) {

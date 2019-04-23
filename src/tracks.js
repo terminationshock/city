@@ -106,6 +106,10 @@ class Tracks {
         }
     }
 
+    abort() {
+        this.generate([]);
+    }
+
     addSingleTrack(negativeHeadFrom, headTo) {
          var headFrom = normalizeAngle(convertInt(negativeHeadFrom) + 180);
 
@@ -137,6 +141,10 @@ class Tracks {
 
     hasTracks() {
         return this.headsFrom.length > 0;
+    }
+
+    getTrackKeys() {
+        return Object.keys(this.track);
     }
 
     getLineSegments() {
@@ -199,6 +207,7 @@ class Tracks {
 
     draw(group) {
         if (this.trackPoints !== null) {
+            group.removeChild(this.trackPoints);
             this.trackPoints.destroy();
         }
 
@@ -224,6 +233,16 @@ class Tracks {
             }
 
             group.add(this.trackPoints);
+        }
+    }
+
+    highlight(headFrom, headTo) {
+        if (headFrom === null) {
+            for (var head in this.track) {
+                this.newTrack[head] = this.track[head].slice(0);
+            }
+        } else {
+            this.newTrack[headFrom] = [headTo];
         }
     }
 };

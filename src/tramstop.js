@@ -6,6 +6,7 @@ class TramStop {
 
     draw(group) {
         if (this.canvas !== null) {
+            group.removeChild(this.canvas);
             this.canvas.destroy();
         }
 

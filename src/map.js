@@ -8,6 +8,7 @@ class Map {
         this.nCols = 0;
         this.nRows = 0;
         this.newTrack = [];
+        this.newLine = new TramLine();
         this.counterHashMap = {};
         this.tileHover = null;
     }
@@ -158,14 +159,22 @@ class Map {
     newTramClick(x, y, hover, tramImages) {
         for (var tile of this.tiles) {
             if (tile.inside(x, y)) {
-                if (tile.hasTracks() && tile.isStraightTrack() && !tile.hasDrivingVehicles()) {
+                if (this.tileHover !== null) {
+                    this.tileHover.setHover(false);
+                }
+                if (tile.hasTracks() && ((this.newLine.isEmpty() && tile.isStraightTrack()) || (!this.newLine.isEmpty() && this.newLine.isAllowed(tile)))) {
                     if (hover) {
+                        this.tileHover = tile;
+                        this.tileHover.setHover(true);
                         return true;
                     }
 
-                    var head = tile.tracks.getRandomConnection();
-                    tile.addVehicle(new Tram(tile, head, tramImages, config.Tram.numTypes));
-                    this.drawVehicles();
+                    this.newLine.proceed(tile);
+
+                    //var head = tile.tracks.getRandomConnection();
+                    //tile.addVehicle(new Tram(tile, head, tramImages, config.Tram.numTypes));
+                    //this.drawVehicles();
+                    this.drawTracks();
                     return true;
                 }
                 return false;
@@ -177,10 +186,16 @@ class Map {
     newTrackAbort() {
         if (this.newTrack.length > 0) {
             this.newTrack.forEach(function(tile) {
-                tile.generateTrack([]);
+                tile.abortTrack();
             });
             this.drawTracks();
             this.newTrack = [];
+        }
+    }
+
+    newTramAbort() {
+        if (this.newLine !== null) {
+            this.newLine.abort();
         }
     }
 

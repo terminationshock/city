@@ -10,6 +10,7 @@ cat src/loader.js >> $js
 cat src/trees.js >> $js
 cat src/tracks.js >> $js
 cat src/tramstop.js >> $js
+cat src/tramline.js >> $js
 cat src/tile.js >> $js
 cat src/map.js >> $js
 cat src/driver.js >> $js

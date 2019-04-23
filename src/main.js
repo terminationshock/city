@@ -88,19 +88,19 @@ function update() {
 }
 
 function onButtonTrack() {
-    ui.setButtonActive('button-track', true);
+    ui.setButtonActive('button-track', true, true);
     ui.setCursorOk(false);
     newTrackMode = true;
 }
 
 function onButtonStop() {
-    ui.setButtonActive('button-stop', false);
+    ui.setButtonActive('button-stop', false, true);
     ui.setCursorOk(false);
     newStopMode = true;
 }
 
 function onButtonTram() {
-    ui.setButtonActive('button-tram', false);
+    ui.setButtonActive('button-tram', true, false);
     ui.setCursorOk(false);
     newTramMode = true;
 }
@@ -108,6 +108,8 @@ function onButtonTram() {
 function onButtonAbort() {
     if (newTrackMode) {
         map.newTrackAbort();
+    } else if (newTramMode) {
+        map.newTramAbort();
     }
     ui.setButtonsInactive();
     ui.setCursorDefault();
