@@ -170,11 +170,11 @@ class Map {
                     }
 
                     this.newLine.proceed(tile);
-
-                    //var head = tile.tracks.getRandomConnection();
-                    //tile.addVehicle(new Tram(tile, head, tramImages, config.Tram.numTypes));
-                    //this.drawVehicles();
                     this.drawTracks();
+
+                    if (this.newLine.closed) {
+                        this.newTramFinalize(tramImages);
+                    }
                     return true;
                 }
                 return false;
@@ -196,6 +196,7 @@ class Map {
     newTramAbort() {
         if (this.newLine !== null) {
             this.newLine.abort();
+            this.drawTracks();
         }
     }
 
@@ -211,6 +212,15 @@ class Map {
             });
             this.drawTracks();
             this.newTrack = [];
+        }
+    }
+
+    newTramFinalize(tramImages) {
+        if (this.newLine !== null) {
+            var tile = this.newLine.getStartTile();
+            tile.addVehicle(new Tram(tile, this.newLine.getHeadMap()[tile.hash], tramImages, config.Tram.numTypes));
+            this.drawVehicles();
+            this.newTramAbort();
         }
     }
 };

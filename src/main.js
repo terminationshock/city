@@ -88,19 +88,19 @@ function update() {
 }
 
 function onButtonTrack() {
-    ui.setButtonActive('button-track', true, true);
+    ui.setButtonActive('button-track', true);
     ui.setCursorOk(false);
     newTrackMode = true;
 }
 
 function onButtonStop() {
-    ui.setButtonActive('button-stop', false, true);
+    ui.setButtonActive('button-stop', false);
     ui.setCursorOk(false);
     newStopMode = true;
 }
 
 function onButtonTram() {
-    ui.setButtonActive('button-tram', true, false);
+    ui.setButtonActive('button-tram', true);
     ui.setCursorOk(false);
     newTramMode = true;
 }

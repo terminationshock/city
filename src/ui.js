@@ -12,13 +12,11 @@ ui.enableButtons = function() {
     document.getElementById('button-tram').classList.remove('button-disabled');
 };
 
-ui.setButtonActive = function(id, showAbort, showFinish) {
+ui.setButtonActive = function(id, showAbort) {
     ui.disableButtons();
     document.getElementById(id).classList.remove('button-disabled');
     document.getElementById(id).classList.add('button-active');
-    if (showFinish) {
-        document.getElementById('button-finish').classList.remove('button-disabled');
-    }
+    document.getElementById('button-finish').classList.remove('button-disabled');
     if (showAbort) {
         document.getElementById('button-abort').classList.remove('button-disabled');
     }
