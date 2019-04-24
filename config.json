@@ -1,12 +1,12 @@
 {
-    "AI": {
-        "probStepDrive": 0.001,
-        "probTilePark": 0.05,
-        "waitAtStop": 100
-    },
     "Car": {
         "imgSize": 32,
         "numTypes": 12
+    },
+    "Driver": {
+        "probStepDrive": 0.001,
+        "probTilePark": 0.05,
+        "waitAtStop": 100
     },
     "Stop": {
         "lane": 22,

@@ -220,7 +220,7 @@ class Tile {
 
             if (this.hasFreeParkingLot(head)) {
                 if (Math.random() < config.Tile.probCar) {
-                    this.addVehicle(new Car(this, head, carImages, config.Car.numTypes));
+                    this.addVehicle(new Car(this, head, carImages, config.Car.numTypes, null));
                 }
             }
         }
@@ -310,7 +310,11 @@ class Tile {
     }
 
     getNeighbourConnection(tile) {
-        return this.neighbourConnections[tile.hash];
+        var hash = tile;
+        if (typeof tile !== 'string') {
+            hash = tile.hash;
+        }
+        return this.neighbourConnections[hash];
     }
 
     getNeighbourAtHead(head) {

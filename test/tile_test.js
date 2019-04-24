@@ -21,9 +21,9 @@ class TileTest {
         this.tile_road[81] = new Tile('r0081', 0, 0);
         this.tile_road[85] = new Tile('r0085', 0, 0);
 
-        this.car1 = new Car(this.tile_road[21], 60, [1], 1);
-        this.car2 = new Car(this.tile_road[21], 60, [2], 1);
-        this.tram = new Tram(this.tile_road[21], 60, [1], 1);
+        this.car1 = new Car(this.tile_road[21], 60, [1], 1, null);
+        this.car2 = new Car(this.tile_road[21], 60, [2], 1, null);
+        this.tram = new Tram(this.tile_road[21], 60, [1], 1, null);
 
         this.testIsGrass();
         this.testIsStreet();

@@ -1,7 +1,7 @@
 class Vehicle {
-    constructor(tile, head, vehicleImages, numTypes) {
+    constructor(tile, head, vehicleImages, numTypes, line) {
         this.hash = generateRandomId();
-        this.driver = new Driver();
+        this.driver = new Driver(line);
         this.colorId = vehicleImages[Math.floor(Math.random() * vehicleImages.length)];
         this.typeId = Math.floor(Math.random() * numTypes);
         this.sprite = null;

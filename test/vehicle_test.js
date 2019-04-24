@@ -25,10 +25,10 @@ class SpriteMock {
 class VehicleTest {
     constructor() {
         this.tile = new Tile('r0045', 0, 0);
-        this.car = new Car(this.tile, 60, ['colorId'], 1);
+        this.car = new Car(this.tile, 60, ['colorId'], 1, null);
         this.car.typeId = 1;
         this.car.driver = new DriverMock();
-        this.otherCar = new Car(this.tile, 60, ['colorId'], 1);
+        this.otherCar = new Car(this.tile, 60, ['colorId'], 1, null);
 
         this.testInit();
         this.testGetNextHead();

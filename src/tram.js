@@ -7,13 +7,12 @@ class Tram extends Vehicle {
     }
 
     getNextTurn() {
-        var head = this.tile.neighbourConnections[this.oldTile];
-        var heads = this.tile.getTrackHeadsFrom(head);
-        if (heads === null) {
+        var head = this.driver.decideTurn(this.tile);
+        if (head === null) {
             error('Tram does not find a way', this, this.disable);
             return null;
         }
-        return this.driver.decideTurn(heads);
+        return head;
     }
 
     isOnStraight() {

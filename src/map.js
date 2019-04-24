@@ -217,8 +217,8 @@ class Map {
 
     newTramFinalize(tramImages) {
         if (this.newLine !== null) {
-            var tile = this.newLine.getStartTile();
-            tile.addVehicle(new Tram(tile, this.newLine.getHeadMap()[tile.hash], tramImages, config.Tram.numTypes));
+            var tiles = this.newLine.getTiles();
+            tiles[0].addVehicle(new Tram(tiles[0], tiles[0].getNeighbourConnection(tiles[1]), tramImages, config.Tram.numTypes, tiles.map(x => x.hash)));
             this.drawVehicles();
             this.newTramAbort();
         }

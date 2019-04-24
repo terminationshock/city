@@ -3,8 +3,6 @@ class TramLine {
         this.NEIGHBOUR_STATUS = {'MULTIPLE_PATHS': 0, 'NO_NEIGHBOUR': 1};
         this.tiles = [];
         this.closed = false;
-        this.startTile = null;
-        this.headMap = {};
     }
 
     isEmpty() {
@@ -59,27 +57,20 @@ class TramLine {
         return this.tiles[n - 1].getNeighbourAtHead(heads[0]);
     }
 
+    getTiles() {
+        return this.tiles;
+    }
+
     abort() {
         this.tiles.forEach(function(tile) {
             tile.abortTrack();
         });
         this.tiles = [];
         this.closed = false;
-        this.startTile = null;
-        this.headMap = {};
-    }
-
-    getStartTile() {
-        return this.startTile;
-    }
-
-    getHeadMap() {
-        return this.headMap;
     }
 
     proceed(tile) {
         if (this.isEmpty()) {
-            this.startTile = tile;
             this.tiles = [tile];
             this.tiles[0].tracks.highlight(null, null);
 
@@ -95,7 +86,6 @@ class TramLine {
         if (n > 1) {
             this.tiles[n - 1].tracks.highlight(this.tiles[n - 1].getNeighbourConnection(this.tiles[n - 2]), this.tiles[n - 1].getNeighbourConnection(tile));
         } else {
-            this.headMap[this.tiles[n - 1].hash] = this.tiles[n - 1].getNeighbourConnection(tile);
             this.tiles[n - 1].tracks.highlight(tile.getNeighbourConnection(this.tiles[n - 1]), this.tiles[n - 1].getNeighbourConnection(tile));
         }
         this.tiles.push(tile);
