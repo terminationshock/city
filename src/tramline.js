@@ -101,11 +101,12 @@ class TramLine {
                 break;
             }
             this.tiles[n - 1].tracks.highlight(this.tiles[n - 1].getNeighbourConnection(this.tiles[n - 2]), this.tiles[n - 1].getNeighbourConnection(nextTile));
-            if (nextTile.equals(this.tiles[0])) {
+            if (nextTile.equals(this.tiles[1]) && this.tiles[n - 1].equals(this.tiles[0])) {
+                this.tiles.pop();
                 this.closed = true;
                 break;
             }
-            if (this.tiles.includes(nextTile)) {
+            if (this.tiles.length > config.Tram.maxLineLength) {
                 this.abort();
                 break;
             }
