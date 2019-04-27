@@ -237,10 +237,12 @@ class Tracks {
     }
 
     highlight(headFrom, headTo) {
-        if (headFrom === null) {
+        if (headFrom === null && headTo === null) {
             for (var head in this.track) {
                 this.newTrack[head] = this.track[head].slice(0);
             }
+        } else if (headTo === null) {
+            this.newTrack[headFrom] = this.track[headFrom].slice(0);
         } else {
             this.newTrack[headFrom] = [headTo];
         }

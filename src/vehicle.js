@@ -374,7 +374,7 @@ class Vehicle {
         }
 
         if (this.tile.isDeadEndOrJunctionOrCrossing()) {
-            if (!(this.isOnNonIntersectingWay() && this.tile.onlySameVehicleType(this))) {
+            if (!(this.isOnNonIntersectingWay() && this.tile.onlySameVehicleType())) {
                 var index = this.tile.getVehicleIndex(this);
                 for (var i = 0; i < index; i++) {
                     if (!this.tile.vehicles[i].isParking() && this.tile.vehicles[i].waitingTime <= config.Vehicle.waitBlocked) {

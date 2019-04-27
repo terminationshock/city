@@ -86,6 +86,10 @@ class Car extends Vehicle {
     }
 
     callbackLeaveParkingLot() {
+        if (!this.tile.onlySameVehicleType()) {
+            return false;
+        }
+
         for (var vehicle of this.tile.vehicles) {
             if (!this.equals(vehicle) && !vehicle.isParking() && vehicle.getHead() === this.getHead()) {
                 return false;

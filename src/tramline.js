@@ -100,7 +100,7 @@ class TramLine {
                 this.abort();
                 break;
             } else if (nextTile === this.NEIGHBOUR_STATUS.MULTIPLE_PATHS) {
-                this.tiles[n - 1].tracks.highlight(null, null);
+                this.tiles[n - 1].tracks.highlight(this.tiles[n - 1].getNeighbourConnection(this.tiles[n - 2]), null);
                 break;
             }
             this.tiles[n - 1].tracks.highlight(this.tiles[n - 1].getNeighbourConnection(this.tiles[n - 2]), this.tiles[n - 1].getNeighbourConnection(nextTile));

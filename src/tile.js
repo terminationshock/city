@@ -476,7 +476,7 @@ class Tile {
         return this.vehicleHashes.indexOf(vehicle.hash);
     }
 
-    onlySameVehicleType(vehicle) {
+    onlySameVehicleType() {
         if (this.vehicles.length > 0) {
             var clazz = getClassOf(this.vehicles[0]);
             for (var i = 1; i < this.vehicles.length; i++) {
