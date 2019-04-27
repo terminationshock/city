@@ -31,6 +31,9 @@ class TramLine {
         if (!heads.includes(headTo)) {
             return false;
         }
+        if (tile.getTrackHeadsFrom(normalizeAngle(headTo + 180)) === null) {
+            return false;
+        }
         return true;
     }
 
@@ -93,7 +96,7 @@ class TramLine {
         while(true) {
             var nextTile = this.getNextUniqueNeighbour();
             n = this.tiles.length;
-            if (nextTile === this.NEIGHBOUR_STATUS.NO_NEIGHBOUR) {
+            if (nextTile === this.NEIGHBOUR_STATUS.NO_NEIGHBOUR || nextTile === null) {
                 this.abort();
                 break;
             } else if (nextTile === this.NEIGHBOUR_STATUS.MULTIPLE_PATHS) {

@@ -82,10 +82,10 @@ class VehicleTest {
     }
 
     testGetNextTurn() {
-        var tile1 = new Tile('r0021', -20, -20);
-        var tile2 = new Tile('r0081', -20, 20);
-        var tile3 = new Tile('r0053', 20, 20);
-        var tile4 = new Tile('r0017', 20, -20);
+        var tile1 = new Tile('r0021', -50, -50);
+        var tile2 = new Tile('r0081', -50, 50);
+        var tile3 = new Tile('r0053', 50, 50);
+        var tile4 = new Tile('r0017', 50, -50);
         var tiles = [this.car.tile, tile1, tile2, tile3, tile4];
         this.car.tile.computeAllNeighbours(tiles);
         this.car.tile.computeStreetNeighboursAndConnections();

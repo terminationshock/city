@@ -370,10 +370,10 @@ class TileTest {
 
     testComputeAllNeighbours() {
         var tile = new Tile('g0000', 0, 0);
-        var tile1 = new Tile('g0000', -20, -20);
-        var tile2 = new Tile('g0000', -20, 20);
-        var tile3 = new Tile('g0000', 20, 20);
-        var tile4 = new Tile('g0000', 20, -20);
+        var tile1 = new Tile('g0000', -50, -50);
+        var tile2 = new Tile('g0000', -50, 50);
+        var tile3 = new Tile('g0000', 50, 50);
+        var tile4 = new Tile('g0000', 50, -50);
         var tiles = [tile, tile1, tile2, tile3, tile4];
 
         tile.computeAllNeighbours(tiles);
@@ -383,10 +383,10 @@ class TileTest {
 
     testComputeStreetNeighboursAndConnections() {
         var tile = new Tile('r0045', 0, 0);
-        var tile1 = new Tile('r0021', -20, -20);
-        var tile2 = new Tile('r0081', -20, 20);
-        var tile3 = new Tile('r0053', 20, 20);
-        var tile4 = new Tile('r0017', 20, -20);
+        var tile1 = new Tile('r0021', -50, -50);
+        var tile2 = new Tile('r0081', -50, 50);
+        var tile3 = new Tile('r0053', 50, 50);
+        var tile4 = new Tile('r0017', 50, -50);
         var tiles = [tile, tile1, tile2, tile3, tile4];
         tile.computeAllNeighbours(tiles);
         tile.computeStreetNeighboursAndConnections();
