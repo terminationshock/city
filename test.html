@@ -16,9 +16,10 @@
     <script src="src/tram.js"></script>
     <script src="test/bezier_test.js"></script>
     <script src="test/util_test.js"></script>
-    <script src="test/vehicle_test.js"></script>
     <script src="test/tile_test.js"></script>
     <script src="test/tracks_test.js"></script>
+    <script src="test/vehicle_test.js"></script>
+    <script src="test/tramline_test.js"></script>
     <style type="text/css">
         #spinner {
             position: absolute;
@@ -31,7 +32,13 @@
             animation: spin 3s linear infinite;
         }
         #result {
-            font: 40px Arial;
+            font: 20px Arial;
+        }
+        table {
+            font-family: Courier New;
+        }
+        td {
+            padding-right: 40px;
         }
         @keyframes spin {
             0% { transform: rotate(0deg); }
@@ -56,8 +63,27 @@
         }
 
         function displayError(error) {
-            var file = error.stack.split('\n')[1].split('\/');
-            displayText(file[file.length-1]);
+            var message = error.message;
+            var stack = error.stack.split('\n');
+            var table = '<table>';
+            for (var line of stack) {
+                if (line.indexOf('@') > 0) {
+                    var functionName = line.split('@')[0];
+                    if (functionName.includes('assertTrue')) {
+                        continue;
+                    }
+                    var fileName = line.split('@')[1];
+                    if (fileName.includes('test.html')) {
+                        break;
+                    }
+                    fileName = fileName.substring(fileName.lastIndexOf('/') + 1);
+                    lineNumber = fileName.split(':')[1];
+                    fileName = fileName.split(':')[0];
+                    table += '<tr><td><b>' + functionName + '</b></td><td>' + fileName + '</td><td>' + lineNumber + '</td></tr>';
+                }
+            }
+            table += '</table>';
+            displayText('<h1>' + message + '</h1>' + table);
         }
 
         function create() {
@@ -67,12 +93,13 @@
                 new UtilTest();
                 new TileTest();
                 new TracksTest();
+                new TramLineTest();
                 new VehicleTest();
             } catch (e) {
                 displayError(e);
                 throw e;
             }
-            displayText('Tests successful');
+            displayText('<h1>Tests successful</h1>');
         }
     </script>
 </body>
