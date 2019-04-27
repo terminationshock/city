@@ -8,11 +8,14 @@
     <script src="src/tracks.js"></script>
     <script src="src/tile.js"></script>
     <script src="src/driver.js"></script>
+    <script src="src/cardriver.js"></script>
+    <script src="src/tramdriver.js"></script>
     <script src="src/bezier.js"></script>
     <script src="src/vehicle.js"></script>
     <script src="src/car.js"></script>
     <script src="src/tram.js"></script>
     <script src="test/bezier_test.js"></script>
+    <script src="test/util_test.js"></script>
     <script src="test/vehicle_test.js"></script>
     <script src="test/tile_test.js"></script>
     <script src="test/tracks_test.js"></script>
@@ -47,25 +50,29 @@
             game.load.json('config', 'config.json');
         }
 
+        function displayText(message) {
+            document.getElementById('spinner').style.display = 'none';
+            document.getElementById('result').innerHTML = message;
+        }
+
         function displayError(error) {
             var file = error.stack.split('\n')[1].split('\/');
-            document.getElementById('spinner').style.display = 'none';
-            document.getElementById('result').innerHTML = file[file.length-1];
+            displayText(file[file.length-1]);
         }
 
         function create() {
             config = game.cache.getJSON('config');
             try {
-                new TracksTest();
-                new TileTest();
                 new BezierCurveTest();
+                new UtilTest();
+                new TileTest();
+                new TracksTest();
                 new VehicleTest();
             } catch (e) {
                 displayError(e);
                 throw e;
             }
-            document.getElementById('spinner').style.display = 'none';
-            document.getElementById('result').innerHTML = 'Tests successful';
+            displayText('Tests successful');
         }
     </script>
 </body>

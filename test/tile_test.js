@@ -21,8 +21,8 @@ class TileTest {
         this.tile_road[81] = new Tile('r0081', 0, 0);
         this.tile_road[85] = new Tile('r0085', 0, 0);
 
-        this.car1 = new Car(this.tile_road[21], 60, [1], 1, null);
-        this.car2 = new Car(this.tile_road[21], 60, [2], 1, null);
+        this.car1 = new Car(this.tile_road[21], 60, [1], 1);
+        this.car2 = new Car(this.tile_road[21], 60, [2], 1);
         this.tram = new Tram(this.tile_road[21], 60, [1], 1, null);
 
         this.testIsGrass();
@@ -40,8 +40,6 @@ class TileTest {
         this.testComputeStreetNeighboursAndConnections();
         this.testIsConnectedTo();
         this.testGetStreetConnections();
-        this.testGetDeltaHead();
-        this.testGetTurnDirection();
         this.testInside();
         this.testCenterAhead();
         this.testGetLane();
@@ -428,30 +426,6 @@ class TileTest {
         assertTrue(this.tile_road[77].getStreetConnections().length === 1);
         assertTrue(this.tile_road[81].getStreetConnections().length === 2);
         assertTrue(this.tile_road[85].getStreetConnections().length === 2);
-    }
-
-    testGetDeltaHead() {
-        assertTrue(getDeltaHead(0, 90) === 90);
-        assertTrue(getDeltaHead(90, 0) === 90);
-        assertTrue(getDeltaHead(0, 180) === 180);
-        assertTrue(getDeltaHead(180, 0) === 180);
-        assertTrue(getDeltaHead(0, 270) === 90);
-        assertTrue(getDeltaHead(270, 0) === 90);
-        assertTrue(getDeltaHead(359, 1) === 2);
-        assertTrue(getDeltaHead(1, 359) === 2);
-        assertTrue(getDeltaHead(1, 0) === 1);
-        assertTrue(getDeltaHead(359, 0) === 1);
-    }
-
-    testGetTurnDirection() {
-        assertTrue(getTurnDirection(0, 90) === 1);
-        assertTrue(getTurnDirection(0, 270) === -1);
-        assertTrue(getTurnDirection(90, 180) === 1);
-        assertTrue(getTurnDirection(90, 0) === -1);
-        assertTrue(getTurnDirection(180, 270) === 1);
-        assertTrue(getTurnDirection(180, 90) === -1);
-        assertTrue(getTurnDirection(270, 0) === 1);
-        assertTrue(getTurnDirection(270, 180) === -1);
     }
 
     testInside() {

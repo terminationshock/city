@@ -1,4 +1,9 @@
 class Tram extends Vehicle {
+    constructor(a, b, c, d, line) {
+        super(a, b, c, d);
+        this.driver = new TramDriver(line);
+    }
+
     start() {
         var intHead = this.getHead();
         var lane = this.tile.getLane(intHead, config.Street.laneDrive);

@@ -14,6 +14,8 @@ cat src/tramline.js >> $js
 cat src/tile.js >> $js
 cat src/map.js >> $js
 cat src/driver.js >> $js
+cat src/cardriver.js >> $js
+cat src/tramdriver.js >> $js
 cat src/bezier.js >> $js
 cat src/vehicle.js >> $js
 cat src/car.js >> $js

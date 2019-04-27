@@ -1,4 +1,9 @@
 class Car extends Vehicle {
+    constructor(...args) {
+        super(...args);
+        this.driver = new CarDriver();
+    }
+
     start() {
         var intHead = this.getHead();
         var lane = this.tile.getLane(intHead, config.Street.lanePark);
