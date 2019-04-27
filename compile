@@ -1,6 +1,6 @@
 #!/bin/bash
 
-js=game.js
+js=dist/game.js
 
 rm $js
 echo "'use strict';" > $js

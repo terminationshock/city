@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <script src="phaser.min.js"></script>
+    <script src="dist/phaser.min.js"></script>
     <script src="src/error.js"></script>
     <script src="src/utils.js"></script>
     <script src="src/tracks.js"></script>
@@ -55,7 +55,7 @@
         var config;
 
         function preload() {
-            game.load.json('config', 'config.json');
+            game.load.json('config', 'dist/config.json');
         }
 
         function displayText(message) {
