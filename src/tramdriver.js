@@ -2,6 +2,7 @@ class TramDriver extends Driver {
     constructor(line) {
         super();
         this.line = line;
+        this.lastLineIndex = 0;
         this.waitingTime = 0;
     }
 
@@ -14,15 +15,19 @@ class TramDriver extends Driver {
         return false;
     }
 
-    decideTurn(tile) {   //TODO                                 
-        var i = this.line.indexOf(tile.hash);
+    decideTurn(tile) {
+        var i = this.line.indexOf(tile.hash, this.lastLineIndex);
         if (i < 0) {
-            return null;
+            i = this.line.indexOf(tile.hash);
+            if (i < 0) {
+                return null;
+            }
         }
         i += 1;
         if (i > this.line.length - 1) {
             i = 0;
         }
+        this.lastLineIndex = i;
         return tile.getNeighbourConnection(this.line[i]);
     }
 };
