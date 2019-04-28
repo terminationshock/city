@@ -63,6 +63,7 @@ class TramLineTest {
         assertTrue(this.line.isAllowed(this.tile0));
         this.line.tiles = [this.tile300];
         assertTrue(!this.line.isAllowed(this.tile0));
+        assertTrue(!this.line.isAllowed(this.tile120));
 
         this.line.tiles = [this.tile240, this.tile0];
         assertTrue(this.line.isAllowed(this.tile60));

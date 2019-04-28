@@ -24,6 +24,9 @@ class TramLine {
         }
 
         var headTo = this.tiles[n - 1].getNeighbourConnection(tile);
+        if (headTo === null) {
+            return false;
+        }
         var heads = this.tiles[n - 1].getTrackHeadsFrom(headFrom);
         if (heads === null) {
             return false;
@@ -98,7 +101,11 @@ class TramLine {
                 this.abort();
                 break;
             } else if (nextTile === this.NEIGHBOUR_STATUS.MULTIPLE_PATHS) {
-                this.tiles[n - 1].tracks.highlight(this.tiles[n - 1].getNeighbourConnection(this.tiles[n - 2]), null);
+                if (this.isAllowed(this.tiles[0])) {
+                    this.closed = true;
+                } else {
+                    this.tiles[n - 1].tracks.highlight(this.tiles[n - 1].getNeighbourConnection(this.tiles[n - 2]), null);
+                }
                 break;
             }
             this.tiles[n - 1].tracks.highlight(this.tiles[n - 1].getNeighbourConnection(this.tiles[n - 2]), this.tiles[n - 1].getNeighbourConnection(nextTile));

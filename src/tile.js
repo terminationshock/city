@@ -310,6 +310,9 @@ class Tile {
         if (typeof tile !== 'string') {
             hash = tile.hash;
         }
+        if (!(hash in this.neighbourConnections)) {
+            return null;
+        }
         return this.neighbourConnections[hash];
     }
 
