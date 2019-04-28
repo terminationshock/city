@@ -16,11 +16,11 @@ class StateTramInfo extends State {
     }
 
     abort(map) {
-        map.showTramClick(-1, -1);
+        map.removeSelectedTram();
     }
 
     finish(map) {
-        this.abort(map);
+        map.showTramClick(-1, -1);
     }
 
     click(x, y, map) {

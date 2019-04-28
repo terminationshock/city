@@ -472,10 +472,10 @@ class Tile {
         for (var vehicle of this.vehicles) {
             if (vehicle.isTram() && vehicle.click(x, y)) {
                 TramLine.show(vehicle.getLine());
-                return true;
+                return vehicle;
             }
         }
-        return false;
+        return null;
     }
 
     getVehicleIndex(vehicle) {

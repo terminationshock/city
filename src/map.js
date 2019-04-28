@@ -9,6 +9,7 @@ class Map {
         this.nRows = 0;
         this.newTrack = [];
         this.newLine = new TramLine();
+        this.selectedVehicle = null;
         this.counterHashMap = {};
         this.tileHover = null;
     }
@@ -184,8 +185,12 @@ class Map {
     showTramClick(x, y) {
         this.tiles.forEach(t => t.abortTrack());
         var clicked = false;
+        this.selectedVehicle = null;
+
         for (var tile of this.tiles) {
-            if (tile.clickVehicle(x, y)) {
+            var vehicle = tile.clickVehicle(x, y);
+            if (vehicle !== null) {
+                this.selectedVehicle = vehicle;
                 clicked = true;
             }
         }
@@ -230,6 +235,14 @@ class Map {
             tiles[0].addVehicle(new Tram(tiles[0], tiles[0].getNeighbourConnection(tiles[1]), tramImages, config.Tram.numTypes, tiles));
             this.drawVehicles();
             this.newTramAbort();
+        }
+    }
+
+    removeSelectedTram() {
+        if (this.selectedVehicle !== null) {
+            this.selectedVehicle.disable();
+            this.selectedVehicle = null;
+            this.showTramClick(-1, -1);
         }
     }
 };
