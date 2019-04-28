@@ -117,23 +117,17 @@ class TramLine {
         }
     }
 
-    static show(tiles, visible) {
-        if (visible) {
-            for (var i = 0; i < tiles.length; i++) {
-                var im1 = i - 1;
-                var ip1 = i + 1;
-                if (im1 < 0) {
-                    im1 = tiles.length - 1;
-                }
-                if (ip1 > tiles.length - 1) {
-                    ip1 = 0;
-                }
-                tiles[i].highlight(tiles[i].getNeighbourConnection(tiles[im1]), tiles[i].getNeighbourConnection(tiles[ip1]));
+    static show(tiles) {
+        for (var i = 0; i < tiles.length; i++) {
+            var im1 = i - 1;
+            var ip1 = i + 1;
+            if (im1 < 0) {
+                im1 = tiles.length - 1;
             }
-        } else {
-            this.tiles.forEach(function(tile) {
-                tile.abortTrack();
-            });
+            if (ip1 > tiles.length - 1) {
+                ip1 = 0;
+            }
+            tiles[i].tracks.highlight(tiles[i].getNeighbourConnection(tiles[im1]), tiles[i].getNeighbourConnection(tiles[ip1]));
         }
     }
 }

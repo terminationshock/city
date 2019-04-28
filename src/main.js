@@ -60,28 +60,31 @@ function update() {
         game.camera.x += 20;
     }
 
-    if (newTrackMode || newStopMode || newTramMode) {
-        if (game.input.mousePointer.leftButton.isDown) {
-            mouseDown = true;
-        }
-        if (game.input.mousePointer.leftButton.isUp && mouseDown) {
-            mouseDown = false;
-            if (newTrackMode) {
-                map.newTrackClick(game.input.mousePointer.worldX, game.input.mousePointer.worldY, false);
-            } else if (newStopMode) {
-                map.newStopClick(game.input.mousePointer.worldX, game.input.mousePointer.worldY, false);
-            } else if (newTramMode) {
-                map.newTramClick(game.input.mousePointer.worldX, game.input.mousePointer.worldY, false, loader.trams);
-            }
+    if (game.input.mousePointer.leftButton.isDown) {
+        mouseDown = true;
+    }
+
+    if (game.input.mousePointer.leftButton.isUp && mouseDown) {
+        mouseDown = false;
+        if (newTrackMode) {
+            map.newTrackClick(game.input.mousePointer.worldX, game.input.mousePointer.worldY, false);
+        } else if (newStopMode) {
+            map.newStopClick(game.input.mousePointer.worldX, game.input.mousePointer.worldY, false);
+        } else if (newTramMode) {
+            map.newTramClick(game.input.mousePointer.worldX, game.input.mousePointer.worldY, false, loader.trams);
         } else {
-            var ok = null;
-            if (newTrackMode) {
-                ok = map.newTrackClick(game.input.mousePointer.worldX, game.input.mousePointer.worldY, true);
-            } else if (newStopMode) {
-                ok = map.newStopClick(game.input.mousePointer.worldX, game.input.mousePointer.worldY, true);
-            } else if (newTramMode) {
-                ok = map.newTramClick(game.input.mousePointer.worldX, game.input.mousePointer.worldY, true, loader.trams);
-            }
+            map.showTramClick(game.input.mousePointer.worldX - game.camera.x, game.input.mousePointer.worldY - game.camera.y);
+        }
+    } else {
+        var ok = null;
+        if (newTrackMode) {
+            ok = map.newTrackClick(game.input.mousePointer.worldX, game.input.mousePointer.worldY, true);
+        } else if (newStopMode) {
+            ok = map.newStopClick(game.input.mousePointer.worldX, game.input.mousePointer.worldY, true);
+        } else if (newTramMode) {
+            ok = map.newTramClick(game.input.mousePointer.worldX, game.input.mousePointer.worldY, true, loader.trams);
+        }
+        if (ok !== null) {
             UI.setCursorOk(ok);
         }
     }

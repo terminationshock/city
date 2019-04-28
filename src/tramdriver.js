@@ -33,6 +33,6 @@ class TramDriver extends Driver {
     }
 
     getLine() {
-        return this.line;
+        return this.tiles;
     }
 };

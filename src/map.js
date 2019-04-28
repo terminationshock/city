@@ -183,6 +183,16 @@ class Map {
         return false;
     }
 
+    showTramClick(x, y) {
+        this.tiles.forEach(t => t.abortTrack());
+        for (var tile of this.tiles) {
+            if (tile.clickVehicle(x, y)) {
+                break;
+            }
+        }
+        this.drawTracks();
+    }
+
     newTrackAbort() {
         if (this.newTrack.length > 0) {
             this.newTrack.forEach(function(tile) {
