@@ -1,7 +1,8 @@
 class TramDriver extends Driver {
-    constructor(line) {
+    constructor(tiles) {
         super();
-        this.line = line;
+        this.tiles = tiles;
+        this.line = tiles.map(x => x.hash);
         this.lastLineIndex = 0;
         this.waitingTime = 0;
     }
@@ -29,5 +30,9 @@ class TramDriver extends Driver {
         }
         this.lastLineIndex = i;
         return tile.getNeighbourConnection(this.line[i]);
+    }
+
+    getLine() {
+        return this.line;
     }
 };

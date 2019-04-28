@@ -474,7 +474,8 @@ class Tile {
 
     clickVehicle(x, y) {
         for (var vehicle of this.vehicles) {
-            if (vehicle.click(x, y)) {
+            if (vehicle.isTram() && vehicle.click(x, y)) {
+                TramLine.show(vehicle.getLine());
                 return true;
             }
         }
@@ -487,9 +488,8 @@ class Tile {
 
     onlySameVehicleType() {
         if (this.vehicles.length > 0) {
-            var clazz = getClassOf(this.vehicles[0]);
             for (var i = 1; i < this.vehicles.length; i++) {
-                if (getClassOf(this.vehicles[i]) !== clazz) {
+                if (this.vehicles[i].isTram() !== this.vehicles[0].isTram()) {
                     return false;
                 }
             }

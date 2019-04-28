@@ -125,6 +125,10 @@ class Vehicle {
         return false;
     }
 
+    getLine() {
+        return this.driver.getLine();
+    }
+
     update() {
         if (this.error) {
             return;

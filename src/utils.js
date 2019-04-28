@@ -17,10 +17,6 @@ function generateRandomId() {
     return id;
 }
 
-function getClassOf(instance) {
-    return instance.constructor.name;
-}
-
 function getTurnDirection(fromHead, toHead) {
     if (0 < toHead - fromHead && toHead - fromHead < 180) {
         return 1;
