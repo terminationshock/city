@@ -21,4 +21,8 @@ class StateDefault extends State {
         }
         return this;
     }
+
+    isClickable() {
+        return true;
+    }
 };

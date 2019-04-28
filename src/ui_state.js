@@ -11,4 +11,8 @@ class State {
 
     hover(x, y, map) {
     }
+
+    isClickable() {
+        return false;
+    }
 };

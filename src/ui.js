@@ -73,31 +73,13 @@ class UI {
         document.getElementById('canvas').classList.add('nok');
     }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-    static setCursorInfo(info) {
-        if (info) {
-            if (mode === MODE_DEFAULT || mode === MODE_TRAM_INFO) {
-                document.getElementById('canvas').classList.add('info');
-            }
-        } else {
-            document.getElementById('canvas').classList.remove('info');
+    static setCursorInfo() {
+        if (state.isClickable()) {
+            document.getElementById('canvas').classList.add('info');
         }
     }
 
-    static setCursorDefault() {
-        document.getElementById('canvas').classList.remove('ok');
-        document.getElementById('canvas').classList.remove('nok');
+    static unsetCursorInfo() {
+        document.getElementById('canvas').classList.remove('info');
     }
 };

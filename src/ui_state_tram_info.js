@@ -26,4 +26,8 @@ class StateTramInfo extends State {
     click(x, y, map) {
         return StateDefault.change().click(x, y, map);
     }
+
+    isClickable() {
+        return true;
+    }
 };

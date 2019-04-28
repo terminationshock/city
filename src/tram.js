@@ -9,14 +9,13 @@ class Tram extends Vehicle {
     }
 
     setCursor() {
-        return;                                                                                 
         if (this.sprite !== null) {
             this.sprite.inputEnabled = true;
             this.sprite.events.onInputOver.add(function() {
-                UI.setCursorInfo(true);
+                UI.setCursorInfo();
             });
             this.sprite.events.onInputOut.add(function() {
-                UI.setCursorInfo(false);
+                UI.unsetCursorInfo();
             });
         }
     }
