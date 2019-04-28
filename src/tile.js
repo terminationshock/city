@@ -38,10 +38,10 @@ class Tile {
         this.hover = new Phaser.Graphics(game, this.imgX, this.imgY);
         this.hover.beginFill(Phaser.Color.hexToRGB(config.Tile.hoverColor));
         this.hover.fillAlpha = 0.5;
-        this.hover.drawPolygon(new Point(config.Tile.width / 2, 0),
-                               new Point(config.Tile.width, config.Tile.height / 2),
-                               new Point(config.Tile.width / 2, config.Tile.height),
-                               new Point(0, config.Tile.height / 2));
+        this.hover.drawPolygon(new Phaser.Point(config.Tile.width / 2, 0),
+                               new Phaser.Point(config.Tile.width, config.Tile.height / 2),
+                               new Phaser.Point(config.Tile.width / 2, config.Tile.height),
+                               new Phaser.Point(0, config.Tile.height / 2));
         this.hover.endFill();
         this.hover.visible = false;
         rowGroupGround.add(this.hover);
@@ -470,6 +470,15 @@ class Tile {
             this.vehicles.splice(index, 1);
             this.vehicleHashes.splice(index, 1);
         }
+    }
+
+    clickVehicle(x, y) {
+        for (var vehicle of this.vehicles) {
+            if (vehicle.click(x, y)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     getVehicleIndex(vehicle) {

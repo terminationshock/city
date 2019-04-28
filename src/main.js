@@ -43,8 +43,8 @@ function create() {
     document.getElementById('button-tram').addEventListener('click', onButtonTram);
     document.getElementById('button-abort').addEventListener('click', onButtonAbort);
     document.getElementById('button-finish').addEventListener('click', onButtonFinish);
-    ui.enableButtons();
-    ui.disableSpinner();
+    UI.enableButtons();
+    UI.disableSpinner();
 }
 
 function update() {
@@ -82,26 +82,26 @@ function update() {
             } else if (newTramMode) {
                 ok = map.newTramClick(game.input.mousePointer.worldX, game.input.mousePointer.worldY, true, loader.trams);
             }
-            ui.setCursorOk(ok);
+            UI.setCursorOk(ok);
         }
     }
 }
 
 function onButtonTrack() {
-    ui.setButtonActive('button-track', true);
-    ui.setCursorOk(false);
+    UI.setButtonActive('button-track', true);
+    UI.setCursorOk(false);
     newTrackMode = true;
 }
 
 function onButtonStop() {
-    ui.setButtonActive('button-stop', false);
-    ui.setCursorOk(false);
+    UI.setButtonActive('button-stop', false);
+    UI.setCursorOk(false);
     newStopMode = true;
 }
 
 function onButtonTram() {
-    ui.setButtonActive('button-tram', true);
-    ui.setCursorOk(false);
+    UI.setButtonActive('button-tram', true);
+    UI.setCursorOk(false);
     newTramMode = true;
 }
 
@@ -111,8 +111,8 @@ function onButtonAbort() {
     } else if (newTramMode) {
         map.newTramAbort();
     }
-    ui.setButtonsInactive();
-    ui.setCursorDefault();
+    UI.setButtonsInactive();
+    UI.setCursorDefault();
     newTrackMode = false;
     newStopMode = false;
     newTramMode = false;
@@ -122,8 +122,8 @@ function onButtonFinish() {
     if (newTrackMode) {
         map.newTrackFinalize();
     }
-    ui.setButtonsInactive();
-    ui.setCursorDefault();
+    UI.setButtonsInactive();
+    UI.setCursorDefault();
     newTrackMode = false;
     newStopMode = false;
     newTramMode = false;

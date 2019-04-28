@@ -107,7 +107,7 @@ class Tracks {
     }
 
     abort() {
-        this.generate([]);
+        this.newTrack = {};
     }
 
     addSingleTrack(negativeHeadFrom, headTo) {

@@ -118,6 +118,13 @@ class Vehicle {
         }
     }
 
+    click(x, y) {
+        if (this.sprite !== null) {
+           return Phaser.Rectangle.containsPoint(this.sprite.getBounds(), new Phaser.Point(x, y));
+        }
+        return false;
+    }
+
     update() {
         if (this.error) {
             return;

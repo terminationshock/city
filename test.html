@@ -5,6 +5,7 @@
     <script src="dist/phaser.min.js"></script>
     <script src="src/error.js"></script>
     <script src="src/utils.js"></script>
+    <script src="src/point.js"></script>
     <script src="src/tracks.js"></script>
     <script src="src/tile.js"></script>
     <script src="src/driver.js"></script>
@@ -85,6 +86,12 @@
             }
             table += '</table>';
             displayText('<h1>' + message + '</h1>' + table);
+        }
+
+        function assertTrue(expression) {
+            if (!expression) {
+                throw new Error('Assertion Error');
+            }
         }
 
         function create() {

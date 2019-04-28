@@ -1,9 +1,3 @@
-function assertTrue(expression) {
-    if (!expression) {
-        throw new Error('Assertion Error');
-    }
-}
-
 function convertInt(input) {
     return parseInt(input, 10);
 }
@@ -93,13 +87,3 @@ function linesAreEqual(line1, line2) {
     }
     return true;
 }
-
-class Point {
-    constructor(x, y) {
-        this.x = x;
-        this.y = y;
-    }
-    equals(x, y) {
-        return this.x === x && this.y === y;
-    }
-};

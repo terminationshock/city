@@ -6,6 +6,7 @@ rm $js
 echo "'use strict';" > $js
 cat src/error.js >> $js
 cat src/utils.js >> $js
+cat src/point.js >> $js
 cat src/loader.js >> $js
 cat src/trees.js >> $js
 cat src/tracks.js >> $js

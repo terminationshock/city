@@ -32,19 +32,19 @@ class TramStop {
                 var ey = -Math.cos((180 - head) * Math.PI / 180) * config.Stop.width;
 
                 this.canvas.beginFill(Phaser.Color.hexToRGB(config.Stop.color1));
-                var p1 = new Point(p.x + ex - dx, p.y + 1 + ey - dy);
-                var p2 = new Point(p.x + ex + dx, p.y + 1 + ey + dy);
-                var p3 = new Point(p.x - ex + dx, p.y + 1 - ey + dy);
-                var p4 = new Point(p.x - ex - dx, p.y + 1 - ey - dy);
+                var p1 = new Phaser.Point(p.x + ex - dx, p.y + 1 + ey - dy);
+                var p2 = new Phaser.Point(p.x + ex + dx, p.y + 1 + ey + dy);
+                var p3 = new Phaser.Point(p.x - ex + dx, p.y + 1 - ey + dy);
+                var p4 = new Phaser.Point(p.x - ex - dx, p.y + 1 - ey - dy);
 
                 this.canvas.drawPolygon([p1, p2, p3, p4]);
                 this.canvas.endFill();
 
                 this.canvas.beginFill(Phaser.Color.hexToRGB(config.Stop.color2));
-                p1 = new Point(p.x + ex - dx, p.y - 1 + ey - dy);
-                p2 = new Point(p.x + ex + dx, p.y - 1 + ey + dy);
-                p3 = new Point(p.x - ex + dx, p.y - 1 - ey + dy);
-                p4 = new Point(p.x - ex - dx, p.y - 1 - ey - dy);
+                p1 = new Phaser.Point(p.x + ex - dx, p.y - 1 + ey - dy);
+                p2 = new Phaser.Point(p.x + ex + dx, p.y - 1 + ey + dy);
+                p3 = new Phaser.Point(p.x - ex + dx, p.y - 1 - ey + dy);
+                p4 = new Phaser.Point(p.x - ex - dx, p.y - 1 - ey - dy);
 
                 this.canvas.drawPolygon([p1, p2, p3, p4]);
                 this.canvas.endFill();

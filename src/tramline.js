@@ -116,4 +116,16 @@ class TramLine {
             this.tiles.push(nextTile);
         }
     }
+
+    static show(tiles, visible) {
+        if (visible) {
+            for (var i = 1; i < tiles.length; i++) {
+                
+            }
+        } else {
+            this.tiles.forEach(function(tile) {
+                tile.abortTrack();
+            });
+        }
+    }
 }
