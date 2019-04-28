@@ -55,6 +55,7 @@ class Vehicle {
             this.updateSprite(this.x, this.y, this.getHead());
             group.add(this.sprite);
             this.createBounds();
+            this.setCursor();
         }
     }
 

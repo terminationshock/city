@@ -40,6 +40,16 @@ class UI {
         }
     }
 
+    static setCursorInfo(info) {
+        if (info) {
+            if (mode === MODE_DEFAULT) {
+                document.getElementById('canvas').classList.add('info');
+            }
+        } else {
+            document.getElementById('canvas').classList.remove('info');
+        }
+    }
+
     static setCursorDefault() {
         document.getElementById('canvas').classList.remove('ok');
         document.getElementById('canvas').classList.remove('nok');

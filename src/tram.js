@@ -8,6 +8,18 @@ class Tram extends Vehicle {
         return true;
     }
 
+    setCursor() {
+        if (this.sprite !== null) {
+            this.sprite.inputEnabled = true;
+            this.sprite.events.onInputOver.add(function() {
+                UI.setCursorInfo(true);
+            });
+            this.sprite.events.onInputOut.add(function() {
+                UI.setCursorInfo(false);
+            });
+        }
+    }
+
     start() {
         var intHead = this.getHead();
         var lane = this.tile.getLane(intHead, config.Street.laneDrive);

@@ -3,10 +3,13 @@ var loader = new Loader();
 var map = new Map();
 var config;
 var cursors;
-var newTrackMode = false;
-var newStopMode = false;
-var newTramMode = false;
+
 var mouseDown = false;
+const MODE_DEFAULT = 0;
+const MODE_TRACK = 1;
+const MODE_STOP = 2;
+const MODE_TRAM = 3;
+var mode = MODE_DEFAULT;
 
 function loadConfig(progress, key, success, totalLoadedFile, totalFiles) {
     if (key === 'config') {
@@ -66,23 +69,32 @@ function update() {
 
     if (game.input.mousePointer.leftButton.isUp && mouseDown) {
         mouseDown = false;
-        if (newTrackMode) {
-            map.newTrackClick(game.input.mousePointer.worldX, game.input.mousePointer.worldY, false);
-        } else if (newStopMode) {
-            map.newStopClick(game.input.mousePointer.worldX, game.input.mousePointer.worldY, false);
-        } else if (newTramMode) {
-            map.newTramClick(game.input.mousePointer.worldX, game.input.mousePointer.worldY, false, loader.trams);
-        } else {
-            map.showTramClick(game.input.mousePointer.worldX - game.camera.x, game.input.mousePointer.worldY - game.camera.y);
+        switch(mode) {
+            case MODE_DEFAULT:
+                map.showTramClick(game.input.mousePointer.worldX - game.camera.x, game.input.mousePointer.worldY - game.camera.y);
+                break;
+            case MODE_TRACK:
+                map.newTrackClick(game.input.mousePointer.worldX, game.input.mousePointer.worldY, false);
+                break;
+            case MODE_STOP:
+                map.newStopClick(game.input.mousePointer.worldX, game.input.mousePointer.worldY, false);
+                break;
+            case MODE_TRAM:
+                map.newTramClick(game.input.mousePointer.worldX, game.input.mousePointer.worldY, false, loader.trams);
+                break;
         }
     } else {
         var ok = null;
-        if (newTrackMode) {
-            ok = map.newTrackClick(game.input.mousePointer.worldX, game.input.mousePointer.worldY, true);
-        } else if (newStopMode) {
-            ok = map.newStopClick(game.input.mousePointer.worldX, game.input.mousePointer.worldY, true);
-        } else if (newTramMode) {
-            ok = map.newTramClick(game.input.mousePointer.worldX, game.input.mousePointer.worldY, true, loader.trams);
+        switch(mode) {
+            case MODE_TRACK:
+                ok = map.newTrackClick(game.input.mousePointer.worldX, game.input.mousePointer.worldY, true);
+                break;
+            case MODE_STOP:
+                ok = map.newStopClick(game.input.mousePointer.worldX, game.input.mousePointer.worldY, true);
+                break;
+            case MODE_TRAM:
+                ok = map.newTramClick(game.input.mousePointer.worldX, game.input.mousePointer.worldY, true, loader.trams);
+                break;
         }
         if (ok !== null) {
             UI.setCursorOk(ok);
@@ -93,41 +105,40 @@ function update() {
 function onButtonTrack() {
     UI.setButtonActive('button-track', true);
     UI.setCursorOk(false);
-    newTrackMode = true;
+    mode = MODE_TRACK;
 }
 
 function onButtonStop() {
     UI.setButtonActive('button-stop', false);
     UI.setCursorOk(false);
-    newStopMode = true;
+    mode = MODE_STOP;
 }
 
 function onButtonTram() {
     UI.setButtonActive('button-tram', true);
     UI.setCursorOk(false);
-    newTramMode = true;
+    mode = MODE_TRAM;
 }
 
 function onButtonAbort() {
-    if (newTrackMode) {
-        map.newTrackAbort();
-    } else if (newTramMode) {
-        map.newTramAbort();
+    switch(mode) {
+        case MODE_TRACK:
+            map.newTrackAbort();
+            break;
+        case MODE_TRAM:
+            map.newTramAbort();
+            break;
     }
     UI.setButtonsInactive();
     UI.setCursorDefault();
-    newTrackMode = false;
-    newStopMode = false;
-    newTramMode = false;
+    mode = MODE_DEFAULT;
 }
 
 function onButtonFinish() {
-    if (newTrackMode) {
+    if (mode === MODE_TRACK) {
         map.newTrackFinalize();
     }
     UI.setButtonsInactive();
     UI.setCursorDefault();
-    newTrackMode = false;
-    newStopMode = false;
-    newTramMode = false;
+    mode = MODE_DEFAULT;
 }

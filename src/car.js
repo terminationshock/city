@@ -8,6 +8,9 @@ class Car extends Vehicle {
         return false;
     }
 
+    setCursor() {
+    }
+
     start() {
         var intHead = this.getHead();
         var lane = this.tile.getLane(intHead, config.Street.lanePark);
