@@ -9,6 +9,7 @@ class Tram extends Vehicle {
     }
 
     setCursor() {
+        return;                                                                                 
         if (this.sprite !== null) {
             this.sprite.inputEnabled = true;
             this.sprite.events.onInputOver.add(function() {

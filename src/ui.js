@@ -1,48 +1,94 @@
 class UI {
-    static disableButtons() {
-        document.getElementById('button-track').classList.add('button-disabled');
-        document.getElementById('button-stop').classList.add('button-disabled');
-        document.getElementById('button-tram').classList.add('button-disabled');
+    static disableSpinner() {
+        document.getElementById('spinner').style.display = 'none';
     }
 
-    static enableButtons() {
-        document.getElementById('button-track').classList.remove('button-disabled');
-        document.getElementById('button-stop').classList.remove('button-disabled');
-        document.getElementById('button-tram').classList.remove('button-disabled');
-    }
-
-    static setButtonActive(id, showAbort) {
-        UI.disableButtons();
-        document.getElementById(id).classList.remove('button-disabled');
-        document.getElementById(id).classList.add('button-active');
-        document.getElementById('button-finish').classList.remove('button-disabled');
-        if (showAbort) {
-            document.getElementById('button-abort').classList.remove('button-disabled');
-        }
-    }
-
-    static setButtonsInactive() {
-        document.getElementById('button-track').classList.remove('button-active');
-        document.getElementById('button-stop').classList.remove('button-active');
-        document.getElementById('button-tram').classList.remove('button-active');
-        document.getElementById('button-abort').classList.add('button-disabled');
-        document.getElementById('button-finish').classList.add('button-disabled');
-        UI.enableButtons();
-    }
-
-    static setCursorOk(ok) {
-        if (ok) {
-            document.getElementById('canvas').classList.remove('nok');
-            document.getElementById('canvas').classList.add('ok');
+    static buttonNewTrack(visible, active) {
+        if (visible) {
+            document.getElementById('button-track').classList.remove('button-disabled');
         } else {
-            document.getElementById('canvas').classList.remove('ok');
-            document.getElementById('canvas').classList.add('nok');
+            document.getElementById('button-track').classList.add('button-disabled');
+        }
+        if (active) {
+            document.getElementById('button-track').classList.add('button-active');
+        } else {
+            document.getElementById('button-track').classList.remove('button-active');
         }
     }
+
+    static buttonNewStop(visible, active) {
+        if (visible) {
+            document.getElementById('button-stop').classList.remove('button-disabled');
+        } else {
+            document.getElementById('button-stop').classList.add('button-disabled');
+        }
+        if (active) {
+            document.getElementById('button-stop').classList.add('button-active');
+        } else {
+            document.getElementById('button-stop').classList.remove('button-active');
+        }
+    }
+
+    static buttonNewTram(visible, active) {
+        if (visible) {
+            document.getElementById('button-tram').classList.remove('button-disabled');
+        } else {
+            document.getElementById('button-tram').classList.add('button-disabled');
+        }
+        if (active) {
+            document.getElementById('button-tram').classList.add('button-active');
+        } else {
+            document.getElementById('button-tram').classList.remove('button-active');
+        }
+    }
+
+    static buttonAbort(visible) {
+        if (visible) {
+            document.getElementById('button-abort').classList.remove('button-disabled');
+        } else {
+            document.getElementById('button-abort').classList.add('button-disabled');
+        }
+    }
+
+    static buttonFinish(visible) {
+        if (visible) {
+            document.getElementById('button-finish').classList.remove('button-disabled');
+        } else {
+            document.getElementById('button-finish').classList.add('button-disabled');
+        }
+    }
+
+    static setCursorDefault() {
+        document.getElementById('canvas').classList.remove('ok');
+        document.getElementById('canvas').classList.remove('nok');
+    }
+
+    static setCursorOk() {
+        document.getElementById('canvas').classList.add('ok');
+        document.getElementById('canvas').classList.remove('nok');
+    }
+
+    static setCursorNok() {
+        document.getElementById('canvas').classList.remove('ok');
+        document.getElementById('canvas').classList.add('nok');
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     static setCursorInfo(info) {
         if (info) {
-            if (mode === MODE_DEFAULT) {
+            if (mode === MODE_DEFAULT || mode === MODE_TRAM_INFO) {
                 document.getElementById('canvas').classList.add('info');
             }
         } else {
@@ -53,9 +99,5 @@ class UI {
     static setCursorDefault() {
         document.getElementById('canvas').classList.remove('ok');
         document.getElementById('canvas').classList.remove('nok');
-    }
-
-    static disableSpinner() {
-        document.getElementById('spinner').style.display = 'none';
     }
 };

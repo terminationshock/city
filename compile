@@ -22,4 +22,10 @@ cat src/vehicle.js >> $js
 cat src/car.js >> $js
 cat src/tram.js >> $js
 cat src/ui.js >> $js
+cat src/ui_state.js >> $js
+cat src/ui_state_default.js >> $js
+cat src/ui_state_new_track.js >> $js
+cat src/ui_state_new_stop.js >> $js
+cat src/ui_state_new_tram.js >> $js
+cat src/ui_state_tram_info.js >> $js
 cat src/main.js >> $js

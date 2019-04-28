@@ -1,15 +1,10 @@
 var game = new Phaser.Game('100', '100', Phaser.CANVAS, 'canvas', { preload: preload, create: create, update: update });
 var loader = new Loader();
 var map = new Map();
+var state = StateDefault.change();
 var config;
 var cursors;
-
 var mouseDown = false;
-const MODE_DEFAULT = 0;
-const MODE_TRACK = 1;
-const MODE_STOP = 2;
-const MODE_TRAM = 3;
-var mode = MODE_DEFAULT;
 
 function loadConfig(progress, key, success, totalLoadedFile, totalFiles) {
     if (key === 'config') {
@@ -26,6 +21,11 @@ function preload() {
     game.load.onFileComplete.add(loadConfig, this);
     game.load.text('world', 'world.dat');
     game.load.json('config', 'config.json');
+}
+
+function updateUI() {
+    state.setButtons();
+    state.setCursor();
 }
 
 function create() {
@@ -46,8 +46,40 @@ function create() {
     document.getElementById('button-tram').addEventListener('click', onButtonTram);
     document.getElementById('button-abort').addEventListener('click', onButtonAbort);
     document.getElementById('button-finish').addEventListener('click', onButtonFinish);
-    UI.enableButtons();
     UI.disableSpinner();
+    updateUI();
+}
+
+function onButtonTrack() {
+    state = StateNewTrack.change();
+    updateUI();
+}
+
+function onButtonStop() {
+    state = StateNewStop.change();
+    updateUI();
+}
+
+function onButtonTram() {
+    state = StateNewTram.change();
+    updateUI();
+}
+
+function onTramInfo() {
+    state = StateTramInfo.change();
+    updateUI();
+}
+
+function onButtonAbort() {
+    state.abort(map);
+    state = StateDefault.change();
+    updateUI();
+}
+
+function onButtonFinish() {
+    state.finish(map);
+    state = StateDefault.change();
+    updateUI();
 }
 
 function update() {
@@ -69,76 +101,9 @@ function update() {
 
     if (game.input.mousePointer.leftButton.isUp && mouseDown) {
         mouseDown = false;
-        switch(mode) {
-            case MODE_DEFAULT:
-                map.showTramClick(game.input.mousePointer.worldX - game.camera.x, game.input.mousePointer.worldY - game.camera.y);
-                break;
-            case MODE_TRACK:
-                map.newTrackClick(game.input.mousePointer.worldX, game.input.mousePointer.worldY, false);
-                break;
-            case MODE_STOP:
-                map.newStopClick(game.input.mousePointer.worldX, game.input.mousePointer.worldY, false);
-                break;
-            case MODE_TRAM:
-                map.newTramClick(game.input.mousePointer.worldX, game.input.mousePointer.worldY, false, loader.trams);
-                break;
-        }
+        state = state.click(game.input.mousePointer.worldX, game.input.mousePointer.worldY, map);
+        updateUI();
     } else {
-        var ok = null;
-        switch(mode) {
-            case MODE_TRACK:
-                ok = map.newTrackClick(game.input.mousePointer.worldX, game.input.mousePointer.worldY, true);
-                break;
-            case MODE_STOP:
-                ok = map.newStopClick(game.input.mousePointer.worldX, game.input.mousePointer.worldY, true);
-                break;
-            case MODE_TRAM:
-                ok = map.newTramClick(game.input.mousePointer.worldX, game.input.mousePointer.worldY, true, loader.trams);
-                break;
-        }
-        if (ok !== null) {
-            UI.setCursorOk(ok);
-        }
+        state.hover(game.input.mousePointer.worldX, game.input.mousePointer.worldY, map);
     }
-}
-
-function onButtonTrack() {
-    UI.setButtonActive('button-track', true);
-    UI.setCursorOk(false);
-    mode = MODE_TRACK;
-}
-
-function onButtonStop() {
-    UI.setButtonActive('button-stop', false);
-    UI.setCursorOk(false);
-    mode = MODE_STOP;
-}
-
-function onButtonTram() {
-    UI.setButtonActive('button-tram', true);
-    UI.setCursorOk(false);
-    mode = MODE_TRAM;
-}
-
-function onButtonAbort() {
-    switch(mode) {
-        case MODE_TRACK:
-            map.newTrackAbort();
-            break;
-        case MODE_TRAM:
-            map.newTramAbort();
-            break;
-    }
-    UI.setButtonsInactive();
-    UI.setCursorDefault();
-    mode = MODE_DEFAULT;
-}
-
-function onButtonFinish() {
-    if (mode === MODE_TRACK) {
-        map.newTrackFinalize();
-    }
-    UI.setButtonsInactive();
-    UI.setCursorDefault();
-    mode = MODE_DEFAULT;
 }

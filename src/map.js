@@ -183,12 +183,14 @@ class Map {
 
     showTramClick(x, y) {
         this.tiles.forEach(t => t.abortTrack());
+        var clicked = false;
         for (var tile of this.tiles) {
             if (tile.clickVehicle(x, y)) {
-                break;
+                clicked = true;
             }
         }
         this.drawTracks();
+        return clicked;
     }
 
     newTrackAbort() {
