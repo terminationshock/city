@@ -101,12 +101,16 @@ class Map {
         this.masterGroup.sort('yz');
     }
 
+    disableTileHover() {
+        if (this.tileHover !== null) {
+            this.tileHover.setHover(false);
+        }
+    }
+
     newTrackClick(x, y, hover) {
         for (var tile of this.tiles) {
             if (tile.inside(x, y)) {
-                if (this.tileHover !== null) {
-                    this.tileHover.setHover(false);
-                }
+                this.disableTileHover();
                 if (!tile.isHouse() && (this.newTrack.length === 0 || this.newTrack[this.newTrack.length - 1].isTrackNeighbourOf(tile))) {
                     if (hover) {
                         this.tileHover = tile;
@@ -134,9 +138,7 @@ class Map {
     newStopClick(x, y, hover) {
         for (var tile of this.tiles) {
             if (tile.inside(x, y)) {
-                if (this.tileHover !== null) {
-                    this.tileHover.setHover(false);
-                }
+                this.disableTileHover();
                 if (tile.hasTracks() && tile.isStraightTrack() && (tile.isStraight() || tile.isGrass()) && !tile.hasStop()) {
                     if (hover) {
                         this.tileHover = tile;
@@ -157,9 +159,7 @@ class Map {
     newTramClick(x, y, hover, tramImages) {
         for (var tile of this.tiles) {
             if (tile.inside(x, y)) {
-                if (this.tileHover !== null) {
-                    this.tileHover.setHover(false);
-                }
+                this.disableTileHover();
                 if (tile.hasTracks() && ((this.newLine.isEmpty() && tile.isStraightTrack()) || (!this.newLine.isEmpty() && this.newLine.isAllowed(tile)))) {
                     if (hover) {
                         this.tileHover = tile;
@@ -197,6 +197,7 @@ class Map {
             this.drawTracks();
             this.newTrack = [];
         }
+        this.disableTileHover();
     }
 
     newTramAbort() {
@@ -204,6 +205,7 @@ class Map {
             this.newLine.abort();
             this.drawTracks();
         }
+        this.disableTileHover();
     }
 
     newTrackFinalize() {
@@ -217,6 +219,7 @@ class Map {
             this.drawTracks();
             this.newTrack = [];
         }
+        this.disableTileHover();
     }
 
     newTramFinalize(tramImages) {
