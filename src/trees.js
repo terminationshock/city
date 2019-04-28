@@ -37,14 +37,10 @@ class Trees {
         for (var tree of this.trees) {
             this.sprites.push(game.add.image(tree.imgX, tree.imgY, tree.tree));
         }
-        this.sprites.forEach(function(sprite) {
-            group.add(sprite);
-        });
+        this.sprites.forEach(sprite => group.add(sprite));
     }
 
     remove() {
-        this.sprites.forEach(function(sprite) {
-            sprite.destroy();
-        });
+        this.sprites.forEach(sprite => sprite.destroy());
     }
 };

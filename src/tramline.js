@@ -65,9 +65,7 @@ class TramLine {
     }
 
     abort() {
-        this.tiles.forEach(function(tile) {
-            tile.abortTrack();
-        });
+        this.tiles.forEach(tile => tile.abortTrack());
         this.tiles = [];
         this.closed = false;
     }

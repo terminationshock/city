@@ -11,9 +11,7 @@ class TramLineTest {
         this.tiles.forEach(function(tile, index, tiles) {
             tile.computeAllNeighbours(tiles);
         });
-        this.tiles.forEach(function(tile) {
-            tile.computeStreetNeighboursAndConnections();
-        });
+        this.tiles.forEach(tile => tile.computeStreetNeighboursAndConnections());
 
         this.line = new TramLine();
         this.line.abortCalled = false;
@@ -34,9 +32,7 @@ class TramLineTest {
         this.tile240.tracks.track[240] = [60];
         this.tile300.tracks.track[120] = [300];
 
-        this.tiles.forEach(function(tile) {
-            tile.tracks.finalize();
-        });
+        this.tiles.forEach(tile => tile.tracks.finalize());
     }
 
     configuration2() {
@@ -47,9 +43,7 @@ class TramLineTest {
         this.tile240.tracks.track[240] = [60];
         this.tile300.tracks.track[120] = [120];
 
-        this.tiles.forEach(function(tile) {
-            tile.tracks.finalize();
-        });
+        this.tiles.forEach(tile => tile.tracks.finalize());
     }
 
     testIsAllowed() {

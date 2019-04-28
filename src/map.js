@@ -97,9 +97,7 @@ class Map {
     }
 
     update() {
-        this.tiles.forEach(function(tile) {
-            tile.update();
-        });
+        this.tiles.forEach(tile => tile.update());
         this.masterGroup.sort('yz');
     }
 
@@ -195,9 +193,7 @@ class Map {
 
     newTrackAbort() {
         if (this.newTrack.length > 0) {
-            this.newTrack.forEach(function(tile) {
-                tile.abortTrack();
-            });
+            this.newTrack.forEach(tile => tile.abortTrack());
             this.drawTracks();
             this.newTrack = [];
         }
@@ -217,9 +213,7 @@ class Map {
         }
 
         if (this.newTrack.length > 0) {
-            this.newTrack.forEach(function(tile) {
-                tile.finalizeTrack();
-            });
+            this.newTrack.forEach(tile => tile.finalizeTrack());
             this.drawTracks();
             this.newTrack = [];
         }

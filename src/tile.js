@@ -55,9 +55,7 @@ class Tile {
     }
 
     drawVehicles(group) {
-        this.vehicles.forEach(function(vehicle) {
-            vehicle.draw(group);
-        });
+        this.vehicles.forEach(vehicle => vehicle.draw(group));
     }
 
     drawStop(group) {
@@ -82,9 +80,7 @@ class Tile {
     }
 
     update() {
-        this.vehicles.forEach(function(vehicle) {
-            vehicle.update();
-        });
+        this.vehicles.forEach(vehicle => vehicle.update());
     }
 
     isGrass() {
