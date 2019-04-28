@@ -244,7 +244,11 @@ class Tracks {
         } else if (headTo === null) {
             this.newTrack[headFrom] = this.track[headFrom].slice(0);
         } else {
-            this.newTrack[headFrom] = [headTo];
+            var values = [headTo];
+            if (headFrom in this.newTrack) {
+                values = values.concat(this.newTrack[headFrom]);
+            }
+            this.newTrack[headFrom] = values;
         }
     }
 };
