@@ -24,7 +24,7 @@ class SpriteMock {
 
 class VehicleTest {
     constructor() {
-        this.tile = new Tile('r0045', 0, 0);
+        this.tile = new Tile('r0045', '0', 0, 0);
         this.car = new Car(this.tile, 60, ['colorId'], 1);
         this.car.typeId = 1;
         this.car.driver = new DriverMock();
@@ -82,10 +82,10 @@ class VehicleTest {
     }
 
     testGetNextTurn() {
-        var tile1 = new Tile('r0021', -50, -50);
-        var tile2 = new Tile('r0081', -50, 50);
-        var tile3 = new Tile('r0053', 50, 50);
-        var tile4 = new Tile('r0017', 50, -50);
+        var tile1 = new Tile('r0021', '1', -50, -50);
+        var tile2 = new Tile('r0081', '2', -50, 50);
+        var tile3 = new Tile('r0053', '3', 50, 50);
+        var tile4 = new Tile('r0017', '4', 50, -50);
         var tiles = [this.car.tile, tile1, tile2, tile3, tile4];
         this.car.tile.computeAllNeighbours(tiles);
         this.car.tile.computeStreetNeighboursAndConnections();
@@ -146,7 +146,7 @@ class VehicleTest {
     }
 
     testParkNow() {
-        this.car.tile = new Tile('r0017', 0, 0);
+        this.car.tile = new Tile('r0017', '5', 0, 0);
         this.car.head = 60;
         this.car.queue = [this.car.callbackLeaveParkingLot, this.car.callbackDrive];
         this.car.parkNow();

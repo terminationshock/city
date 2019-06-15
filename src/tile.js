@@ -1,7 +1,7 @@
 class Tile {
-    constructor(fileId, x, y) {
-        this.hash = generateRandomId();
+    constructor(fileId, hash, x, y) {
         this.fileId = fileId;
+        this.hash = hash;
         this.imgX = x;
         this.imgY = y;
         this.x = this.imgX + Math.floor(config.Tile.width / 2);

@@ -1,10 +1,10 @@
 class TramLineTest {
     constructor() {
-        this.tile0 = new Tile('r0045', 0, 0);
-        this.tile60 = new Tile('r0017', 50, -50);
-        this.tile120 = new Tile('r0053', 50, 50);
-        this.tile240 = new Tile('r0081', -50, 50);
-        this.tile300 = new Tile('r0021', -50, -50);
+        this.tile0 = new Tile('r0045', '0', 0, 0);
+        this.tile60 = new Tile('r0017', '1', 50, -50);
+        this.tile120 = new Tile('r0053', '2', 50, 50);
+        this.tile240 = new Tile('r0081', '3', -50, 50);
+        this.tile300 = new Tile('r0021', '4', -50, -50);
 
         this.tiles = [this.tile0, this.tile60, this.tile120, this.tile240, this.tile300];
 

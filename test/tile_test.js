@@ -1,25 +1,25 @@
 class TileTest {
     constructor() {
-        this.tile_grass = new Tile('g0000', 0, 0);
-        this.tile_house = new Tile('h0001', 0, 0);
+        this.tile_grass = new Tile('g0000', '00', 0, 0);
+        this.tile_house = new Tile('h0001', '01', 0, 0);
         this.tile_road = {};
-        this.tile_road[1] = new Tile('r0001', 0, 0);
-        this.tile_road[5] = new Tile('r0005', 0, 0);
-        this.tile_road[9] = new Tile('r0009', 0, 0);
-        this.tile_road[13] = new Tile('r0013', 0, 0);
-        this.tile_road[17] = new Tile('r0017', 0, 0);
-        this.tile_road[21] = new Tile('r0021', 0, 0);
-        this.tile_road[45] = new Tile('r0045', 0, 0);
-        this.tile_road[49] = new Tile('r0049', 0, 0);
-        this.tile_road[53] = new Tile('r0053', 0, 0);
-        this.tile_road[57] = new Tile('r0057', 0, 0);
-        this.tile_road[61] = new Tile('r0061', 0, 0);
-        this.tile_road[65] = new Tile('r0065', 0, 0);
-        this.tile_road[69] = new Tile('r0069', 0, 0);
-        this.tile_road[73] = new Tile('r0073', 0, 0);
-        this.tile_road[77] = new Tile('r0077', 0, 0);
-        this.tile_road[81] = new Tile('r0081', 0, 0);
-        this.tile_road[85] = new Tile('r0085', 0, 0);
+        this.tile_road[1] = new Tile('r0001', '02', 0, 0);
+        this.tile_road[5] = new Tile('r0005', '03', 0, 0);
+        this.tile_road[9] = new Tile('r0009', '04', 0, 0);
+        this.tile_road[13] = new Tile('r0013', '05', 0, 0);
+        this.tile_road[17] = new Tile('r0017', '06', 0, 0);
+        this.tile_road[21] = new Tile('r0021', '07', 0, 0);
+        this.tile_road[45] = new Tile('r0045', '08', 0, 0);
+        this.tile_road[49] = new Tile('r0049', '09', 0, 0);
+        this.tile_road[53] = new Tile('r0053', '10', 0, 0);
+        this.tile_road[57] = new Tile('r0057', '11', 0, 0);
+        this.tile_road[61] = new Tile('r0061', '12', 0, 0);
+        this.tile_road[65] = new Tile('r0065', '13', 0, 0);
+        this.tile_road[69] = new Tile('r0069', '14', 0, 0);
+        this.tile_road[73] = new Tile('r0073', '15', 0, 0);
+        this.tile_road[77] = new Tile('r0077', '16', 0, 0);
+        this.tile_road[81] = new Tile('r0081', '17', 0, 0);
+        this.tile_road[85] = new Tile('r0085', '18', 0, 0);
 
         this.car1 = new Car(this.tile_road[21], 60, [1], 1);
         this.car2 = new Car(this.tile_road[21], 60, [2], 1);
@@ -369,11 +369,11 @@ class TileTest {
     }
 
     testComputeAllNeighbours() {
-        var tile = new Tile('g0000', 0, 0);
-        var tile1 = new Tile('g0000', -50, -50);
-        var tile2 = new Tile('g0000', -50, 50);
-        var tile3 = new Tile('g0000', 50, 50);
-        var tile4 = new Tile('g0000', 50, -50);
+        var tile = new Tile('g0000', '0', 0, 0);
+        var tile1 = new Tile('g0000', '1', -50, -50);
+        var tile2 = new Tile('g0000', '2', -50, 50);
+        var tile3 = new Tile('g0000', '3', 50, 50);
+        var tile4 = new Tile('g0000', '4', 50, -50);
         var tiles = [tile, tile1, tile2, tile3, tile4];
 
         tile.computeAllNeighbours(tiles);
@@ -382,11 +382,11 @@ class TileTest {
     }
 
     testComputeStreetNeighboursAndConnections() {
-        var tile = new Tile('r0045', 0, 0);
-        var tile1 = new Tile('r0021', -50, -50);
-        var tile2 = new Tile('r0081', -50, 50);
-        var tile3 = new Tile('r0053', 50, 50);
-        var tile4 = new Tile('r0017', 50, -50);
+        var tile = new Tile('r0045', '0', 0, 0);
+        var tile1 = new Tile('r0021', '1', -50, -50);
+        var tile2 = new Tile('r0081', '2', -50, 50);
+        var tile3 = new Tile('r0053', '3', 50, 50);
+        var tile4 = new Tile('r0017', '4', 50, -50);
         var tiles = [tile, tile1, tile2, tile3, tile4];
         tile.computeAllNeighbours(tiles);
         tile.computeStreetNeighboursAndConnections();

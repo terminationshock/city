@@ -10,7 +10,6 @@ class Map {
         this.newTrack = [];
         this.newLine = new TramLine();
         this.selectedVehicle = null;
-        this.counterHashMap = {};
         this.tileHover = null;
     }
 
@@ -40,8 +39,7 @@ class Map {
                     if (tileCode.length > 0) {
                         var counter = tileCode.substring(0, 4);
                         var fileId = tileCode.substring(4);
-                        var tile = new Tile(fileId, xoff + 2 * x * config.Tile.dx, (y - 1) * config.Tile.dy);
-                        this.counterHashMap[counter] = tile.hash;
+                        var tile = new Tile(fileId, counter, xoff + 2 * x * config.Tile.dx, (y - 1) * config.Tile.dy);
                         this.tiles.push(tile);
                         this.tileRowId.push(this.nRows - 1);
                     }
