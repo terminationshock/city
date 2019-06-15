@@ -21,6 +21,8 @@ function preload() {
     game.load.onFileComplete.add(loadConfig, this);
     game.load.text('world', 'world.dat');
     game.load.text('tracks', 'tracks.dat');
+    game.load.text('stops', 'stops.dat');
+    game.load.text('trams', 'trams.dat');
     game.load.json('config', 'config.json');
 }
 
@@ -34,8 +36,11 @@ function create() {
 
     game.stage.backgroundColor = config.Street.color;
     map.loadMap(game.cache.getText('world'));
-    map.initTiles(loader.houses, loader.trees, loader.cars);
+    map.initTiles();
     map.loadTracks(game.cache.getText('tracks'));
+    map.loadStops(game.cache.getText('stops'));
+    map.generateItems(loader.houses, loader.trees, loader.cars);
+    map.loadTrams(game.cache.getText('trams'), loader.trams);
 
     game.world.resize(map.getWidth(), map.getHeight());
     map.draw();

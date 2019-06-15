@@ -63,8 +63,40 @@ class Map {
                 }
             }
         }
+    }
 
-        this.drawTracks();
+    loadStops(fileContent) {
+        var line = fileContent.trim();
+        if (line.includes(',')) {
+            var tileHashes = line.split(',');
+            for (var hash of tileHashes) {
+                for (var tile of this.tiles) {
+                    if (tile.equalsHash(hash)) {
+                        tile.addStop();
+                    }
+                }
+            }
+        }
+    }
+
+    loadTrams(fileContent, tramImages) {
+        var lines = fileContent.trim().split('\n');
+        for (var y = 0; y < lines.length; y++) {
+            if (lines[y].includes(',')) {
+                var tileHashes = lines[y].split(',');
+                var tiles = [];
+                for (var hash of tileHashes) {
+                    for (var tile of this.tiles) {
+                        if (tile.equalsHash(hash)) {
+                            tiles.push(tile);
+                        }
+                    }
+                }
+                if (tiles.length > 1) {
+                    tiles[0].addVehicle(new Tram(tiles[0], tiles[0].getNeighbourConnection(tiles[1]), tramImages, config.Tram.numTypes, tiles));
+                }
+            }
+        }
     }
 
     getWidth() {
@@ -75,13 +107,18 @@ class Map {
         return this.nRows * config.Tile.dy - Math.floor(config.Tile.height / 2);
     }
 
-    initTiles(houseImages, treeImages, carImages) {
+    initTiles() {
         this.tiles.forEach(function(tile, index, tiles) {
             tile.computeAllNeighbours(tiles);
         });
         this.tiles.forEach(function(tile) {
             tile.computeStreetNeighboursAndConnections();
             tile.computeLineSegments();
+        });
+    }
+
+    generateItems(houseImages, treeImages, carImages) {
+        this.tiles.forEach(function(tile) {
             tile.generateHouse(houseImages);
             tile.generateTrees(treeImages);
             tile.generateCars(carImages);
@@ -93,6 +130,7 @@ class Map {
             this.tiles[i].draw(this.rowGroupsGround[this.tileRowId[i]], this.rowGroupsHouses[this.tileRowId[i]]);
         }
         this.drawVehicles();
+        this.drawTracks();
     }
 
     drawTracks() {
@@ -165,6 +203,7 @@ class Map {
                     }
 
                     tile.addStop();
+                    console.log(tile.hash);
                     this.drawStops();
                     return true;
                 }
@@ -239,6 +278,7 @@ class Map {
         }
 
         if (this.newTrack.length > 0) {
+            console.log(this.newTrack.map(x => x.hash).join());
             this.newTrack.forEach(tile => tile.finalizeTrack());
             this.drawTracks();
             this.newTrack = [];
@@ -249,6 +289,7 @@ class Map {
     newTramFinalize(tramImages) {
         if (this.newLine !== null) {
             var tiles = this.newLine.getTiles();
+            console.log(tiles.map(x => x.hash).join());
             tiles[0].addVehicle(new Tram(tiles[0], tiles[0].getNeighbourConnection(tiles[1]), tramImages, config.Tram.numTypes, tiles));
             this.drawVehicles();
             this.newTramAbort();

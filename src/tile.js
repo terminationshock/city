@@ -188,7 +188,7 @@ class Tile {
     }
 
     generateHouse(houseImages) {
-        if (!this.isGrass()) {
+        if (!this.isGrass() || this.hasTracks()) {
             return;
         }
 
@@ -207,7 +207,7 @@ class Tile {
     }
 
     generateTrees(treeImages) {
-        if (this.isGrass()) {
+        if (this.isGrass() && !this.hasTracks()) {
             this.trees = new Trees(this, treeImages);
             this.trees.generateTrees();
         }
