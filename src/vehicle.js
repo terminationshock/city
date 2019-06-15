@@ -49,13 +49,15 @@ class Vehicle {
         this.y = (lane.nx * (lane.px - this.x) + lane.ny * lane.py) / lane.ny;
     }
 
-    draw(group) {
+    draw(group, disableUI) {
         if (this.sprite === null) {
             this.sprite = game.add.sprite(0, 0, this.colorId);
             this.updateSprite(this.x, this.y, this.getHead());
             group.add(this.sprite);
             this.createBounds();
-            this.setCursor();
+            if (!disableUI) {
+                this.setCursor();
+            }
         }
     }
 

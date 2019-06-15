@@ -5,6 +5,7 @@ var state = StateDefault.change();
 var config;
 var cursors;
 var mouseDown = false;
+var disableUI = true;
 
 function loadConfig(progress, key, success, totalLoadedFile, totalFiles) {
     if (key === 'config') {
@@ -48,11 +49,19 @@ function create() {
     var dt = 1.0 / config.World.stepsPerSecond;
     game.time.events.loop(dt, step);
 
-    document.getElementById('button-track').addEventListener('click', onButtonTrack);
-    document.getElementById('button-stop').addEventListener('click', onButtonStop);
-    document.getElementById('button-tram').addEventListener('click', onButtonTram);
-    document.getElementById('button-abort').addEventListener('click', onButtonAbort);
-    document.getElementById('button-finish').addEventListener('click', onButtonFinish);
+    if (disableUI) {
+       document.getElementById('button-track').style.display = 'none';
+       document.getElementById('button-stop').style.display = 'none';
+       document.getElementById('button-tram').style.display = 'none';
+       document.getElementById('button-abort').style.display = 'none';
+       document.getElementById('button-finish').style.display = 'none';
+    } else {
+        document.getElementById('button-track').addEventListener('click', onButtonTrack);
+        document.getElementById('button-stop').addEventListener('click', onButtonStop);
+        document.getElementById('button-tram').addEventListener('click', onButtonTram);
+        document.getElementById('button-abort').addEventListener('click', onButtonAbort);
+        document.getElementById('button-finish').addEventListener('click', onButtonFinish);
+    }
     UI.disableSpinner();
     updateUI();
 }
@@ -102,15 +111,17 @@ function update() {
         game.camera.x += 20;
     }
 
-    if (game.input.mousePointer.leftButton.isDown) {
-        mouseDown = true;
-    }
+    if (!disableUI) {
+        if (game.input.mousePointer.leftButton.isDown) {
+            mouseDown = true;
+        }
 
-    if (game.input.mousePointer.leftButton.isUp && mouseDown) {
-        mouseDown = false;
-        state = state.click(game.input.mousePointer.worldX, game.input.mousePointer.worldY, map);
-        updateUI();
-    } else {
-        state.hover(game.input.mousePointer.worldX, game.input.mousePointer.worldY, map);
+        if (game.input.mousePointer.leftButton.isUp && mouseDown) {
+            mouseDown = false;
+            state = state.click(game.input.mousePointer.worldX, game.input.mousePointer.worldY, map);
+            updateUI();
+        } else {
+            state.hover(game.input.mousePointer.worldX, game.input.mousePointer.worldY, map);
+        }
     }
 }

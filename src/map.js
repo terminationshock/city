@@ -142,7 +142,7 @@ class Map {
 
     drawVehicles() {
         for (var tile of this.tiles) {
-            tile.drawVehicles(this.masterGroup);
+            tile.drawVehicles(this.masterGroup, disableUI);
         }
     }
 

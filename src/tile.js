@@ -54,8 +54,8 @@ class Tile {
         }
     }
 
-    drawVehicles(group) {
-        this.vehicles.forEach(vehicle => vehicle.draw(group));
+    drawVehicles(group, disableUI) {
+        this.vehicles.forEach(vehicle => vehicle.draw(group, disableUI));
     }
 
     drawStop(group) {
