@@ -48,6 +48,25 @@ class Map {
         }
     }
 
+    loadTracks(fileContent) {
+        var lines = fileContent.trim().split('\n');
+        for (var y = 0; y < lines.length; y++) {
+            if (lines[y].includes(',')) {
+                var tileHashes = lines[y].split(',');
+                for (var hash of tileHashes) {
+                    for (var tile of this.tiles) {
+                        if (tile.equalsHash(hash)) {
+                            tile.generateTrack(tileHashes);
+                            tile.finalizeTrack();
+                        }
+                    }
+                }
+            }
+        }
+
+        this.drawTracks();
+    }
+
     getWidth() {
         return 2 * this.nCols * config.Tile.dx - Math.floor(config.Tile.width / 2);
     }

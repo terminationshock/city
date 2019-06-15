@@ -79,6 +79,10 @@ class Tile {
         return this.hash === other.hash;
     }
 
+    equalsHash(hash) {
+        return this.hash == hash;
+    }
+
     update() {
         this.vehicles.forEach(vehicle => vehicle.update());
     }

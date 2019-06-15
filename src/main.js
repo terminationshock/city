@@ -20,6 +20,7 @@ function step() {
 function preload() {
     game.load.onFileComplete.add(loadConfig, this);
     game.load.text('world', 'world.dat');
+    game.load.text('tracks', 'tracks.dat');
     game.load.json('config', 'config.json');
 }
 
@@ -34,6 +35,7 @@ function create() {
     game.stage.backgroundColor = config.Street.color;
     map.loadMap(game.cache.getText('world'));
     map.initTiles(loader.houses, loader.trees, loader.cars);
+    map.loadTracks(game.cache.getText('tracks'));
 
     game.world.resize(map.getWidth(), map.getHeight());
     map.draw();
