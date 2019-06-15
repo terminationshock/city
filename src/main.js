@@ -34,7 +34,16 @@ function updateUI() {
 
 function create() {
     cursors = game.input.keyboard.createCursorKeys();
-    Phaser.Canvas.setTouchAction(game.canvas, 'auto');
+    game.kineticScrolling = game.plugins.add(Phaser.Plugin.KineticScrolling);
+    game.kineticScrolling.configure({
+        kineticMovement: true,
+        timeConstantScroll: 325,
+        horizontalScroll: true,
+        verticalScroll: true,
+        horizontalWheel: false,
+        verticalWheel: false
+    });
+    game.kineticScrolling.start();
 
     game.stage.backgroundColor = config.Street.color;
     map.loadMap(game.cache.getText('world'));
@@ -49,6 +58,9 @@ function create() {
 
     var dt = 1.0 / config.World.stepsPerSecond;
     game.time.events.loop(dt, step);
+
+    var zoom = Math.max(1, window.devicePixelRatio * 0.6);
+    game.camera.scale.setTo(zoom, zoom);
 
     if (disableUI) {
        document.getElementById('button-track').style.display = 'none';
