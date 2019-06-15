@@ -58,7 +58,7 @@ function create() {
     document.getElementById('vehicle-canvas').height = config.Tram.imgSize * config.Vehicle.headingOrder.length;
     map.draw();
 
-    var dt = 1.0 / config.World.stepsPerSecond;
+    var dt = 1000 / config.World.stepsPerSecond;
     game.time.events.loop(dt, step);
 
     var zoom = Math.max(1, window.devicePixelRatio * 0.6);

@@ -68,6 +68,6 @@
         "collisionSampling": 15
     },
     "World": {
-        "stepsPerSecond": 30
+        "stepsPerSecond": 20
     }
 }
