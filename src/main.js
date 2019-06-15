@@ -20,11 +20,11 @@ function step() {
 
 function preload() {
     game.load.onFileComplete.add(loadConfig, this);
-    game.load.text('world', 'world.dat');
-    game.load.text('tracks', 'tracks.dat');
-    game.load.text('stops', 'stops.dat');
-    game.load.text('trams', 'trams.dat');
-    game.load.json('config', 'config.json');
+    game.load.text('world', 'city/world.dat');
+    game.load.text('tracks', 'city/tracks.dat');
+    game.load.text('stops', 'city/stops.dat');
+    game.load.text('trams', 'city/trams.dat');
+    game.load.json('config', 'city/config.json');
 }
 
 function updateUI() {
@@ -34,6 +34,7 @@ function updateUI() {
 
 function create() {
     cursors = game.input.keyboard.createCursorKeys();
+    Phaser.Canvas.setTouchAction(game.canvas, 'auto');
 
     game.stage.backgroundColor = config.Street.color;
     map.loadMap(game.cache.getText('world'));

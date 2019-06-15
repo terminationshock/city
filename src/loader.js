@@ -120,23 +120,23 @@ class Loader {
         this.trams = ['v00'];
 
         this.streets.forEach(function(street) {
-            game.load.image(street, 'img/' + street + '.png');
+            game.load.image(street, 'city/img/' + street + '.png');
         });
 
         this.houses.forEach(function(house) {
-            game.load.image(house, 'img/' + house + '.png');
+            game.load.image(house, 'city/img/' + house + '.png');
         });
 
         this.trees.forEach(function(tree) {
-            game.load.image(tree, 'img/' + tree + '.png');
+            game.load.image(tree, 'city/img/' + tree + '.png');
         });
 
         this.cars.forEach(function(car) {
-            game.load.spritesheet(car, 'img/' + car + '.png', config.Car.imgSize, config.Car.imgSize, config.Vehicle.headingOrder.length * config.Car.numTypes);
+            game.load.spritesheet(car, 'city/img/' + car + '.png', config.Car.imgSize, config.Car.imgSize, config.Vehicle.headingOrder.length * config.Car.numTypes);
         });
 
         this.trams.forEach(function(tram) {
-            game.load.spritesheet(tram, 'img/' + tram + '.png', config.Tram.imgSize, config.Tram.imgSize, config.Vehicle.headingOrder.length * config.Tram.numTypes);
+            game.load.spritesheet(tram, 'city/img/' + tram + '.png', config.Tram.imgSize, config.Tram.imgSize, config.Vehicle.headingOrder.length * config.Tram.numTypes);
         });
     }
 };
