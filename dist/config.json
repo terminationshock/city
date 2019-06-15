@@ -49,7 +49,8 @@
     "Tram": {
         "imgSize": 80,
         "numTypes": 1,
-        "maxLineLength": 200
+        "maxLineLength": 200,
+        "maxTilesPerTram": 40
     },
     "Tree": {
         "numTrees": 6,

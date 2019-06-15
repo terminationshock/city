@@ -2,6 +2,17 @@ function convertInt(input) {
     return parseInt(input, 10);
 }
 
+function getPermutations(input, num) {
+    var permutations = [];
+    for (var i = 0; i < num; i++) {
+        var index = Math.floor(input.length * i / num);
+        var part1 = input.slice(index);
+        var part2 = input.slice(0, index);
+        permutations.push(part1.concat(part2));
+    }
+    return permutations;
+}
+
 function normalizeAngle(angle) {
     if (angle >= 360) {
         angle -= 360;

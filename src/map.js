@@ -93,7 +93,11 @@ class Map {
                     }
                 }
                 if (tiles.length > 1) {
-                    tiles[0].addVehicle(new Tram(tiles[0], tiles[0].getNeighbourConnection(tiles[1]), tramImages, config.Tram.numTypes, tiles));
+                    var numTrams = Math.ceil(tiles.length / config.Tram.maxTilesPerTram);
+                    var permutations = getPermutations(tiles, numTrams);
+                    permutations.forEach(function(tileList) {
+                        tileList[0].addVehicle(new Tram(tileList[0], tileList[0].getNeighbourConnection(tileList[1]), tramImages, config.Tram.numTypes, tileList));
+                    });
                 }
             }
         }
