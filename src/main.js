@@ -54,6 +54,8 @@ function create() {
     map.loadTrams(game.cache.getText('trams'), loader.trams);
 
     game.world.resize(map.getWidth(), map.getHeight());
+    document.getElementById('vehicle-canvas').width = config.Tram.imgSize * config.Vehicle.headingOrder.length;
+    document.getElementById('vehicle-canvas').height = config.Tram.imgSize * config.Vehicle.headingOrder.length;
     map.draw();
 
     var dt = 1.0 / config.World.stepsPerSecond;
