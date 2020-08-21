@@ -2,7 +2,7 @@
 
 js=city/game.js
 
-rm $js
+rm -f $js
 echo "'use strict';" > $js
 cat src/error.js >> $js
 cat src/utils.js >> $js
