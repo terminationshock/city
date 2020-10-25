@@ -107,7 +107,7 @@ class Map {
         return 2 * this.nCols * config.Tile.dx - Math.floor(config.Tile.width / 2);
     }
 
-    getHeight(fileContent) {
+    getHeight() {
         return this.nRows * config.Tile.dy - Math.floor(config.Tile.height / 2);
     }
 

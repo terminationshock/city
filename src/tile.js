@@ -80,7 +80,7 @@ class Tile {
     }
 
     equalsHash(hash) {
-        return this.hash == hash;
+        return this.hash === hash;
     }
 
     update() {
@@ -419,8 +419,8 @@ class Tile {
         }
         var ray = new Phaser.Line(px, py, x, y);
         var line = null;
-        for (var head of [60, 120, 240, 300]) {
-            switch (head) {
+        for (var h of [60, 120, 240, 300]) {
+            switch (h) {
                 case 60:
                     line = new Phaser.Line(this.x, this.y-config.Tile.height/2, this.x+config.Tile.width/2, this.y);
                     break;

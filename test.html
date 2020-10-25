@@ -79,7 +79,7 @@
                         break;
                     }
                     fileName = fileName.substring(fileName.lastIndexOf('/') + 1);
-                    lineNumber = fileName.split(':')[1];
+                    var lineNumber = fileName.split(':')[1];
                     fileName = fileName.split(':')[0];
                     table += '<tr><td><b>' + functionName + '</b></td><td>' + fileName + '</td><td>' + lineNumber + '</td></tr>';
                 }

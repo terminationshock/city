@@ -270,10 +270,8 @@ class Vehicle {
         var dx = other.x - x;
         var dy = other.y - y;
         var direction = this.getHeadFromDxDy(dx, dy);
-        if ((head + 60 < direction && direction < head + 300) || (head + 60 < direction + 360 && direction + 360 < head + 300)) {
-            return false;
-        }
-        return true;
+        return !((head + 60 < direction && direction < head + 300) || (head + 60 < direction + 360 && direction + 360 < head + 300));
+
     }
 
     getHeadFromDxDy(dx, dy) {

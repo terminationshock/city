@@ -26,7 +26,7 @@ class Tracks {
 
         var indices = [];
         var index = track.indexOf(this.tile.hash);
-        while (index != -1) {
+        while (index !== -1) {
             indices.push(index);
             index = track.indexOf(this.tile.hash, index + 1);
         }
@@ -75,14 +75,14 @@ class Tracks {
                 this.track[head] = this.newTrack[head];
             }
         }
-        for (var headFrom in this.track) {
+        for (var headingFrom in this.track) {
             var headsTo = [];
-            for (i = 0; i < this.track[headFrom].length; i++) {
-                if (!headsTo.includes(this.track[headFrom][i])) {
-                    headsTo.push(this.track[headFrom][i]);
+            for (i = 0; i < this.track[headingFrom].length; i++) {
+                if (!headsTo.includes(this.track[headingFrom][i])) {
+                    headsTo.push(this.track[headingFrom][i]);
                 }
             }
-            this.track[headFrom] = headsTo;
+            this.track[headingFrom] = headsTo;
         }
         this.headsFrom = Object.keys(this.track);
         this.headsTo = Object.values(this.track);
@@ -155,10 +155,8 @@ class Tracks {
         if (this.isDeadEnd()) {
             return false;
         }
-        if (this.tile.linesIntersectInside(this.lineSegments)) {
-            return false;
-        }
-        return true;
+        return !this.tile.linesIntersectInside(this.lineSegments);
+
     }
 
     isDeadEnd() {

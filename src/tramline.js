@@ -34,10 +34,8 @@ class TramLine {
         if (!heads.includes(headTo)) {
             return false;
         }
-        if (tile.getTrackHeadsFrom(normalizeAngle(headTo + 180)) === null) {
-            return false;
-        }
-        return true;
+        return tile.getTrackHeadsFrom(normalizeAngle(headTo + 180)) !== null;
+
     }
 
     getNextUniqueNeighbour() {
@@ -95,12 +93,12 @@ class TramLine {
         this.tiles.push(tile);
 
         while(true) {
-            var nextTile = this.getNextUniqueNeighbour();
+            var nextTile1 = this.getNextUniqueNeighbour();
             n = this.tiles.length;
-            if (nextTile === this.NEIGHBOUR_STATUS.NO_NEIGHBOUR || nextTile === null) {
+            if (nextTile1 === this.NEIGHBOUR_STATUS.NO_NEIGHBOUR || nextTile1 === null) {
                 this.abort();
                 break;
-            } else if (nextTile === this.NEIGHBOUR_STATUS.MULTIPLE_PATHS) {
+            } else if (nextTile1 === this.NEIGHBOUR_STATUS.MULTIPLE_PATHS) {
                 if (this.isAllowed(this.tiles[0])) {
                     this.closed = true;
                 } else {
@@ -108,8 +106,8 @@ class TramLine {
                 }
                 break;
             }
-            this.tiles[n - 1].tracks.highlight(this.tiles[n - 1].getNeighbourConnection(this.tiles[n - 2]), this.tiles[n - 1].getNeighbourConnection(nextTile));
-            if (nextTile.equals(this.tiles[1]) && this.tiles[n - 1].equals(this.tiles[0])) {
+            this.tiles[n - 1].tracks.highlight(this.tiles[n - 1].getNeighbourConnection(this.tiles[n - 2]), this.tiles[n - 1].getNeighbourConnection(nextTile1));
+            if (nextTile1.equals(this.tiles[1]) && this.tiles[n - 1].equals(this.tiles[0])) {
                 this.tiles.pop();
                 this.closed = true;
                 break;
@@ -118,7 +116,7 @@ class TramLine {
                 this.abort();
                 break;
             }
-            this.tiles.push(nextTile);
+            this.tiles.push(nextTile1);
         }
     }
 

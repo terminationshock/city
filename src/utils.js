@@ -70,13 +70,13 @@ function getCurve(p1, p2, head1, head2, bezierFactor) {
 
     var deltaHead = getDeltaHead(head1, head2);
 
-    var bezierFactor = bezierFactor * deltaHead;
+    var bezierFactorDelta = bezierFactor * deltaHead;
     if (deltaHead === 0) {
         return new BezierCurve([p1, p2]);
     }
     return new BezierCurve([p1,
-                            new Point(p1.x + bezierFactor * dx1, p1.y + bezierFactor * dy1),
-                            new Point(p2.x - bezierFactor * dx2, p2.y - bezierFactor * dy2),
+                            new Point(p1.x + bezierFactorDelta * dx1, p1.y + bezierFactorDelta * dy1),
+                            new Point(p2.x - bezierFactorDelta * dx2, p2.y - bezierFactorDelta * dy2),
                             p2]);
 }
 
