@@ -10,10 +10,6 @@ class DriverMock {
     parkNow() {
         return true;
     }
-
-    leaveStop() {
-        return true;
-    }
 }
 
 class SpriteMock {
@@ -41,7 +37,6 @@ class VehicleTest {
         this.testParkNow();
 
         this.testCallbackPark();
-        this.testCallbackAtStop();
         this.testCallbackLeaveParkingLot();
         this.testCallbackEnterParkingLot();
         this.testCallbackChangeLane();
@@ -164,14 +159,6 @@ class VehicleTest {
         assertTrue(this.car.v === 0);
         assertTrue(this.car.queue.length === 1);
         assertTrue(this.car.queue[0] === this.car.callbackLeaveParkingLot);
-        assertTrue(res);
-    }
-
-    testCallbackAtStop() {
-        var res = this.car.callbackAtStop();
-        assertTrue(this.car.v === 0);
-        assertTrue(this.car.queue.length === 2);
-        assertTrue(this.car.queue[1] === this.car.callbackDrive);
         assertTrue(res);
     }
 

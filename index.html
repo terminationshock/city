@@ -6,97 +6,17 @@
     <script src="city/phaser-kinetic-scrolling-plugin.min.js"></script>
     <script src="city/game.js"></script>
     <style type="text/css">
-        #copyright {
-            position: absolute;
-            right: 5px;
-            bottom: 5px;
-            font: 12px Arial;
-            color: #FFFFFF;
-        }
         #canvas {
             height: 100vh;
             width: 100vw;
         }
-        #spinner {
-            position: absolute;
-            left: calc(50vw - 60px);
-            top: calc(50vh - 110px);
-            border: 10px solid #FFFFFF;
-            border-radius: 50%;
-            width: 100px;
-            height: 200px;
-            animation: spin 2s linear infinite;
-        }
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-        .ok {
-            cursor: copy;
-        }
-        .nok {
-            cursor: not-allowed;
-        }
         .info {
             cursor: pointer;
-        }
-        .button {
-            display: table;
-            position: absolute;
-            top: 20px;
-            width: 60px;
-            height: 60px;
-            border-radius: 10px;
-            border-color: rgb(255, 255, 255);
-            border-style: solid;
-            background-color: rgba(50, 50, 50, 0.5);
-        }
-        .button:hover {
-            cursor: pointer;
-            background-color: rgb(255, 255, 255);
-        }
-        .button-icon {
-            display: table-cell;
-            font: 40px Arial;
-            text-align: center;
-            vertical-align: middle;
-        }
-        .button-disabled {
-            pointer-events: none !important;
-            visibility: hidden;
-        }
-        .button-active {
-            pointer-events: none !important;
-            background-color: rgb(255, 255, 255);
-        }
-        #button-abort {
-            right: 100px;
-            top: 100px;
-        }
-        #button-finish {
-            right: 20px;
-            top: 100px;
-        }
-        #button-track {
-            right: 180px;
-        }
-        #button-stop {
-            right: 100px;
-        }
-        #button-tram {
-            right: 20px;
         }
     </style>
 </head>
 <body style="margin: 0;">
-    <div id="spinner"></div>
     <div id="canvas"></div>
-    <div id="button-abort" class="button button-disabled"><div class="button-icon">&#10062;</div></div>
-    <div id="button-finish" class="button button-disabled"><div class="button-icon">&#9989;</div></div>
-    <div id="button-track" class="button button-disabled"><div class="button-icon">&#128740;</div></div>
-    <div id="button-stop" class="button button-disabled"><div class="button-icon">&#128655;</div></div>
-    <div id="button-tram" class="button button-disabled"><div class="button-icon">&#128651;</div></div>
-    <div id="copyright">Tram 3D model from cadnav.com</div>
     <canvas id="vehicle-canvas" style="display: none;"></canvas>
 </body>
 </html>

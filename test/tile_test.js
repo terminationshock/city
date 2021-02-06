@@ -23,7 +23,6 @@ class TileTest {
 
         this.car1 = new Car(this.tile_road[21], 60, [1], 1);
         this.car2 = new Car(this.tile_road[21], 60, [2], 1);
-        this.tram = new Tram(this.tile_road[21], 60, [1], 1, []);
 
         this.testIsGrass();
         this.testIsStreet();
@@ -49,7 +48,6 @@ class TileTest {
         this.testAddVehicle();
         this.testGetVehicleIndex();
         this.testRemoveVehicle();
-        this.testOnlySameVehicleType();
         this.testHasFreeParkingLot();
     }
 
@@ -182,38 +180,6 @@ class TileTest {
                 }
             }
         }
-
-        for (var keylist of heads) {
-            if (force_60 && !keylist.includes(60)) continue;
-
-            var list = list1;
-            if (keylist.length === 2) list = list2;
-            if (keylist.length === 3) list = list3;
-            if (keylist.length === 4) list = list4;
-            for (var combination of list) {
-                tile.tracks.track = {};
-                for (var i = 0; i < keylist.length; i++) {
-                    tile.tracks.track[keylist[i]] = combination[i];
-                }
-                tile.tracks.finalize();
-                var found = false;
-                for (var f of falses) {
-                    if (this.dictsEqual(tile.tracks.track, f)) {
-                        if (tile.isDeadEndOrJunctionOrCrossing()) {
-                            console.log(tile.tracks.track);
-                            assertTrue(false);
-                        }
-                        found = true;
-                    }
-                }
-                if (!found) {
-                    if (!tile.isDeadEndOrJunctionOrCrossing()) {
-                        console.log(tile.tracks.track);
-                        assertTrue(false);
-                    }
-                }
-            }
-        }
     }
 
     testIsDeadEndOrJunctionOrCrossingStreet() {
@@ -237,7 +203,6 @@ class TileTest {
     }
 
     testIsDeadEndOrJunctionOrCrossingStraight() {
-        this.tile_road[17].computeLineSegments();
         this.helperIsDeadEndOrJunctionOrCrossing(this.tile_road[17], [
             {240: [60]},
             {240: [120]},
@@ -255,12 +220,9 @@ class TileTest {
             {240: [60, 120], 60: [300]},
             {240: [60, 120], 60: [240, 300]}
         ], false);
-        this.tile_road[17].tracks.track = {};
-        this.tile_road[17].tracks.finalize();
     }
 
     testIsDeadEndOrJunctionOrCrossingCurve() {
-        this.tile_road[61].computeLineSegments();
         this.helperIsDeadEndOrJunctionOrCrossing(this.tile_road[61], [
             {60: [300]},
             {240: [120]},
@@ -286,12 +248,9 @@ class TileTest {
             {240: [120], 120: [300,60]},
             {240: [120], 120: [240,300,60]}
         ], false);
-        this.tile_road[61].tracks.track = {};
-        this.tile_road[61].tracks.finalize();
     }
 
     testIsDeadEndOrJunctionOrCrossingGrass() {
-        this.tile_grass.computeLineSegments();
         this.helperIsDeadEndOrJunctionOrCrossing(this.tile_grass, [
             {60: [120]},
             {60: [120], 120: [60]},
@@ -344,8 +303,6 @@ class TileTest {
             {60: [120,240,300]},
             {60: [120,240,300], 120: [60]}
         ], true);
-        this.tile_grass.tracks.track = {};
-        this.tile_grass.tracks.finalize();
     }
 
     testIsDeadEnd() {
@@ -519,22 +476,6 @@ class TileTest {
         assertTrue(this.tile_road[1].vehicles.length === 1);
         assertTrue(this.tile_road[1].vehicleHashes.length === 1);
         assertTrue(this.tile_road[1].vehicleHashes[0] === this.car2.hash);
-    }
-
-    testOnlySameVehicleType() {
-        this.tile_road[21].vehicles = [this.car1, this.car2];
-        assertTrue(this.tile_road[21].onlySameVehicleType());
-        this.tile_road[21].vehicles = [this.car1];
-        assertTrue(this.tile_road[21].onlySameVehicleType());
-        this.tile_road[21].vehicles = [this.tram];
-        assertTrue(this.tile_road[21].onlySameVehicleType());
-        this.tile_road[21].vehicles = [];
-        assertTrue(this.tile_road[21].onlySameVehicleType());
-        this.tile_road[21].vehicles = [this.car1, this.tram];
-        assertTrue(!this.tile_road[21].onlySameVehicleType());
-        this.tile_road[21].vehicles = [this.car1, this.car2, this.tram];
-        assertTrue(!this.tile_road[21].onlySameVehicleType());
-        this.tile_road[21].vehicles = [];
     }
 
     testHasFreeParkingLot() {

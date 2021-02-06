@@ -5,15 +5,7 @@
     },
     "Driver": {
         "probStepDrive": 0.001,
-        "probTilePark": 0.05,
-        "waitAtStop": 100
-    },
-    "Stop": {
-        "lane": 22,
-        "width": 4,
-        "length": 25,
-        "color1": "#888888",
-        "color2": "#CCCCCC"
+        "probTilePark": 0.05
     },
     "Street": {
         "highways": ["r0081", "r0085"],
@@ -37,20 +29,6 @@
         "grass": "g0000",
         "hoverColor": "#FFFF00",
         "streetPrefix": "r"
-    },
-    "Track": {
-        "lanePointFactor": 0.25,
-        "curveFactor": 7,
-        "bezierFactor": 0.2,
-        "color": "#333333",
-        "activeColor": "#FFFF00",
-        "width": 6
-    },
-    "Tram": {
-        "imgSize": 80,
-        "numTypes": 1,
-        "maxLineLength": 200,
-        "maxTilesPerTram": 40
     },
     "Tree": {
         "numTrees": 6,

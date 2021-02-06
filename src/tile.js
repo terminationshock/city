@@ -9,10 +9,6 @@ class Tile {
         this.neighbours = [];
         this.streetNeighbours = [];
         this.neighbourConnections = {};
-        this.lineSegments = [];
-        this.tracks = new Tracks(this);
-        this.tramstop = null;
-        this.hover = null;
         this.trees = null;
         this.vehicles = [];
         this.vehicleHashes = [];
@@ -34,42 +30,10 @@ class Tile {
         if (this.trees !== null) {
             this.trees.draw(rowGroupHouses);
         }
-
-        this.hover = new Phaser.Graphics(game, this.imgX, this.imgY);
-        this.hover.beginFill(Phaser.Color.hexToRGB(config.Tile.hoverColor));
-        this.hover.fillAlpha = 0.5;
-        this.hover.drawPolygon(new Phaser.Point(config.Tile.width / 2, 0),
-                               new Phaser.Point(config.Tile.width, config.Tile.height / 2),
-                               new Phaser.Point(config.Tile.width / 2, config.Tile.height),
-                               new Phaser.Point(0, config.Tile.height / 2));
-        this.hover.endFill();
-        this.hover.visible = false;
-        rowGroupGround.add(this.hover);
     }
 
-    drawTracks(group) {
-        this.tracks.draw(group);
-        if (this.hasTracks() && this.trees !== null) {
-            this.trees.remove();
-        }
-    }
-
-    drawVehicles(group, disableUI) {
-        this.vehicles.forEach(vehicle => vehicle.draw(group, disableUI));
-    }
-
-    drawStop(group) {
-        if (this.hasStop()) {
-            this.tramstop.draw(group);
-        }
-    }
-
-    setHover(hover) {
-        this.hover.visible = hover;
-    }
-
-    addStop() {
-        this.tramstop = new TramStop(this);
+    drawVehicles(group) {
+        this.vehicles.forEach(vehicle => vehicle.draw(group));
     }
 
     equals(other) {
@@ -119,27 +83,6 @@ class Tile {
         return config.Street.deadEnds.includes(this.fileId);
     }
 
-    isStraightTrack() {
-        if (this.hasTracks()) {
-            return this.tracks.isStraight();
-        }
-        return false;
-    }
-
-    getStraightTracks() {
-        if (this.hasTracks()) {
-            return this.tracks.getStraights();
-        }
-        return null;
-    }
-
-    isNonIntersectingTrack() {
-        if (this.hasTracks()) {
-            return this.tracks.isNotIntersecting();
-        }
-        return true;
-    }
-
     isDeadEndOrJunctionOrCrossing() {
         if (this.isDeadEnd()) {
             return true;
@@ -147,48 +90,11 @@ class Tile {
         if (!this.isStraightOrCurve() && !this.isGrass()) {
             return true;
         }
-        if (this.hasTracks()) {
-            if (this.tracks.isDeadEnd()) {
-                return true;
-            }
-
-            var lines = this.lineSegments.concat(this.tracks.getLineSegments());
-            if (this.linesIntersectInside(lines)) {
-                return true;
-            }
-        }
         return false;
-    }
-
-    linesIntersectInside(lines) {
-        var point = null;
-        for (var i = 0; i < lines.length; i++) {
-            for (var j = i+1; j < lines.length; j++) {
-                if (!linesAreEqual(lines[i], lines[j])) {
-                    for (var line1 of lines[i]) {
-                        for (var line2 of lines[j]) {
-                            point = Phaser.Line.intersects(line1, line2);
-                            if (point !== null && this.inside(point.x, point.y, 0.99)) {
-                                return true;
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        return false;
-    }
-
-    hasStop() {
-        return this.tramstop !== null;
-    }
-
-    hasTracks() {
-        return this.tracks.hasTracks();
     }
 
     generateHouse(houseImages) {
-        if (!this.isGrass() || this.hasTracks()) {
+        if (!this.isGrass()) {
             return;
         }
 
@@ -207,7 +113,7 @@ class Tile {
     }
 
     generateTrees(treeImages) {
-        if (this.isGrass() && !this.hasTracks()) {
+        if (this.isGrass()) {
             this.trees = new Trees(this, treeImages);
             this.trees.generateTrees();
         }
@@ -224,26 +130,6 @@ class Tile {
                 }
             }
         }
-    }
-
-    generateTrack(track) {
-        this.tracks.generate(track);
-    }
-
-    abortTrack() {
-        this.tracks.abort();
-    }
-
-    finalizeTrack() {
-        this.tracks.finalize();
-        if (this.hasStop() && !this.isStraightTrack()) {
-            this.tramstop.draw(null);
-            this.tramstop = null;
-        }
-    }
-
-    getTrackHeadsFrom(head) {
-        return this.tracks.getHeadsFrom(head);
     }
 
     computeAllNeighbours(tiles) {
@@ -289,26 +175,6 @@ class Tile {
         }
     }
 
-    computeLineSegments() {
-        var connections = this.getStreetConnections();
-        if (connections.length === 2) {
-            for (var i = 0; i < 2; i++) {
-                var headFrom = normalizeAngle(connections[i] + 180);
-                var headTo = connections[1-i];
-                var p1 = this.getLaneStartPoint(headFrom, config.Street.laneDrive, 1);
-                var p2 = this.getLaneTargetPoint(headTo, config.Street.laneDrive, 0.24);
-                var segments = [];
-                if (getTurnDirection(headFrom, headTo) === -1) {
-                    segments.push(new Phaser.Line(Math.round(p1.x), Math.round(p1.y), Math.round(this.x), Math.round(this.y)));
-                    segments.push(new Phaser.Line(Math.round(this.x), Math.round(this.y), Math.round(p2.x), Math.round(p2.y)));
-                } else {
-                    segments.push(new Phaser.Line(Math.round(p1.x), Math.round(p1.y), Math.round(p2.x), Math.round(p2.y)));
-                }
-                this.lineSegments.push(segments);
-            }
-        }
-    }
-
     getNeighbourConnection(tile) {
         var hash = tile;
         if (typeof tile !== 'string') {
@@ -326,10 +192,6 @@ class Tile {
             return null;
         }
         return list[0];
-    }
-
-    isTrackNeighbourOf(tile) {
-        return this.neighbours.includes(tile) && !tile.isHouse();
     }
 
     isConnectedTo(head) {
@@ -475,29 +337,8 @@ class Tile {
         }
     }
 
-    clickVehicle(x, y) {
-        for (var vehicle of this.vehicles) {
-            if (vehicle.isTram() && vehicle.click(x, y)) {
-                TramLine.show(vehicle.getLine());
-                return vehicle;
-            }
-        }
-        return null;
-    }
-
     getVehicleIndex(vehicle) {
         return this.vehicleHashes.indexOf(vehicle.hash);
-    }
-
-    onlySameVehicleType() {
-        if (this.vehicles.length > 0) {
-            for (var i = 1; i < this.vehicles.length; i++) {
-                if (this.vehicles[i].isTram() !== this.vehicles[0].isTram()) {
-                    return false;
-                }
-            }
-        }
-        return true;
     }
 
     hasFreeParkingLot(head) {
@@ -508,9 +349,6 @@ class Tile {
             return false;
         }
         if (this.isDeadEndOrJunctionOrCrossing()) {
-            return false;
-        }
-        if (this.hasStop()) {
             return false;
         }
         if (!this.isConnectedTo(head)) {

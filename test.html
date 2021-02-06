@@ -6,22 +6,16 @@
     <script src="src/error.js"></script>
     <script src="src/utils.js"></script>
     <script src="src/point.js"></script>
-    <script src="src/tracks.js"></script>
     <script src="src/tile.js"></script>
     <script src="src/driver.js"></script>
     <script src="src/cardriver.js"></script>
-    <script src="src/tramdriver.js"></script>
-    <script src="src/tramline.js"></script>
     <script src="src/bezier.js"></script>
     <script src="src/vehicle.js"></script>
     <script src="src/car.js"></script>
-    <script src="src/tram.js"></script>
     <script src="test/bezier_test.js"></script>
     <script src="test/util_test.js"></script>
     <script src="test/tile_test.js"></script>
-    <script src="test/tracks_test.js"></script>
     <script src="test/vehicle_test.js"></script>
-    <script src="test/tramline_test.js"></script>
     <style type="text/css">
         #spinner {
             position: absolute;
@@ -100,8 +94,6 @@
                 new BezierCurveTest();
                 new UtilTest();
                 new TileTest();
-                new TracksTest();
-                new TramLineTest();
                 new VehicleTest();
             } catch (e) {
                 displayError(e);

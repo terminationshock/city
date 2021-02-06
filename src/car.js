@@ -4,13 +4,6 @@ class Car extends Vehicle {
         this.driver = new CarDriver();
     }
 
-    isTram() {
-        return false;
-    }
-
-    setCursor() {
-    }
-
     start() {
         var intHead = this.getHead();
         var lane = this.tile.getLane(intHead, config.Street.lanePark);
@@ -93,10 +86,6 @@ class Car extends Vehicle {
     }
 
     callbackLeaveParkingLot() {
-        if (!this.tile.onlySameVehicleType()) {
-            return false;
-        }
-
         for (var vehicle of this.tile.vehicles) {
             if (!this.equals(vehicle) && !vehicle.isParking() && vehicle.getHead() === this.getHead()) {
                 return false;
@@ -116,11 +105,6 @@ class Car extends Vehicle {
 
     callbackChangeLane(turn) {
         this.head = this.getNextHead(2 * turn);
-        return true;
-    }
-
-    callbackAtStop() {
-        this.queue.push(this.callbackDrive);
         return true;
     }
 };

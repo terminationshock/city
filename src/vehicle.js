@@ -20,7 +20,6 @@ class Vehicle {
         this.turnPath = null;
         this.plannedHead = null;
         this.error = false;
-        this.lastStop = null;
     }
 
     disable() {
@@ -49,15 +48,12 @@ class Vehicle {
         this.y = (lane.nx * (lane.px - this.x) + lane.ny * lane.py) / lane.ny;
     }
 
-    draw(group, disableUI) {
+    draw(group) {
         if (this.sprite === null) {
             this.sprite = game.add.sprite(0, 0, this.colorId);
             this.updateSprite(this.x, this.y, this.getHead());
             group.add(this.sprite);
             this.createBounds();
-            if (!disableUI) {
-                this.setCursor();
-            }
         }
     }
 
@@ -119,17 +115,6 @@ class Vehicle {
             this.sprite.frame = this.typeId * config.Vehicle.headingOrder.length + col;
             this.cachedSpriteHead = head;
         }
-    }
-
-    click(x, y) {
-        if (this.sprite !== null) {
-           return Phaser.Rectangle.containsPoint(this.sprite.getBounds(), new Phaser.Point(x, y));
-        }
-        return false;
-    }
-
-    getLine() {
-        return this.driver.getLine();
     }
 
     update() {
@@ -380,13 +365,8 @@ class Vehicle {
             this.v = config.Vehicle.velocityCity;
         }
 
-        if (this.tile.hasStop() && this.isOnStraight() && this.tile.inside(this.x, this.y, config.Vehicle.centerSizeFactor)) {
-            this.queue.push(this.callbackAtStop);
-            return true;
-        }
-
         if (this.tile.isDeadEndOrJunctionOrCrossing()) {
-            if (!(this.isOnNonIntersectingWay() && this.tile.onlySameVehicleType())) {
+            if (!this.isOnNonIntersectingWay()) {
                 var index = this.tile.getVehicleIndex(this);
                 for (var i = 0; i < index; i++) {
                     if (!this.tile.vehicles[i].isParking() && this.tile.vehicles[i].waitingTime <= config.Vehicle.waitBlocked) {
