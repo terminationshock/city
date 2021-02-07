@@ -186,14 +186,6 @@ class Tile {
         return this.neighbourConnections[hash];
     }
 
-    getNeighbourAtHead(head) {
-        var list = this.neighbours.filter(x => this.neighbourConnections[x.hash] === head);
-        if (list.length !== 1) {
-            return null;
-        }
-        return list[0];
-    }
-
     isConnectedTo(head) {
         var id = parseInt(this.fileId.substring(1, 5));
         if ([1, 5, 9, 21, 45, 49, 53, 77, 85].includes(id)) {
@@ -234,13 +226,6 @@ class Tile {
 
     nearCenter(x, y) {
         return this.inside(x, y, config.Street.centerSizeFactor);
-    }
-
-    centerAhead(x, head) {
-        if (0 < head && head < 180) {
-            return x < this.x;
-        }
-        return x > this.x;
     }
 
     getLane(head, lane) {
@@ -308,16 +293,6 @@ class Tile {
         var dist = factor * config.Tile.width;
         var x = this.x + Math.sin(head * Math.PI/180) * dist;
         var y = this.y - Math.cos(head * Math.PI/180) * dist;
-        if (factor >= 1) {
-            return this.getTileBoundaryPoint(x, y, head, lane);
-        }
-        return this.getClosestPointInLane(x, y, head, lane);
-    }
-
-    getLaneStartPoint(head, lane, factor) {
-        var dist = factor * config.Tile.width;
-        var x = this.x - Math.sin(head * Math.PI/180) * dist;
-        var y = this.y + Math.cos(head * Math.PI/180) * dist;
         if (factor >= 1) {
             return this.getTileBoundaryPoint(x, y, head, lane);
         }

@@ -40,7 +40,6 @@ class TileTest {
         this.testIsConnectedTo();
         this.testGetStreetConnections();
         this.testInside();
-        this.testCenterAhead();
         this.testGetLane();
         this.testGetClosestPointInLane();
         this.testGetDistanceToLane();
@@ -392,14 +391,6 @@ class TileTest {
         assertTrue(this.tile_grass.inside(x+20, y+20, 1));
         assertTrue(!this.tile_grass.inside(x+20, y+20, 0.1));
         assertTrue(!this.tile_grass.inside(x+100, y+100, 1));
-    }
-
-    testCenterAhead() {
-        var x = this.tile_road[45].x;
-        assertTrue(this.tile_road[45].centerAhead(x-10, 90));
-        assertTrue(!this.tile_road[45].centerAhead(x+10, 90));
-        assertTrue(!this.tile_road[45].centerAhead(x-10, 270));
-        assertTrue(this.tile_road[45].centerAhead(x+10, 270));
     }
 
     testGetLane() {

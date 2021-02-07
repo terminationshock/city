@@ -2,7 +2,6 @@ class UtilTest {
     constructor() {
         this.testGetTurnDirection();
         this.testGetDeltaHead();
-        this.testGetPermutations();
     }
 
     testGetTurnDirection() {
@@ -31,18 +30,5 @@ class UtilTest {
 
     arraysEqual(x, y) {
         return JSON.stringify(x) === JSON.stringify(y);
-    }
-
-    testGetPermutations() {
-        var a = [0, 1, 2, 3, 4, 5, 6];
-        assertTrue(getPermutations(a, 1).length === 1);
-        assertTrue(getPermutations(a, 2).length === 2);
-        assertTrue(getPermutations(a, 3).length === 3);
-        assertTrue(this.arraysEqual(getPermutations(a, 1)[0], a));
-        assertTrue(this.arraysEqual(getPermutations(a, 2)[0], a));
-        assertTrue(this.arraysEqual(getPermutations(a, 3)[0], a));
-        assertTrue(this.arraysEqual(getPermutations(a, 2)[1], [3, 4, 5, 6, 0, 1, 2]))
-        assertTrue(this.arraysEqual(getPermutations(a, 3)[1], [2, 3, 4, 5, 6, 0, 1]))
-        assertTrue(this.arraysEqual(getPermutations(a, 3)[2], [4, 5, 6, 0, 1, 2, 3]))
     }
 }

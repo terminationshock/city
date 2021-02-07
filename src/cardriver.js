@@ -1,4 +1,4 @@
-class CarDriver extends Driver {
+class CarDriver {
     leaveParkingLot() {
         return Math.random() < config.Driver.probStepDrive;
     }

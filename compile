@@ -11,7 +11,6 @@ cat src/loader.js >> $js
 cat src/trees.js >> $js
 cat src/tile.js >> $js
 cat src/map.js >> $js
-cat src/driver.js >> $js
 cat src/cardriver.js >> $js
 cat src/bezier.js >> $js
 cat src/vehicle.js >> $js

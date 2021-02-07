@@ -2,24 +2,6 @@ function convertInt(input) {
     return parseInt(input, 10);
 }
 
-function getPermutations(input, num) {
-    var permutations = [];
-    for (var i = 0; i < num; i++) {
-        var index = Math.floor(input.length * i / num);
-        var part1 = input.slice(index);
-        var part2 = input.slice(0, index);
-        permutations.push(part1.concat(part2));
-    }
-    return permutations;
-}
-
-function normalizeAngle(angle) {
-    if (angle >= 360) {
-        angle -= 360;
-    }
-    return angle;
-}
-
 function generateRandomId() {
     var id = '';
     id += Math.random().toString(36).substr(2, 5);
@@ -78,19 +60,4 @@ function getCurve(p1, p2, head1, head2, bezierFactor) {
                             new Point(p1.x + bezierFactorDelta * dx1, p1.y + bezierFactorDelta * dy1),
                             new Point(p2.x - bezierFactorDelta * dx2, p2.y - bezierFactorDelta * dy2),
                             p2]);
-}
-
-function linesAreEqual(line1, line2) {
-    if (line1.length !== line2.length) {
-        return false;
-    }
-    for (var i = 0; i < line1.length; i++) {
-        if (line1[i].start.x !== line2[i].start.x || line1[i].start.y !== line2[i].start.y) {
-            return false;
-        }
-        if (line1[i].end.x !== line2[i].end.x || line1[i].end.y !== line2[i].end.y) {
-            return false;
-        }
-    }
-    return true;
 }
