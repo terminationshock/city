@@ -1,4 +1,4 @@
-var game = new Phaser.Game('100', '100', Phaser.CANVAS, 'canvas', { preload: preload, create: create, update: update });
+var game = new Phaser.Game({width: '100', height: '100', renderer: Phaser.CANVAS, antialias: false, state: { preload: preload, create: create, update: update }});
 var loader = new Loader();
 var map = new Map();
 var config;
