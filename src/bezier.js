@@ -17,7 +17,8 @@ class BezierCurve {
         var x = 0;
         var y = 0;
         for (j = 1; j < n; j++) {
-            for (i = 0; i < n - j; i++) {
+            var nj = n - j;
+            for (i = 0; i < nj; i++) {
                 x = (1. - t) * point[i][j - 1].x + t * point[i + 1][j - 1].x;
                 y = (1. - t) * point[i][j - 1].y + t * point[i + 1][j - 1].y;
                 point[i][j] = new Point(x, y);

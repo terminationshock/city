@@ -65,7 +65,8 @@ class Vehicle {
         canvas.getContext('2d').drawImage(image, 0, 0, image.width, image.height);
 
         var y0 = this.typeId * size;
-        for (var headIndex = 0; headIndex < config.Vehicle.headingOrder.length; headIndex++) {
+        var headIndexLength = config.Vehicle.headingOrder.length;
+        for (var headIndex = 0; headIndex < headIndexLength; headIndex++) {
             var points = [];
             var x0 = headIndex * size;
             for (var angle = 0; angle < 360; angle += config.Vehicle.collisionSampling) {
@@ -214,7 +215,8 @@ class Vehicle {
             headingOrderCopy.sort(function(a, b) {
                 return a - b;
             });
-            for (var i = 0; i < headingOrderCopy.length - 1; i++) {
+            var headingOrderCopyLength = headingOrderCopy.length - 1;
+            for (var i = 0; i < headingOrderCopyLength; i++) {
                 if (headingOrderCopy[i] <= head && head < headingOrderCopy[i + 1]) {
                     return headingOrderCopy[i];
                 }

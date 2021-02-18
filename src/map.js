@@ -14,7 +14,8 @@ class Map {
         var lines = fileContent.trim().split('\n');
         this.masterGroup = game.add.group();
 
-        for (var y = 0; y < lines.length; y++) {
+        var linesLength = lines.length;
+        for (var y = 0; y < linesLength; y++) {
             if (lines[y].includes(',')) {
                 var tileCodes = lines[y].split(',');
                 this.nRows++;
@@ -31,7 +32,8 @@ class Map {
 
                 var xoff = -config.Tile.dx * (1 - (y % 2));
 
-                for (var x = 0; x < tileCodes.length; x++) {
+                var tileCodesLength = tileCodes.length;
+                for (var x = 0; x < tileCodesLength; x++) {
                     var tileCode = tileCodes[x].trim();
                     if (tileCode.length > 0) {
                         var counter = tileCode.substring(0, 4);
@@ -71,7 +73,8 @@ class Map {
     }
 
     draw() {
-        for (var i = 0; i < this.tiles.length; i++) {
+        var tilesLength = this.tiles.length;
+        for (var i = 0; i < tilesLength; i++) {
             this.tiles[i].draw(this.rowGroupsGround[this.tileRowId[i]], this.rowGroupsHouses[this.tileRowId[i]]);
         }
         this.drawVehicles();
