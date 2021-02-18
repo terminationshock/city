@@ -3,7 +3,6 @@ var loader = new Loader();
 var map = new Map();
 var config;
 var cursors;
-var mouseDown = false;
 
 function loadConfig(progress, key, success, totalLoadedFile, totalFiles) {
     if (key === 'config') {
