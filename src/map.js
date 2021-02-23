@@ -3,6 +3,8 @@ class Map {
         this.tiles = [];
         this.tileRowId = [];
         this.masterGroup = null;
+        this.backgroundGroup = null;
+        this.foregroundGroup = null;
         this.rowGroupsGround = [];
         this.rowGroupsHouses = [];
         this.nCols = 0;
@@ -13,6 +15,10 @@ class Map {
     loadMap(fileContent) {
         var lines = fileContent.trim().split('\n');
         this.masterGroup = game.add.group();
+        this.backgroundGroup = game.add.group();
+        this.foregroundGroup = game.add.group();
+        this.masterGroup.add(this.backgroundGroup);
+        this.masterGroup.add(this.foregroundGroup);
 
         var linesLength = lines.length;
         for (var y = 0; y < linesLength; y++) {
@@ -27,8 +33,8 @@ class Map {
                 groupHouses.yz = (y - 1) * config.Tile.dy + config.Tile.height;
                 this.rowGroupsGround.push(groupGround);
                 this.rowGroupsHouses.push(groupHouses);
-                this.masterGroup.add(groupGround);
-                this.masterGroup.add(groupHouses);
+                this.backgroundGroup.add(groupGround);
+                this.foregroundGroup.add(groupHouses);
 
                 var xoff = -config.Tile.dx * (1 - (y % 2));
 
@@ -78,16 +84,17 @@ class Map {
             this.tiles[i].draw(this.rowGroupsGround[this.tileRowId[i]], this.rowGroupsHouses[this.tileRowId[i]]);
         }
         this.drawVehicles();
+        this.masterGroup.sort('yz')
     }
 
     drawVehicles() {
         for (var tile of this.tiles) {
-            tile.drawVehicles(this.masterGroup);
+            tile.drawVehicles(this.foregroundGroup);
         }
     }
 
     update() {
         this.tiles.forEach(tile => tile.update());
-        this.masterGroup.sort('yz');
+        this.foregroundGroup.sort('yz');
     }
 };
