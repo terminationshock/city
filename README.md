@@ -6,6 +6,8 @@ This project can serve as input for a browser game.
 
 ![Screenshot](/screenshot.png?raw=true)
 
+The images are public domain and taken from [OpenGameArt.org](https://opengameart.org/users/kenney).
+
 ## Run
 
 Build the JavaScript file by executing `./compile`. Then, open `index.html` in any browser. If the screen stays black, disable strict CORS policy.
