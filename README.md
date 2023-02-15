@@ -12,10 +12,6 @@ The images are public domain and taken from [OpenGameArt.org](https://opengamear
 
 Build the JavaScript file by executing `./compile`. Then, open `index.html` in any browser. If the screen stays black, disable strict CORS policy.
 
-## License
-
-[GPL v3](https://www.gnu.org/licenses/gpl-3.0)
-
 ## Usage of Phaser 2
 
 This project uses [Phaser 2](https://www.phaser.io/), which is distributed under the MIT License:
